@@ -12,6 +12,7 @@ type Config struct {
 	DBPort     string
 	DBPassword string
 	DBAddress  string
+	DBHost     string
 	DBName     string
 }
 
@@ -25,7 +26,8 @@ func initConfig() Config {
 		DBPassword: getEnv("DB_PASSWORD", "root"),
 		DBPort:     getEnv("DB_PORT", "5432"),
 		DBName:     getEnv("DB_NAME", "ticket_sale"),
-		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0."), getEnv("DB_PORT", "5432")),
+		DBHost:     getEnv("DB_HOST", "localhost"),
+		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "5432")),
 	}
 }
 
