@@ -2,7 +2,7 @@ package entities
 
 import "github.com/wesleyfebarretos/ticket-sale/domain/enums"
 
-type User struct {
+type UserEntity struct {
 	FirstName string
 	LastName  string
 	email     string
@@ -11,6 +11,6 @@ type User struct {
 	Id        int
 }
 
-func (u *User) TableName() string {
+func (u *UserEntity) TableName() string {
 	return "user"
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -9,7 +8,6 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
-	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 )
 
@@ -22,18 +20,13 @@ func main() {
 	action := os.Args[1]
 	migrationType := os.Args[2]
 
-	connector := fmt.Sprintf("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		config.Envs.DBHost,
-		config.Envs.DBPort,
-		config.Envs.DBUser,
-		config.Envs.DBPassword,
-		config.Envs.DBName)
+	stringConnect := db.GetStringConnection()
 
-	db, err := db.OpenConnection(connector)
+	db, err := db.OpenConnection(stringConnect)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {

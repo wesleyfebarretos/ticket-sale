@@ -9,7 +9,7 @@ import (
 )
 
 func Run(db *sql.DB) error {
-	router := routes.Bind()
+	router := routes.Bind(db)
 
 	return router.Run(fmt.Sprintf(":%s", config.Envs.Port))
 }

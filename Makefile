@@ -5,6 +5,7 @@ db-stop:
 
 db-restart:
 	@docker compose -f ./infra/docker-compose.yaml down 
+	
 	@docker compose -f ./infra/docker-compose.yaml up -d
 
 #Migrations
