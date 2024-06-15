@@ -20,5 +20,5 @@ mu-seeders: #UP SEEDERS
 	@go run ./cmd/migrations/main.go up seeders
 md-tables: #DOWN TABLES
 	@go run ./cmd/migrations/main.go down 
-dbforce-version:
-#migrate -database "postgres://root:root@localhost:5432/postgres?sslmode=disable" -path cmd/migrations/tables down
+# dbforce-version:
+# migrate -database "postgres://root:root@localhost:5432/postgres?sslmode=disable" -path cmd/migrations/tables down

@@ -21,6 +21,15 @@ FROM
 WHERE
    email = $1 LIMIT 1;
 
+-- name: GetDifferentUserByEmail :one
+SELECT 
+    id, first_name, last_name,
+    email, role, created_at, updated_at
+FROM 
+   users
+WHERE
+   email = $1 AND id != $2 LIMIT 1;
+
 -- name: CreateUser :one
 INSERT INTO users 
 (first_name, last_name, email, password, role)
@@ -36,8 +45,7 @@ SET
     first_name = $2,
     last_name = $3,
     email = $4,
-    password = $5,
-    role = $6
+    role = $5
 WHERE id = $1;
 
 -- name: DestroyUser :exec

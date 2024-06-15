@@ -23,5 +23,5 @@ func GetId(c *gin.Context) (int32, error) {
 }
 
 func WriteError(c *gin.Context, status int, err error) {
-	c.JSON(status, gin.H{"error": err.Error()})
+	c.JSON(status, gin.H{"code": status, "message": err.Error()})
 }

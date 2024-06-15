@@ -5,6 +5,7 @@
 package sqlc
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"time"
@@ -64,4 +65,19 @@ type User struct {
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt null.Time `json:"updatedAt"`
+}
+
+type UsersAddress struct {
+	ID            int32          `json:"id"`
+	UserID        int32          `json:"userId"`
+	StreetAddress string         `json:"streetAddress"`
+	City          string         `json:"city"`
+	Complement    sql.NullString `json:"complement"`
+	State         string         `json:"state"`
+	PostalCode    sql.NullString `json:"postalCode"`
+	Country       string         `json:"country"`
+	AddressType   sql.NullString `json:"addressType"`
+	Favorite      sql.NullBool   `json:"favorite"`
+	CreatedAt     null.Time      `json:"createdAt"`
+	UpdatedAt     null.Time      `json:"updatedAt"`
 }

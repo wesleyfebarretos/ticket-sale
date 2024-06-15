@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	userservice "github.com/wesleyfebarretos/ticket-sale/domain/service"
+	"github.com/wesleyfebarretos/ticket-sale/domain/service"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
@@ -27,7 +27,7 @@ func NewUserController(db *sql.DB) *UserController {
 func (u *UserController) GetAll(c *gin.Context) {
 	dbCon := sqlc.New(u.db)
 
-	users, err := userservice.GetAll(c, dbCon)
+	users, err := service.GetUsers(c, dbCon)
 	if err != nil {
 		return
 	}
@@ -44,7 +44,7 @@ func (u *UserController) GetOne(c *gin.Context) {
 		return
 	}
 
-	user, err := userservice.GetOne(c, dbCon, id)
+	user, err := service.GetUser(c, dbCon, id)
 	if err != nil {
 		return
 	}
@@ -57,7 +57,7 @@ func (u *UserController) Create(c *gin.Context) {
 	c.Bind(&b)
 	dbCon := sqlc.New(u.db)
 
-	user, err := userservice.Create(c, dbCon, b)
+	user, err := service.CreateUser(c, dbCon, b)
 	if err != nil {
 		return
 	}
@@ -79,7 +79,7 @@ func (u *UserController) Update(c *gin.Context) {
 
 	b.ID = id
 
-	err = userservice.Update(c, dbCon, b)
+	err = service.UpdateUser(c, dbCon, b)
 	if err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func (u *UserController) Destroy(c *gin.Context) {
 		utils.WriteError(c, http.StatusBadRequest, err)
 	}
 
-	err = userservice.Destroy(c, dbCon, id)
+	err = service.DestroyUser(c, dbCon, id)
 	if err != nil {
 		return
 	}
