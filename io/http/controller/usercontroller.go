@@ -2,12 +2,12 @@ package controller
 
 import (
 	"database/sql"
-	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	userservice "github.com/wesleyfebarretos/ticket-sale/domain/service"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
 // TODO:
@@ -18,51 +18,87 @@ type UserController struct {
 	db *sql.DB
 }
 
-func NewUser(db *sql.DB) *UserController {
+func NewUserController(db *sql.DB) *UserController {
 	return &UserController{
 		db: db,
 	}
 }
 
 func (u *UserController) GetAll(c *gin.Context) {
-	userRepository := sqlc.New(u.db)
+	dbCon := sqlc.New(u.db)
 
-	users, err := userRepository.GetUsers(c)
+	users, err := userservice.GetAll(c, dbCon)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
+
 	c.JSON(http.StatusOK, users)
 }
 
 func (u *UserController) GetOne(c *gin.Context) {
-	log.Println("Get one users")
-	user := UserController{}
+	dbCon := sqlc.New(u.db)
+
+	id, err := utils.GetId(c)
+	if err != nil {
+		utils.WriteError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	user, err := userservice.GetOne(c, dbCon, id)
+	if err != nil {
+		return
+	}
+
 	c.JSON(http.StatusOK, user)
 }
 
 func (u *UserController) Create(c *gin.Context) {
 	var b sqlc.CreateUserParams
 	c.Bind(&b)
-	userRepository := sqlc.New(u.db)
-	newUser, err := userRepository.CreateUser(c, b)
+	dbCon := sqlc.New(u.db)
+
+	user, err := userservice.Create(c, dbCon, b)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
-	userJSON, err := json.Marshal(newUser)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	response := string(userJSON)
-
-	c.JSON(http.StatusCreated, response)
+	c.JSON(http.StatusCreated, user)
 }
 
 func (u *UserController) Update(c *gin.Context) {
-	c.Status(http.StatusOK)
+	id, err := utils.GetId(c)
+	if err != nil {
+		utils.WriteError(c, http.StatusBadRequest, err)
+	}
+
+	dbCon := sqlc.New(u.db)
+
+	var b sqlc.UpdateUserParams
+
+	c.Bind(&b)
+
+	b.ID = id
+
+	err = userservice.Update(c, dbCon, b)
+	if err != nil {
+		return
+	}
+
+	c.JSON(http.StatusCreated, true)
 }
 
 func (u *UserController) Destroy(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	dbCon := sqlc.New(u.db)
+
+	id, err := utils.GetId(c)
+	if err != nil {
+		utils.WriteError(c, http.StatusBadRequest, err)
+	}
+
+	err = userservice.Destroy(c, dbCon, id)
+	if err != nil {
+		return
+	}
+
+	c.JSON(http.StatusOK, true)
 }

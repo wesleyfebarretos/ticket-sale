@@ -18,7 +18,13 @@ func main() {
 	}
 
 	action := os.Args[1]
-	migrationType := os.Args[2]
+	var migrationType string
+
+	if action == "down" {
+		migrationType = "tables"
+	} else {
+		migrationType = os.Args[2]
+	}
 
 	stringConnect := db.GetStringConnection()
 

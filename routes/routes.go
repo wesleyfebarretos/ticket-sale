@@ -11,7 +11,7 @@ func Bind(db *sql.DB) *gin.Engine {
 	router := gin.New()
 	HandleHealthCheck(router)
 
-	userController := controller.NewUser(db)
+	userController := controller.NewUserController(db)
 	HandleUser(router, userController)
 	return router
 }

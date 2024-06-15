@@ -1,10 +1,7 @@
-package enums
-
-type Roles int
+package enum
 
 const (
-	NORMAL = iota
-	ADMIN
+	USER_ROLE       = "user"
+	ADMIN_ROLE      = "admin"
+	WEBSERVICE_ROLE = "webservice"
 )
-
-var c Roles = NORMAL

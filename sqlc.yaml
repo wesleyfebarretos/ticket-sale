@@ -2,8 +2,19 @@ version: "2"
 sql:
   - engine: "postgresql"
     queries: "repository/query/"
-    schema: "repository/schema"
+    schema: "cmd/migrations/tables"
     gen:
       go:
         package: "sqlc"
         out: "repository/sqlc"
+        emit_json_tags: true
+        emit_empty_slices: true
+        json_tags_case_style: "camel"
+        emit_pointers_for_null_types: true
+        overrides:
+          - db_type: "pg_catalog.timestamp"
+            nullable: true
+            go_type:
+              import: "gopkg.in/guregu/null.v4"
+              package: "null"
+              type: "Time"
