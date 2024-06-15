@@ -30,6 +30,43 @@ FROM
 WHERE
    email = $1 AND id != $2 LIMIT 1;
 
+-- name: GetUserFullProfile :one
+SELECT 
+    u.id, 
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.role,
+    u.created_at,
+    u.updated_at,
+    COALESCE(
+        json_agg(
+            json_build_object(
+                'id', ua.id,
+                'userId', ua.user_id,
+                'streetAddress', ua.street_address,
+                'city', ua.city,
+                'complement', ua.complement,
+                'state', ua.state,
+                'postalCode', ua.postal_code,
+                'country', ua.country,
+                'addressType', ua.address_type,
+                'favorite', ua.favorite
+            ) ORDER BY ua.favorite DESC
+        ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
+    ) AS addresses
+FROM 
+    users AS u
+LEFT JOIN 
+    users_addresses AS ua
+ON 
+    u.id = ua.user_id
+WHERE 
+    u.id = $1 
+GROUP BY 
+	u.id 
+LIMIT 1;
+
 -- name: CreateUser :one
 INSERT INTO users 
 (first_name, last_name, email, password, role)

@@ -9,6 +9,7 @@ func HandleUser(router *gin.Engine, userController *controller.UserController) {
 	userRoute := router.Group("users")
 
 	userRoute.GET("", userController.GetAll)
+	userRoute.GET("full-profile/:id", userController.GetFullProfile)
 	userRoute.GET(":id", userController.GetOne)
 	userRoute.POST("", userController.Create)
 	userRoute.PUT(":id", userController.Update)

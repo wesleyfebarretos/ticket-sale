@@ -7,7 +7,6 @@ package sqlc
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createUserAddress = `-- name: CreateUserAddress :one
@@ -19,19 +18,19 @@ RETURNING id, user_id, street_address, city, complement, state, postal_code, cou
 `
 
 type CreateUserAddressParams struct {
-	UserID        int32          `json:"userId"`
-	StreetAddress string         `json:"streetAddress"`
-	City          string         `json:"city"`
-	Complement    sql.NullString `json:"complement"`
-	State         string         `json:"state"`
-	PostalCode    sql.NullString `json:"postalCode"`
-	Country       string         `json:"country"`
-	AddressType   sql.NullString `json:"addressType"`
-	Favorite      sql.NullBool   `json:"favorite"`
+	UserID        int32   `json:"userId"`
+	StreetAddress string  `json:"streetAddress"`
+	City          string  `json:"city"`
+	Complement    *string `json:"complement"`
+	State         string  `json:"state"`
+	PostalCode    *string `json:"postalCode"`
+	Country       string  `json:"country"`
+	AddressType   *string `json:"addressType"`
+	Favorite      *bool   `json:"favorite"`
 }
 
 func (q *Queries) CreateUserAddress(ctx context.Context, arg CreateUserAddressParams) (UsersAddress, error) {
-	row := q.db.QueryRowContext(ctx, createUserAddress,
+	row := q.db.QueryRow(ctx, createUserAddress,
 		arg.UserID,
 		arg.StreetAddress,
 		arg.City,
@@ -75,19 +74,19 @@ WHERE id = $1
 `
 
 type UpdateUserAddressParams struct {
-	ID            int32          `json:"id"`
-	StreetAddress string         `json:"streetAddress"`
-	City          string         `json:"city"`
-	Complement    sql.NullString `json:"complement"`
-	State         string         `json:"state"`
-	PostalCode    sql.NullString `json:"postalCode"`
-	Country       string         `json:"country"`
-	AddressType   sql.NullString `json:"addressType"`
-	Favorite      sql.NullBool   `json:"favorite"`
+	ID            int32   `json:"id"`
+	StreetAddress string  `json:"streetAddress"`
+	City          string  `json:"city"`
+	Complement    *string `json:"complement"`
+	State         string  `json:"state"`
+	PostalCode    *string `json:"postalCode"`
+	Country       string  `json:"country"`
+	AddressType   *string `json:"addressType"`
+	Favorite      *bool   `json:"favorite"`
 }
 
 func (q *Queries) UpdateUserAddress(ctx context.Context, arg UpdateUserAddressParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserAddress,
+	_, err := q.db.Exec(ctx, updateUserAddress,
 		arg.ID,
 		arg.StreetAddress,
 		arg.City,

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -17,16 +18,14 @@ func main() {
 
 	stringConnect := db.GetStringConnection()
 
-	_db, err := db.OpenConnection(stringConnect)
+	conn, err := db.OpenConnection(stringConnect)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer _db.Close()
+	defer conn.Close(context.Background())
 
-	db.Init(_db)
-
-	if err := app.Run(_db); err != nil {
+	if err := app.Run(conn); err != nil {
 		log.Fatal(err)
 	}
 }

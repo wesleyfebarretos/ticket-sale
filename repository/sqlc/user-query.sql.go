@@ -8,8 +8,6 @@ package sqlc
 import (
 	"context"
 	"time"
-
-	null "gopkg.in/guregu/null.v4"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -31,17 +29,17 @@ type CreateUserParams struct {
 }
 
 type CreateUserRow struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Role      Roles     `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt null.Time `json:"updatedAt"`
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
+	row := q.db.QueryRow(ctx, createUser,
 		arg.FirstName,
 		arg.LastName,
 		arg.Email,
@@ -66,7 +64,7 @@ DELETE FROM users WHERE id = $1
 `
 
 func (q *Queries) DestroyUser(ctx context.Context, id int32) error {
-	_, err := q.db.ExecContext(ctx, destroyUser, id)
+	_, err := q.db.Exec(ctx, destroyUser, id)
 	return err
 }
 
@@ -86,17 +84,17 @@ type GetDifferentUserByEmailParams struct {
 }
 
 type GetDifferentUserByEmailRow struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Role      Roles     `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt null.Time `json:"updatedAt"`
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetDifferentUserByEmail(ctx context.Context, arg GetDifferentUserByEmailParams) (GetDifferentUserByEmailRow, error) {
-	row := q.db.QueryRowContext(ctx, getDifferentUserByEmail, arg.Email, arg.ID)
+	row := q.db.QueryRow(ctx, getDifferentUserByEmail, arg.Email, arg.ID)
 	var i GetDifferentUserByEmailRow
 	err := row.Scan(
 		&i.ID,
@@ -119,17 +117,17 @@ FROM
 `
 
 type GetUserRow struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Role      Roles     `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt null.Time `json:"updatedAt"`
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (GetUserRow, error) {
-	row := q.db.QueryRowContext(ctx, getUser, id)
+	row := q.db.QueryRow(ctx, getUser, id)
 	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
@@ -154,17 +152,17 @@ WHERE
 `
 
 type GetUserByEmailRow struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Role      Roles     `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt null.Time `json:"updatedAt"`
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
-	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
 	var i GetUserByEmailRow
 	err := row.Scan(
 		&i.ID,
@@ -178,6 +176,71 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
+const getUserFullProfile = `-- name: GetUserFullProfile :one
+SELECT 
+    u.id, 
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.role,
+    u.created_at,
+    u.updated_at,
+    COALESCE(
+        json_agg(
+        json_build_object(
+            'id', ua.id,
+            'userId', ua.user_id,
+            'streetAddress', ua.street_address,
+            'city', ua.city,
+            'complement', ua.complement,
+            'state', ua.state,
+            'postalCode', ua.postal_code,
+            'country', ua.country,
+            'addressType', ua.address_type,
+            'favorite', ua.favorite
+        ) ORDER BY ua.favorite DESC
+    ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
+    ) AS addresses
+FROM 
+    users AS u
+LEFT JOIN 
+    users_addresses AS ua
+ON 
+    u.id = ua.user_id
+WHERE 
+    u.id = $1 
+GROUP BY 
+	u.id 
+LIMIT 1
+`
+
+type GetUserFullProfileRow struct {
+	ID        int32       `json:"id"`
+	FirstName string      `json:"firstName"`
+	LastName  string      `json:"lastName"`
+	Email     string      `json:"email"`
+	Role      Roles       `json:"role"`
+	CreatedAt time.Time   `json:"createdAt"`
+	UpdatedAt *time.Time  `json:"updatedAt"`
+	Addresses interface{} `json:"addresses"`
+}
+
+func (q *Queries) GetUserFullProfile(ctx context.Context, id int32) (GetUserFullProfileRow, error) {
+	row := q.db.QueryRow(ctx, getUserFullProfile, id)
+	var i GetUserFullProfileRow
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Addresses,
+	)
+	return i, err
+}
+
 const getUsers = `-- name: GetUsers :many
 SELECT 
     id, first_name, last_name,
@@ -187,17 +250,17 @@ FROM
 `
 
 type GetUsersRow struct {
-	ID        int32     `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Role      Roles     `json:"role"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt null.Time `json:"updatedAt"`
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetUsers(ctx context.Context) ([]GetUsersRow, error) {
-	rows, err := q.db.QueryContext(ctx, getUsers)
+	rows, err := q.db.Query(ctx, getUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -217,9 +280,6 @@ func (q *Queries) GetUsers(ctx context.Context) ([]GetUsersRow, error) {
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -246,7 +306,7 @@ type UpdateUserParams struct {
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser,
+	_, err := q.db.Exec(ctx, updateUser,
 		arg.ID,
 		arg.FirstName,
 		arg.LastName,

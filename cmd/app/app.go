@@ -1,15 +1,15 @@
 package app
 
 import (
-	"database/sql"
 	"fmt"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/config"
-	"github.com/wesleyfebarretos/ticket-sale/routes"
+	"github.com/wesleyfebarretos/ticket-sale/io/routes"
 )
 
-func Run(db *sql.DB) error {
-	router := routes.Bind(db)
+func Run(conn *pgx.Conn) error {
+	router := routes.Bind(conn)
 
 	return router.Run(fmt.Sprintf(":%s", config.Envs.Port))
 }
