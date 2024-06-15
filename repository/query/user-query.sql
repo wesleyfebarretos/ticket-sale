@@ -85,5 +85,5 @@ SET
     role = $5
 WHERE id = $1;
 
--- name: DestroyUser :exec
+-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1;

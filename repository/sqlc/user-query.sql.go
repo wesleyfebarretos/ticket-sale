@@ -59,12 +59,12 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateU
 	return i, err
 }
 
-const destroyUser = `-- name: DestroyUser :exec
+const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM users WHERE id = $1
 `
 
-func (q *Queries) DestroyUser(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, destroyUser, id)
+func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
 
@@ -187,19 +187,19 @@ SELECT
     u.updated_at,
     COALESCE(
         json_agg(
-        json_build_object(
-            'id', ua.id,
-            'userId', ua.user_id,
-            'streetAddress', ua.street_address,
-            'city', ua.city,
-            'complement', ua.complement,
-            'state', ua.state,
-            'postalCode', ua.postal_code,
-            'country', ua.country,
-            'addressType', ua.address_type,
-            'favorite', ua.favorite
-        ) ORDER BY ua.favorite DESC
-    ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
+            json_build_object(
+                'id', ua.id,
+                'userId', ua.user_id,
+                'streetAddress', ua.street_address,
+                'city', ua.city,
+                'complement', ua.complement,
+                'state', ua.state,
+                'postalCode', ua.postal_code,
+                'country', ua.country,
+                'addressType', ua.address_type,
+                'favorite', ua.favorite
+            ) ORDER BY ua.favorite DESC
+        ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
     ) AS addresses
 FROM 
     users AS u
