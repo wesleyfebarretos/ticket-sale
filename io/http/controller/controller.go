@@ -15,7 +15,7 @@ func (bs *BaseController) GetId(c *gin.Context) int32 {
 
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		panic(exception.InternalServerException(fmt.Sprintf("invalid input value for id %s", id)))
+		panic(exception.InternalServerException(fmt.Sprintf("invalid id parameter %s", id)))
 	}
 
 	return int32(intId)

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -64,7 +63,7 @@ func UpdateUser(c *gin.Context, conn *sqlc.Queries, user sqlc.UpdateUserParams) 
 		ID:    user.ID,
 	})
 
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
 

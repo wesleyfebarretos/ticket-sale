@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/service"
-	"github.com/wesleyfebarretos/ticket-sale/internal/types"
+	"github.com/wesleyfebarretos/ticket-sale/io/dto"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
@@ -41,7 +41,7 @@ func (u *UserController) GetOne(c *gin.Context) {
 }
 
 func (u *UserController) Create(c *gin.Context) {
-	var body types.CreateUserRequest
+	var body dto.CreateUserRequest
 
 	u.ReadBody(c, &body)
 	conn := sqlc.New(u.conn)
@@ -55,7 +55,7 @@ func (u *UserController) Create(c *gin.Context) {
 
 	newUserResponse := service.CreateUser(c, conn, createUser)
 
-	var newUser types.CreateUserResponse
+	var newUser dto.CreateUserResponse
 
 	newUser.Id = int(newUserResponse.ID)
 
@@ -85,15 +85,20 @@ func (u *UserController) Update(c *gin.Context) {
 
 	conn := sqlc.New(u.conn)
 
-	var b sqlc.UpdateUserParams
+	var body dto.UpdateUserRequest
 
-	c.Bind(&b)
+	u.ReadBody(c, &body)
 
-	b.ID = id
+	updateUser := sqlc.UpdateUserParams{
+		ID:        id,
+		FirstName: body.FirstName,
+		LastName:  body.LastName,
+		Email:     body.Email,
+	}
 
-	service.UpdateUser(c, conn, b)
+	service.UpdateUser(c, conn, updateUser)
 
-	c.JSON(http.StatusCreated, true)
+	c.JSON(http.StatusOK, true)
 }
 
 func (u *UserController) Destroy(c *gin.Context) {
