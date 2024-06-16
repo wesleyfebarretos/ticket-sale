@@ -21,6 +21,14 @@ FROM
 WHERE
    email = $1 LIMIT 1;
 
+-- name: GetUserWithPasswordByEmail :one
+SELECT 
+    id, password, role
+FROM 
+   users
+WHERE
+   email = $1 LIMIT 1;
+
 -- name: GetDifferentUserByEmail :one
 SELECT 
     id, first_name, last_name,

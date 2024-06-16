@@ -241,6 +241,28 @@ func (q *Queries) GetUserFullProfile(ctx context.Context, id int32) (GetUserFull
 	return i, err
 }
 
+const getUserWithPasswordByEmail = `-- name: GetUserWithPasswordByEmail :one
+SELECT 
+    id, password, role
+FROM 
+   users
+WHERE
+   email = $1 LIMIT 1
+`
+
+type GetUserWithPasswordByEmailRow struct {
+	ID       int32  `json:"id"`
+	Password string `json:"password"`
+	Role     Roles  `json:"role"`
+}
+
+func (q *Queries) GetUserWithPasswordByEmail(ctx context.Context, email string) (GetUserWithPasswordByEmailRow, error) {
+	row := q.db.QueryRow(ctx, getUserWithPasswordByEmail, email)
+	var i GetUserWithPasswordByEmailRow
+	err := row.Scan(&i.ID, &i.Password, &i.Role)
+	return i, err
+}
+
 const getUsers = `-- name: GetUsers :many
 SELECT 
     id, first_name, last_name,

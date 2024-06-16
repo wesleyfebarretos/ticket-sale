@@ -5,12 +5,12 @@ import (
 )
 
 type CreateUserResponse struct {
-	Id        int             `json:"id"`
-	Role      int             `json:"role"`
-	FirstName string          `json:"firstName"`
-	LastName  string          `json:"lastName"`
-	Email     string          `json:"email"`
-	Address   AddressResponse `json:"address"`
+	Id        int              `json:"id"`
+	Role      string           `json:"role"`
+	FirstName string           `json:"firstName"`
+	LastName  string           `json:"lastName"`
+	Email     string           `json:"email"`
+	Address   *AddressResponse `json:"address"`
 }
 
 type AddressResponse struct {

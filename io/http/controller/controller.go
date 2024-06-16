@@ -2,15 +2,20 @@ package controller
 
 import (
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
+	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
-type BaseController struct{}
+type BaseController struct {
+	conn *pgx.Conn
+}
 
-func (bs *BaseController) GetId(c *gin.Context) int32 {
+func (bc *BaseController) GetId(c *gin.Context) int32 {
 	id := c.Param("id")
 
 	intId, err := strconv.Atoi(id)
@@ -21,9 +26,16 @@ func (bs *BaseController) GetId(c *gin.Context) int32 {
 	return int32(intId)
 }
 
-func (bs *BaseController) ReadBody(c *gin.Context, body any) {
+func (bc *BaseController) ReadBody(c *gin.Context, body any) {
 	err := c.ShouldBindJSON(&body)
+	if err == io.EOF {
+		panic(exception.BadRequestException("empty request body"))
+	}
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
+}
+
+func (bc *BaseController) NewConnection() *sqlc.Queries {
+	return sqlc.New(bc.conn)
 }

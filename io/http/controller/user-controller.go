@@ -12,18 +12,16 @@ import (
 
 type UserController struct {
 	BaseController
-	conn *pgx.Conn
 }
 
 func NewUserController(conn *pgx.Conn) *UserController {
 	return &UserController{
-		conn:           conn,
-		BaseController: BaseController{},
+		BaseController{conn: conn},
 	}
 }
 
 func (u *UserController) GetAll(c *gin.Context) {
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
 	users := service.GetUsers(c, conn)
 
@@ -31,7 +29,7 @@ func (u *UserController) GetAll(c *gin.Context) {
 }
 
 func (u *UserController) GetOne(c *gin.Context) {
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
 	id := u.GetId(c)
 
@@ -41,10 +39,10 @@ func (u *UserController) GetOne(c *gin.Context) {
 }
 
 func (u *UserController) Create(c *gin.Context) {
-	var body dto.CreateUserRequest
+	body := dto.CreateUserRequest{}
 
 	u.ReadBody(c, &body)
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
 	createUser := sqlc.CreateUserParams{
 		Email:     body.Email,
@@ -55,37 +53,48 @@ func (u *UserController) Create(c *gin.Context) {
 
 	newUserResponse := service.CreateUser(c, conn, createUser)
 
-	var newUser dto.CreateUserResponse
-
-	newUser.Id = int(newUserResponse.ID)
-
 	createUserAddress := sqlc.CreateUserAddressParams{
-		UserID:        int32(newUser.Id),
-		AddressType:   newUser.Address.AddressType,
-		StreetAddress: newUser.Address.StreetAddress,
-		City:          newUser.Address.City,
-		Complement:    newUser.Address.Complement,
-		State:         newUser.Address.State,
-		PostalCode:    newUser.Address.PostalCode,
-		Country:       newUser.Address.Country,
-		Favorite:      newUser.Address.Favorite,
+		UserID:        int32(newUserResponse.ID),
+		AddressType:   body.Address.AddressType,
+		StreetAddress: body.Address.StreetAddress,
+		City:          body.Address.City,
+		Complement:    body.Address.Complement,
+		State:         body.Address.State,
+		PostalCode:    body.Address.PostalCode,
+		Country:       body.Address.Country,
+		Favorite:      body.Address.Favorite,
 	}
-
 	newUserAddress := service.CreateUserAddress(c, conn, createUserAddress)
 
-	newUser.Address.ID = newUserAddress.ID
-	newUser.Address.UserID = newUserAddress.UserID
-	newUser.Address.CreatedAt = newUserAddress.CreatedAt
-	newUser.Address.UpdatedAt = newUserAddress.UpdatedAt
+	newUser := &dto.CreateUserResponse{
+		Id:        int(newUserResponse.ID),
+		Email:     newUserResponse.Email,
+		Role:      string(newUserResponse.Role),
+		FirstName: newUserResponse.FirstName,
+		LastName:  newUserResponse.LastName,
+		Address: &dto.AddressResponse{
+			ID:            newUserAddress.ID,
+			UserID:        newUserAddress.UserID,
+			City:          newUserAddress.City,
+			State:         newUserAddress.State,
+			Country:       newUserAddress.Country,
+			Complement:    newUserAddress.Complement,
+			Favorite:      newUserAddress.Favorite,
+			PostalCode:    newUserAddress.PostalCode,
+			AddressType:   newUserAddress.AddressType,
+			StreetAddress: newUserAddress.StreetAddress,
+		},
+	}
+
 	c.JSON(http.StatusCreated, newUser)
 }
 
 func (u *UserController) Update(c *gin.Context) {
 	id := u.GetId(c)
 
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
-	var body dto.UpdateUserRequest
+	body := dto.UpdateUserRequest{}
 
 	u.ReadBody(c, &body)
 
@@ -102,7 +111,7 @@ func (u *UserController) Update(c *gin.Context) {
 }
 
 func (u *UserController) Destroy(c *gin.Context) {
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
 	id := u.GetId(c)
 
@@ -112,7 +121,7 @@ func (u *UserController) Destroy(c *gin.Context) {
 }
 
 func (u *UserController) GetFullProfile(c *gin.Context) {
-	conn := sqlc.New(u.conn)
+	conn := u.NewConnection()
 
 	id := u.GetId(c)
 

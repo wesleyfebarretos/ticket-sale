@@ -18,5 +18,8 @@ func Bind(conn *pgx.Conn) *gin.Engine {
 
 	userController := controller.NewUserController(conn)
 	HandleUser(router, userController)
+
+	authController := controller.NewAuthController(conn)
+	HandleAuth(router, authController)
 	return router
 }

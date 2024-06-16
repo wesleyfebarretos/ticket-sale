@@ -11,8 +11,8 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
-func GetUsers(c *gin.Context, conn *sqlc.Queries) []sqlc.GetUsersRow {
-	users, err := conn.GetUsers(c)
+func GetUsers(c *gin.Context, query *sqlc.Queries) []sqlc.GetUsersRow {
+	users, err := query.GetUsers(c)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -20,8 +20,8 @@ func GetUsers(c *gin.Context, conn *sqlc.Queries) []sqlc.GetUsersRow {
 	return users
 }
 
-func GetUser(c *gin.Context, conn *sqlc.Queries, id int32) sqlc.GetUserRow {
-	user, err := conn.GetUser(c, id)
+func GetUser(c *gin.Context, query *sqlc.Queries, id int32) sqlc.GetUserRow {
+	user, err := query.GetUser(c, id)
 	if err != nil {
 		panic(exception.NotFoundException("user of id %d not found"))
 	}
@@ -29,10 +29,10 @@ func GetUser(c *gin.Context, conn *sqlc.Queries, id int32) sqlc.GetUserRow {
 	return user
 }
 
-func CreateUser(c *gin.Context, conn *sqlc.Queries, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
+func CreateUser(c *gin.Context, query *sqlc.Queries, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
 	var createdUser sqlc.CreateUserRow
 
-	_, err := conn.GetUserByEmail(c, newUser.Email)
+	_, err := query.GetUserByEmail(c, newUser.Email)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -49,7 +49,7 @@ func CreateUser(c *gin.Context, conn *sqlc.Queries, newUser sqlc.CreateUserParam
 	newUser.Password = string(hashPassword)
 	newUser.Role = enum.USER_ROLE
 
-	createdUser, err = conn.CreateUser(c, newUser)
+	createdUser, err = query.CreateUser(c, newUser)
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
@@ -57,8 +57,8 @@ func CreateUser(c *gin.Context, conn *sqlc.Queries, newUser sqlc.CreateUserParam
 	return createdUser
 }
 
-func UpdateUser(c *gin.Context, conn *sqlc.Queries, user sqlc.UpdateUserParams) {
-	_, err := conn.GetDifferentUserByEmail(c, sqlc.GetDifferentUserByEmailParams{
+func UpdateUser(c *gin.Context, query *sqlc.Queries, user sqlc.UpdateUserParams) {
+	_, err := query.GetDifferentUserByEmail(c, sqlc.GetDifferentUserByEmailParams{
 		Email: user.Email,
 		ID:    user.ID,
 	})
@@ -73,21 +73,21 @@ func UpdateUser(c *gin.Context, conn *sqlc.Queries, user sqlc.UpdateUserParams) 
 
 	user.Role = enum.USER_ROLE
 
-	err = conn.UpdateUser(c, user)
+	err = query.UpdateUser(c, user)
 	if err != nil {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
 
-func DeleteUser(c *gin.Context, conn *sqlc.Queries, id int32) {
-	err := conn.DeleteUser(c, id)
+func DeleteUser(c *gin.Context, query *sqlc.Queries, id int32) {
+	err := query.DeleteUser(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
 }
 
-func GetUserFullProfile(c *gin.Context, conn *sqlc.Queries, id int32) sqlc.GetUserFullProfileRow {
-	user, err := conn.GetUserFullProfile(c, id)
+func GetUserFullProfile(c *gin.Context, query *sqlc.Queries, id int32) sqlc.GetUserFullProfileRow {
+	user, err := query.GetUserFullProfile(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
