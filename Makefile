@@ -1,12 +1,12 @@
 db:
-	@docker compose -f ./infra/docker-compose.yaml up -d
+	@docker compose up -d
 db-stop:
-	@docker compose -f ./infra/docker-compose.yaml down
+	@docker compose down
 
 db-restart:
-	@docker compose -f ./infra/docker-compose.yaml down 
+	@docker compose down 
 	
-	@docker compose -f ./infra/docker-compose.yaml up -d
+	@docker compose up -d
 
 #Migrations
 
