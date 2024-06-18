@@ -114,8 +114,8 @@ func autorizatorHandler(data interface{}, c *gin.Context) bool {
 
 func unauthorizedHandler(c *gin.Context, code int, message string) {
 	c.JSON(code, AuthenticationError{
-		Code:    code,
-		Message: message,
+		Code:    http.StatusForbidden,
+		Message: "Access denied",
 	})
 }
 
