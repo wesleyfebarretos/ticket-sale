@@ -2,12 +2,10 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
-func Bind(conn *pgx.Conn) *gin.Engine {
+func Bind() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.CustomRecovery(middleware.ExceptionMiddleware))
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
@@ -15,11 +13,8 @@ func Bind(conn *pgx.Conn) *gin.Engine {
 	}))
 
 	HandleHealthCheck(router)
+	HandleAuth(router)
+	HandleUser(router)
 
-	userController := controller.NewUserController(conn)
-	HandleUser(router, userController)
-
-	authController := controller.NewAuthController(conn)
-	HandleAuth(router, authController)
 	return router
 }

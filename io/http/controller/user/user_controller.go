@@ -1,48 +1,33 @@
-package controller
+package user_controller
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/internal/service"
-	"github.com/wesleyfebarretos/ticket-sale/io/dto"
+	user_service "github.com/wesleyfebarretos/ticket-sale/internal/service/user"
+	user_address_service "github.com/wesleyfebarretos/ticket-sale/internal/service/user_address"
+	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
-type UserController struct {
-	BaseController
-}
-
-func NewUserController(conn *pgx.Conn) *UserController {
-	return &UserController{
-		BaseController{conn: conn},
-	}
-}
-
-func (u *UserController) GetAll(c *gin.Context) {
-	conn := u.NewConnection()
-
-	users := service.GetUsers(c, conn)
+func GetAll(c *gin.Context) {
+	users := user_service.GetAll(c)
 
 	c.JSON(http.StatusOK, users)
 }
 
-func (u *UserController) GetOne(c *gin.Context) {
-	conn := u.NewConnection()
+func GetById(c *gin.Context) {
+	id := controller.GetId(c)
 
-	id := u.GetId(c)
-
-	user := service.GetUser(c, conn, id)
+	user := user_service.GetOneById(c, id)
 
 	c.JSON(http.StatusOK, user)
 }
 
-func (u *UserController) Create(c *gin.Context) {
-	body := dto.CreateUserRequest{}
+func Create(c *gin.Context) {
+	body := CreateUserRequest{}
 
-	u.ReadBody(c, &body)
-	conn := u.NewConnection()
+	controller.ReadBody(c, &body)
 
 	createUser := sqlc.CreateUserParams{
 		Email:     body.Email,
@@ -51,7 +36,7 @@ func (u *UserController) Create(c *gin.Context) {
 		Password:  body.Password,
 	}
 
-	newUserResponse := service.CreateUser(c, conn, createUser)
+	newUserResponse := user_service.Create(c, createUser)
 
 	createUserAddress := sqlc.CreateUserAddressParams{
 		UserID:        int32(newUserResponse.ID),
@@ -64,15 +49,15 @@ func (u *UserController) Create(c *gin.Context) {
 		Country:       body.Address.Country,
 		Favorite:      body.Address.Favorite,
 	}
-	newUserAddress := service.CreateUserAddress(c, conn, createUserAddress)
+	newUserAddress := user_address_service.Create(c, createUserAddress)
 
-	newUser := &dto.CreateUserResponse{
+	newUser := &CreateUserResponse{
 		Id:        int(newUserResponse.ID),
 		Email:     newUserResponse.Email,
 		Role:      string(newUserResponse.Role),
 		FirstName: newUserResponse.FirstName,
 		LastName:  newUserResponse.LastName,
-		Address: &dto.AddressResponse{
+		Address: &AddressResponse{
 			ID:            newUserAddress.ID,
 			UserID:        newUserAddress.UserID,
 			City:          newUserAddress.City,
@@ -89,14 +74,11 @@ func (u *UserController) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, newUser)
 }
 
-func (u *UserController) Update(c *gin.Context) {
-	id := u.GetId(c)
+func Update(c *gin.Context) {
+	id := controller.GetId(c)
+	body := UpdateUserRequest{}
 
-	conn := u.NewConnection()
-
-	body := dto.UpdateUserRequest{}
-
-	u.ReadBody(c, &body)
+	controller.ReadBody(c, &body)
 
 	updateUser := sqlc.UpdateUserParams{
 		ID:        id,
@@ -105,27 +87,21 @@ func (u *UserController) Update(c *gin.Context) {
 		Email:     body.Email,
 	}
 
-	service.UpdateUser(c, conn, updateUser)
+	user_service.Update(c, updateUser)
 
 	c.JSON(http.StatusOK, true)
 }
 
-func (u *UserController) Destroy(c *gin.Context) {
-	conn := u.NewConnection()
+func Destroy(c *gin.Context) {
+	id := controller.GetId(c)
 
-	id := u.GetId(c)
-
-	service.DeleteUser(c, conn, id)
+	user_service.Delete(c, id)
 
 	c.Status(http.StatusOK)
 }
 
-func (u *UserController) GetFullProfile(c *gin.Context) {
-	conn := u.NewConnection()
-
-	id := u.GetId(c)
-
-	user := service.GetUserFullProfile(c, conn, id)
+func GetFullProfile(c *gin.Context) {
+	user := user_service.GetFullProfile(c)
 
 	c.JSON(http.StatusOK, user)
 }

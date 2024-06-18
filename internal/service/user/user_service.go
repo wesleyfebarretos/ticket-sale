@@ -1,18 +1,20 @@
-package service
+package user_service
 
 import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
+	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/service/auth"
+	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
-func GetUsers(c *gin.Context, query *sqlc.Queries) []sqlc.GetUsersRow {
-	users, err := query.GetUsers(c)
+func GetAll(c *gin.Context) []sqlc.GetUsersRow {
+	users, err := db.Query.GetUsers(c)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -20,8 +22,8 @@ func GetUsers(c *gin.Context, query *sqlc.Queries) []sqlc.GetUsersRow {
 	return users
 }
 
-func GetUser(c *gin.Context, query *sqlc.Queries, id int32) sqlc.GetUserRow {
-	user, err := query.GetUser(c, id)
+func GetOneById(c *gin.Context, id int32) sqlc.GetUserRow {
+	user, err := db.Query.GetUser(c, id)
 	if err != nil {
 		panic(exception.NotFoundException("user of id %d not found"))
 	}
@@ -29,10 +31,10 @@ func GetUser(c *gin.Context, query *sqlc.Queries, id int32) sqlc.GetUserRow {
 	return user
 }
 
-func CreateUser(c *gin.Context, query *sqlc.Queries, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
+func Create(c *gin.Context, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
 	var createdUser sqlc.CreateUserRow
 
-	_, err := query.GetUserByEmail(c, newUser.Email)
+	_, err := db.Query.GetUserByEmail(c, newUser.Email)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -41,7 +43,7 @@ func CreateUser(c *gin.Context, query *sqlc.Queries, newUser sqlc.CreateUserPara
 		panic(exception.BadRequestException(fmt.Sprintf("email %s already registered", newUser.Email)))
 	}
 
-	hashPassword, err := auth.HashPassword(newUser.Password)
+	hashPassword, err := utils.HashPassword(newUser.Password)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -49,7 +51,7 @@ func CreateUser(c *gin.Context, query *sqlc.Queries, newUser sqlc.CreateUserPara
 	newUser.Password = string(hashPassword)
 	newUser.Role = enum.USER_ROLE
 
-	createdUser, err = query.CreateUser(c, newUser)
+	createdUser, err = db.Query.CreateUser(c, newUser)
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
@@ -57,8 +59,8 @@ func CreateUser(c *gin.Context, query *sqlc.Queries, newUser sqlc.CreateUserPara
 	return createdUser
 }
 
-func UpdateUser(c *gin.Context, query *sqlc.Queries, user sqlc.UpdateUserParams) {
-	_, err := query.GetDifferentUserByEmail(c, sqlc.GetDifferentUserByEmailParams{
+func Update(c *gin.Context, user sqlc.UpdateUserParams) {
+	_, err := db.Query.GetDifferentUserByEmail(c, sqlc.GetDifferentUserByEmailParams{
 		Email: user.Email,
 		ID:    user.ID,
 	})
@@ -73,23 +75,24 @@ func UpdateUser(c *gin.Context, query *sqlc.Queries, user sqlc.UpdateUserParams)
 
 	user.Role = enum.USER_ROLE
 
-	err = query.UpdateUser(c, user)
+	err = db.Query.UpdateUser(c, user)
 	if err != nil {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
 
-func DeleteUser(c *gin.Context, query *sqlc.Queries, id int32) {
-	err := query.DeleteUser(c, id)
+func Delete(c *gin.Context, id int32) {
+	err := db.Query.DeleteUser(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
 }
 
-func GetUserFullProfile(c *gin.Context, query *sqlc.Queries, id int32) sqlc.GetUserFullProfileRow {
-	user, err := query.GetUserFullProfile(c, id)
+func GetFullProfile(c *gin.Context) sqlc.GetUserFullProfileRow {
+	claims := controller.GetClaims(c)
+	user, err := db.Query.GetUserFullProfile(c, claims.Id)
 	if err != nil {
-		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
+		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", claims.Id)))
 	}
 
 	return user

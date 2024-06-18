@@ -1,4 +1,4 @@
-package dto
+package user_controller
 
 import (
 	"time"

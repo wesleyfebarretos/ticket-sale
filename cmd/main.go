@@ -18,14 +18,14 @@ func main() {
 
 	stringConnect := db.GetStringConnection()
 
-	conn, err := db.OpenConnection(stringConnect)
+	db.OpenConnection(stringConnect)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer conn.Close(context.Background())
+	defer db.Conn.Close(context.Background())
 
-	if err := app.Run(conn); err != nil {
+	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
 }

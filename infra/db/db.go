@@ -4,20 +4,30 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/config"
+	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
 const DRIVER = "postgres"
 
-func OpenConnection(connector string) (*pgx.Conn, error) {
-	conn, err := pgx.Connect(context.Background(), connector)
-	if err != nil {
-		log.Fatal(err)
-	}
+var (
+	Query    *sqlc.Queries
+	Conn     *pgx.Conn
+	initOnce sync.Once
+)
 
-	return conn, nil
+func OpenConnection(connector string) {
+	initOnce.Do(func() {
+		insideConn, err := pgx.Connect(context.Background(), connector)
+		if err != nil {
+			log.Fatal(err)
+		}
+		Conn = insideConn
+		Query = sqlc.New(Conn)
+	})
 }
 
 func GetStringConnection() string {
@@ -28,11 +38,3 @@ func GetStringConnection() string {
 		config.Envs.DBPassword,
 		config.Envs.DBName)
 }
-
-// func Init(db *sql.DB) {
-// 	if err := db.Ping(); err != nil {
-// 		log.Fatal(err)
-// 	}
-//
-// 	log.Println("DB: Successfully connected")
-// }

@@ -1,4 +1,4 @@
-package dto
+package user_controller
 
 type UpdateUserRequest struct {
 	FirstName string `json:"firstName" binding:"required"`

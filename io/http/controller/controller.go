@@ -6,16 +6,11 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
-type BaseController struct {
-	conn *pgx.Conn
-}
-
-func (bc *BaseController) GetId(c *gin.Context) int32 {
+func GetId(c *gin.Context) int32 {
 	id := c.Param("id")
 
 	intId, err := strconv.Atoi(id)
@@ -26,7 +21,7 @@ func (bc *BaseController) GetId(c *gin.Context) int32 {
 	return int32(intId)
 }
 
-func (bc *BaseController) ReadBody(c *gin.Context, body any) {
+func ReadBody(c *gin.Context, body any) {
 	err := c.ShouldBindJSON(&body)
 	if err == io.EOF {
 		panic(exception.BadRequestException("empty request body"))
@@ -36,6 +31,9 @@ func (bc *BaseController) ReadBody(c *gin.Context, body any) {
 	}
 }
 
-func (bc *BaseController) NewConnection() *sqlc.Queries {
-	return sqlc.New(bc.conn)
+func GetClaims(c *gin.Context) *middleware.UserClaims {
+	if claims, ok := c.Get(middleware.IDENTITY_KEY); ok {
+		return claims.(*middleware.UserClaims)
+	}
+	panic(exception.InternalServerException("JwtError: Fail on get claims"))
 }
