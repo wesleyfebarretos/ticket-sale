@@ -22,3 +22,8 @@ md-tables: #DOWN TABLES
 	@go run ./cmd/migrations/main.go down 
 # dbforce-version:
 # migrate -database "postgres://root:root@localhost:5432/postgres?sslmode=disable" -path cmd/migrations/tables down
+
+#Tests
+
+it: #Integration Tests
+	@go test ./test/integration/
