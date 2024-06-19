@@ -8,5 +8,5 @@ import (
 func HandleAuth(router *gin.Engine) {
 	authRoute := router.Group("auth")
 
-	authRoute.POST("", middleware.Jwt.LoginHandler)
+	authRoute.POST("", middleware.JWT.LoginHandler)
 }

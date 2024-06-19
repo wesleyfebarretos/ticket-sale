@@ -11,7 +11,7 @@ func HandleUser(router *gin.Engine) {
 
 	userRoute.POST("", user_controller.Create)
 
-	userRoute.Use(middleware.Jwt.MiddlewareFunc())
+	userRoute.Use(middleware.JWT.MiddlewareFunc())
 
 	userRoute.GET("", user_controller.GetAll)
 	userRoute.GET("full-profile/:id", user_controller.GetFullProfile)

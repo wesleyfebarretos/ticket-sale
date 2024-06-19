@@ -19,22 +19,27 @@ var (
 	initOnce sync.Once
 )
 
-func OpenConnection(connector string) {
-	initOnce.Do(func() {
-		insideConn, err := pgx.Connect(context.Background(), connector)
-		if err != nil {
-			log.Fatal(err)
-		}
-		Conn = insideConn
-		Query = sqlc.New(Conn)
-	})
+func openConnection(connector string) {
+	insideConn, err := pgx.Connect(context.Background(), connector)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Conn = insideConn
+	Query = sqlc.New(Conn)
 }
 
-func GetStringConnection() string {
+func getStringConnection() string {
 	return fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable",
 		config.Envs.DBHost,
 		config.Envs.DBPort,
 		config.Envs.DBUser,
 		config.Envs.DBPassword,
 		config.Envs.DBName)
+}
+
+func Init() {
+	initOnce.Do(func() {
+		conn := getStringConnection()
+		openConnection(conn)
+	})
 }

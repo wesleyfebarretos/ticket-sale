@@ -8,7 +8,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 )
 
-func ExceptionMiddleware(c *gin.Context, recovered any) {
+func ExceptionHandler(c *gin.Context, recovered any) {
 	if exception, ok := recovered.(*exception.HttpException); ok {
 		c.JSON(exception.StatusCode, gin.H{"code": exception.StatusCode, "message": exception.Message})
 	} else {

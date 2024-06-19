@@ -1,4 +1,0 @@
-package testcontainer
-
-func SetupPG() {
-}

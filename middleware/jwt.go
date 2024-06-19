@@ -37,13 +37,15 @@ type AuthenticationError struct {
 	Code    int
 }
 
-var Jwt = jwtMiddleware()
-
-var jwtTimeout = time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
+var (
+	jwtTimeout = time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
+	JWT        *jwt.GinJWTMiddleware
+)
 
 const IDENTITY_KEY = "user"
 
-func jwtMiddleware() *jwt.GinJWTMiddleware {
+// Initialize a Pointer do JWT
+func InitJWT() {
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:           config.Envs.PublicHost,
 		Key:             []byte(config.Envs.JWTSecret),
@@ -67,7 +69,7 @@ func jwtMiddleware() *jwt.GinJWTMiddleware {
 		log.Fatal("JWT Initialization Error: " + err.Error())
 	}
 
-	return authMiddleware
+	JWT = authMiddleware
 }
 
 func loginHandler(c *gin.Context) (interface{}, error) {
