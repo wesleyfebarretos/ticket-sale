@@ -20,11 +20,14 @@ func BeforeAll() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
 	config.Init()
 
 	wg := &sync.WaitGroup{}
 	runInParallel(wg, func() {
-		runningContainers = append(runningContainers, test_container.SetupPG())
+		pgContainer := test_container.SetupPG()
+		runningContainers = append(runningContainers, pgContainer)
+		config.Envs.DBPort = fmt.Sprintf("%d", pgContainer.Port)
 	})
 	wg.Wait()
 

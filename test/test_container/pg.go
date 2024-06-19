@@ -1,39 +1,49 @@
 package test_container
 
 import (
-	"os"
-	"os/exec"
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/postgres"
+	"github.com/testcontainers/testcontainers-go/wait"
+	"github.com/wesleyfebarretos/ticket-sale/config"
 )
 
 func SetupPG() *ContainerResult {
-	cmd := &exec.Cmd{}
+	ctx := context.Background()
 
-	cmd = exec.Command("docker", "run", "--name", "ticket_sale", "--rm", "-d", "-e", "POSTGRES_DB=ticket_sale", "-e", "POSTGRES_PASSWORD=root", "-e", "POSTGRES_USER=root", "-p", "6432:5432", "postgres:13-alpine")
+	postgresContainer, err := postgres.RunContainer(ctx,
+		testcontainers.WithImage("postgres:13-alpine"),
+		postgres.WithDatabase(config.Envs.DBName),
+		testcontainers.WithLogConsumers(&TestLogConsumer{}),
+		postgres.WithUsername(config.Envs.DBUser),
+		postgres.WithPassword(config.Envs.DBPassword),
+		testcontainers.WithWaitStrategy(
+			wait.ForLog("database system is ready to accept connections").
+				WithOccurrence(2).
+				WithStartupTimeout(5*time.Second)),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	host, err := postgresContainer.Host(ctx)
+	if err != nil {
+		log.Fatalf("Host error: %s", err)
+	}
+	port, err := postgresContainer.MappedPort(ctx, nat.Port(fmt.Sprintf("%d/tcp", 5432)))
+	if err != nil {
+		log.Fatalf("Port error: %s", err)
+	}
 
-	// FIX:
-	// This above works and below not
-	// the code below are open container with sudo and my app cant access it
-	// see how to resolve
-
-	// req := testcontainers.ContainerRequest{
-	// 	Image: "postgres:13-alpine",
-	// 	Env: map[string]string{
-	// 		"POSTGRES_PASSWORD": config.Envs.DBPassword,
-	// 		"POSTGRES_DB":       config.Envs.DBName,
-	// 		"POSTGRES_USER":     config.Envs.DBUser,
-	// 	},
-	// 	ExposedPorts: []string{
-	// 		fmt.Sprintf("%s/tcp", config.Envs.DBPort),
-	// 	},
-	// 	WaitingFor: wait.ForLog("database system is ready to accept connections"),
-	// 	Name:       "Ticket-sale-DB-IT",
-	// }
-	//
-	// printContainerLogs := true
-	//
-	// return setupContainer(req, nat.Port(fmt.Sprintf("%s/tcp", config.Envs.DBPort)), printContainerLogs)
-	return &ContainerResult{}
+	return &ContainerResult{
+		container: postgresContainer,
+		ctx:       ctx,
+		Host:      host,
+		Port:      uint(port.Int()),
+	}
 }

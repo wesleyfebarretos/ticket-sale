@@ -26,4 +26,4 @@ md-tables: #DOWN TABLES
 #Tests
 
 it: #Integration Tests
-	@go test ./test/integration/
+	@go test -v ./test/integration/
