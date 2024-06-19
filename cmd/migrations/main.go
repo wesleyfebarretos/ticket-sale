@@ -23,6 +23,8 @@ func main() {
 		log.Fatal("Action argument is required (up or down)")
 	}
 
+	config.Init()
+
 	action := os.Args[1]
 	var migrationType string
 
