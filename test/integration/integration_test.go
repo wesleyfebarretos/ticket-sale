@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	_ "github.com/wesleyfebarretos/ticket-sale/test/test_init"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
 

@@ -3,26 +3,29 @@ package test_utils
 import (
 	"fmt"
 	"log"
+	"os"
 	"reflect"
 	"sync"
 
 	"github.com/joho/godotenv"
 	"github.com/wesleyfebarretos/ticket-sale/cmd/app"
-	migration "github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migrate"
+	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
-	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
 var runningContainers = []*test_container.ContainerResult{}
 
 func BeforeAll() {
-	wd := utils.GetRootDir()
-
-	err := godotenv.Load(fmt.Sprintf("%s/.env.test", wd))
+	wd, err := os.Getwd()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatalf("error on find working dir: %s", err.Error())
+	}
+
+	err = godotenv.Load(fmt.Sprintf("%s/.env.test", wd))
+	if err != nil {
+		log.Fatal("error loading .env file")
 	}
 
 	config.Init()

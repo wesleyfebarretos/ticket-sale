@@ -1,10 +1,6 @@
 package utils
 
 import (
-	"log"
-	"os/exec"
-	"strings"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,13 +18,4 @@ func ComparePassword(hashedPassword, password string) bool {
 		return false
 	}
 	return true
-}
-
-func GetRootDir() string {
-	cmd := exec.Command("go", "list", "-m", "-f", "{{.Dir}}")
-	output, err := cmd.Output()
-	if err != nil {
-		log.Fatalf("Get root dir error: %s", err.Error())
-	}
-	return strings.TrimSpace(string(output))
 }
