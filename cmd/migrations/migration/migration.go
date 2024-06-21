@@ -98,11 +98,15 @@ func migrationLog(logMessage string) {
 	log.Printf("migration [LOG]: %s", logMessage)
 }
 
+func migrationLogWarning(logMessage string) {
+	log.Printf("migration [LOG_WARNING]: %s", logMessage)
+}
+
 func upMigration(migration *migrate.Migrate) {
 	err := migration.Up()
 
 	if err != nil && fileNotFoundErr(err) {
-		migrationLog("not found files to tables migrations")
+		migrationLogWarning("not found files to tables migrations")
 		err = nil
 	}
 

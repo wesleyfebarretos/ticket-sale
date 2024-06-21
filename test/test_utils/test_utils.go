@@ -3,21 +3,26 @@ package test_utils
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"net/http/cookiejar"
+	"net/http/httptest"
+	"net/url"
 	"os"
 	"reflect"
 	"sync"
 
 	"github.com/joho/godotenv"
-	"github.com/wesleyfebarretos/ticket-sale/cmd/app"
 	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
+	"github.com/wesleyfebarretos/ticket-sale/io/routes"
+	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
 )
 
 var runningContainers = []*test_container.ContainerResult{}
 
-func BeforeAll() {
+func BeforeAll() *httptest.Server {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("error on find working dir: %s", err.Error())
@@ -40,7 +45,8 @@ func BeforeAll() {
 
 	db.Init()
 	migration.Up()
-	app.Run()
+
+	return httptest.NewServer(routes.Bind())
 }
 
 func Finish() {
@@ -57,6 +63,15 @@ func runInParallel(wg *sync.WaitGroup, work func()) {
 	}()
 }
 
+func GenerateJwtToken(role string) string {
+	token, _, _ := middleware.JWT.TokenGenerator(&middleware.UserClaims{
+		Id:   1,
+		Role: role,
+	})
+
+	return token
+}
+
 func printStruct(s interface{}) {
 	v := reflect.ValueOf(s)
 	t := v.Type()
@@ -67,3 +82,25 @@ func printStruct(s interface{}) {
 		fmt.Printf("Key: %v Value: %v\n", key.Name, value)
 	}
 }
+
+func NewHTTPClient(serverUrl *url.URL, role string) *http.Client {
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		log.Fatalf("integration [LOG]: %v", err)
+	}
+
+	client := &http.Client{
+		Jar: jar,
+	}
+
+	cookie := &http.Cookie{
+		Name:  config.Envs.CookieName,
+		Value: GenerateJwtToken(role),
+	}
+
+	client.Jar.SetCookies(serverUrl, []*http.Cookie{cookie})
+
+	return client
+}
+
+func NewServer()
