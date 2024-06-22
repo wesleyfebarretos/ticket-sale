@@ -75,13 +75,13 @@ func Create(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	id := controller.GetId(c)
+	user := controller.GetClaims(c)
 	body := UpdateUserRequest{}
 
 	controller.ReadBody(c, &body)
 
 	updateUser := sqlc.UpdateUserParams{
-		ID:        id,
+		ID:        user.Id,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
 		Email:     body.Email,
@@ -90,14 +90,6 @@ func Update(c *gin.Context) {
 	user_service.Update(c, updateUser)
 
 	c.JSON(http.StatusOK, true)
-}
-
-func Destroy(c *gin.Context) {
-	id := controller.GetId(c)
-
-	user_service.Delete(c, id)
-
-	c.Status(http.StatusOK)
 }
 
 func GetFullProfile(c *gin.Context) {

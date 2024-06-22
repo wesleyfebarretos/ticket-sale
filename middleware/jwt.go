@@ -12,7 +12,6 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
@@ -84,7 +83,12 @@ func loginHandler(c *gin.Context) (interface{}, error) {
 		return nil, jwt.ErrFailedAuthentication
 	}
 
-	return user, nil
+	userClaims := &UserClaims{
+		Id:   user.ID,
+		Role: string(user.Role),
+	}
+
+	return userClaims, nil
 }
 
 func readBody(c *gin.Context, body any) {
@@ -98,10 +102,10 @@ func readBody(c *gin.Context, body any) {
 }
 
 func payloadHandler(data interface{}) jwt.MapClaims {
-	user := data.(sqlc.GetUserWithPasswordByEmailRow)
+	user := data.(*UserClaims)
 
 	return jwt.MapClaims{
-		"id":   user.ID,
+		"id":   user.Id,
 		"role": user.Role,
 	}
 }

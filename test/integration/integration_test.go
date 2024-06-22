@@ -32,7 +32,7 @@ func TestMain(m *testing.M) {
 
 	serverUrl, err := url.Parse(Server.URL)
 	if err != nil {
-		ErrorFatal("could not parse server url")
+		setupError("could not parse server url: ", err)
 	}
 
 	// Make a new http client with user JWT.
@@ -47,31 +47,18 @@ func TestMain(m *testing.M) {
 	os.Exit(exitVal)
 }
 
-func ErrorFatal(msg any) {
-	switch v := msg.(type) {
-	case string:
-		log.Fatalf("integration test [ERROR_FATAL]: %s", v)
-	case error:
-		log.Fatalf("integration test [ERROR_FATAL]: %v", v)
-	case int, int8, int16, int32, int64:
-		log.Fatalf("integration test [ERROR_FATAL]: %d", v)
-	case uint, uint8, uint16, uint32, uint64:
-		log.Fatalf("integration test [ERROR_FATAL]: %d", v)
-	case float32, float64:
-		log.Fatalf("integration test [ERROR_FATAL]: %f", v)
-	case bool:
-		log.Fatalf("integration test [ERROR_FATAL]: %t", v)
-	default:
-		log.Fatalf("integration test [ERROR_FATAL]: %v", v)
-	}
+func setupError(format string, v ...interface{}) {
+	log.Fatalf("integration test [SETUP_ERROR]: "+format, v...)
 }
 
 func TError(t *testing.T, format string, v ...interface{}) {
-	t.Errorf("\nintegration test [FAIL_ERROR]: "+format, v...)
+	t.Errorf("integration test [FAIL_ERROR]: "+format, v...)
+	log.Println()
 }
 
 func TErrorFatal(t *testing.T, format string, v ...interface{}) {
-	t.Fatalf("\nintegration test [FAIL_FATAL_ERROR]: "+format, v...)
+	t.Fatalf("integration test [FAIL_FATAL_ERROR]: "+format, v...)
+	log.Println()
 }
 
 func TMakeRequest(t *testing.T, method, endpoint string, data any) *http.Response {
@@ -79,14 +66,14 @@ func TMakeRequest(t *testing.T, method, endpoint string, data any) *http.Respons
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		ErrorFatal(err)
+		TErrorFatal(t, "could not marshal response body: %v", err)
 	}
 
 	body := bytes.NewReader(jsonData)
 
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
-		ErrorFatal("could not open a new request to path: " + endpoint)
+		TErrorFatal(t, "could not open a new request to path: %s", endpoint)
 	}
 
 	req.Header.Set("Content-Type", "application/json")

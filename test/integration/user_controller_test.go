@@ -165,7 +165,7 @@ func TestUsersController(t *testing.T) {
 			Email:     "updatejohndoe@gmail.com",
 		}
 
-		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("users/%d", expectedUser.Id), updateUser)
+		res := TMakeRequest(t, http.MethodPut, "users", updateUser)
 
 		response := false
 
@@ -175,13 +175,8 @@ func TestUsersController(t *testing.T) {
 		assert.True(t, response)
 	})
 
-	t.Run("it should delete an user", func(t *testing.T) {
-		res := TMakeRequest(t, http.MethodDelete, fmt.Sprintf("users/%d", expectedUser.Id), nil)
-		assert.Equal(t, http.StatusOK, res.StatusCode)
-	})
-
 	t.Run("it should throw a user not found error", func(t *testing.T) {
-		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", expectedUser.Id), nil)
+		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", 100), nil)
 
 		assert.Equal(t, http.StatusNotFound, res.StatusCode)
 	})
