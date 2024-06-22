@@ -25,7 +25,7 @@ func GetAll(c *gin.Context) []sqlc.GetUsersRow {
 func GetOneById(c *gin.Context, id int32) sqlc.GetUserRow {
 	user, err := db.Query.GetUser(c, id)
 	if err != nil {
-		panic(exception.NotFoundException("user of id %d not found"))
+		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
 
 	return user

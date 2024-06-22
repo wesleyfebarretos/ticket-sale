@@ -17,6 +17,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/io/routes"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
+	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
 )
 
@@ -64,15 +65,16 @@ func runInParallel(wg *sync.WaitGroup, work func()) {
 }
 
 func GenerateJwtToken(role string) string {
-	token, _, _ := middleware.JWT.TokenGenerator(&middleware.UserClaims{
-		Id:   1,
-		Role: role,
+	token, _, _ := middleware.JWT.TokenGenerator(sqlc.GetUserWithPasswordByEmailRow{
+		ID:       1,
+		Role:     sqlc.Roles(role),
+		Password: "",
 	})
 
 	return token
 }
 
-func printStruct(s interface{}) {
+func PrintStruct(s interface{}) {
 	v := reflect.ValueOf(s)
 	t := v.Type()
 
@@ -102,5 +104,3 @@ func NewHTTPClient(serverUrl *url.URL, role string) *http.Client {
 
 	return client
 }
-
-func NewServer()
