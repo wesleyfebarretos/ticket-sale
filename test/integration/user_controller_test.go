@@ -6,34 +6,35 @@ import (
 	"io"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
 	user_controller "github.com/wesleyfebarretos/ticket-sale/io/http/controller/user"
+	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
 func TestUsersController(t *testing.T) {
 	expectedUser := &user_controller.CreateUserResponse{}
+	newUserRequest := user_controller.CreateUserRequest{
+		FirstName: "John",
+		LastName:  "Doe",
+		Email:     "johndoe@gmail.com",
+		Password:  "123",
+		Address: user_controller.AddressRequest{
+			City:          "Orlando",
+			State:         "FL",
+			Favorite:      TPointer(true),
+			Complement:    TPointer("Apartment 101"),
+			PostalCode:    TPointer("32801"),
+			AddressType:   TPointer("Residential"),
+			StreetAddress: "123 Main St",
+			Country:       "USA",
+		},
+	}
 
 	t.Run("it should create a user", func(t *testing.T) {
-		newUserRequest := user_controller.CreateUserRequest{
-			FirstName: "John",
-			LastName:  "Doe",
-			Email:     "johndoe@gmail.com",
-			Password:  "123",
-			Address: user_controller.AddressRequest{
-				City:          "Orlando",
-				State:         "FL",
-				Favorite:      TPointer(true),
-				Complement:    TPointer("Apartment 101"),
-				PostalCode:    TPointer("32801"),
-				AddressType:   TPointer("Residential"),
-				StreetAddress: "123 Main St",
-				Country:       "USA",
-			},
-		}
-
 		res := TMakeRequest(t, http.MethodPost, "users", newUserRequest)
 
 		newUserResponse := &user_controller.CreateUserResponse{}
@@ -64,6 +65,28 @@ func TestUsersController(t *testing.T) {
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, expectedUser, newUserResponse)
+	})
+
+	t.Run("it should login", func(t *testing.T) {
+		loginRequest := middleware.SignInRequest{
+			Email:    newUserRequest.Email,
+			Password: newUserRequest.Password,
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "auth", loginRequest)
+
+		responseBody := middleware.SignInResponse{}
+
+		TDecode(t, res.Body, &responseBody)
+
+		jwtTimeOut := middleware.BuildJwtTimeOut()
+
+		jwtTimeOutMinusOne := time.Now().Add(jwtTimeOut - (time.Duration(1) * time.Minute))
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.NotEmpty(t, responseBody.Token)
+		assert.IsType(t, "", responseBody.Token)
+		assert.True(t, responseBody.Expire.After(jwtTimeOutMinusOne), "Expected expiration time to be after actual expiration time")
 	})
 
 	t.Run("it should make sure that the user created has the role user", func(t *testing.T) {

@@ -21,9 +21,9 @@ type SignInRequest struct {
 }
 
 type SignInResponse struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
+	Expire time.Time `json:"expire"`
+	Token  string    `json:"token"`
+	Code   int       `json:"code"`
 }
 
 type UserClaims struct {
@@ -36,15 +36,13 @@ type AuthenticationError struct {
 	Code    int
 }
 
-var (
-	jwtTimeout = time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
-	JWT        *jwt.GinJWTMiddleware
-)
+var JWT *jwt.GinJWTMiddleware
 
 const IDENTITY_KEY = "user"
 
 // Initialize a Pointer do JWT
 func InitJWT() {
+	jwtTimeout := BuildJwtTimeOut()
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:           config.Envs.PublicHost,
 		Key:             []byte(config.Envs.JWTSecret),
@@ -89,6 +87,10 @@ func loginHandler(c *gin.Context) (interface{}, error) {
 	}
 
 	return userClaims, nil
+}
+
+func BuildJwtTimeOut() time.Duration {
+	return time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
 }
 
 func readBody(c *gin.Context, body any) {
