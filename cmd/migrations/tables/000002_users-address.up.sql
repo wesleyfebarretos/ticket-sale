@@ -1,5 +1,5 @@
 BEGIN;
-CREATE TABLE users_addresses (
+CREATE TABLE IF NOT EXISTS users_addresses (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     street_address VARCHAR(255) NOT NULL,

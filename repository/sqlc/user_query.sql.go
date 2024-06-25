@@ -243,7 +243,7 @@ func (q *Queries) GetUserFullProfile(ctx context.Context, id int32) (GetUserFull
 
 const getUserWithPasswordByEmail = `-- name: GetUserWithPasswordByEmail :one
 SELECT 
-    id, password, role
+    id, password, role, email
 FROM 
    users
 WHERE
@@ -254,12 +254,18 @@ type GetUserWithPasswordByEmailRow struct {
 	ID       int32  `json:"id"`
 	Password string `json:"password"`
 	Role     Roles  `json:"role"`
+	Email    string `json:"email"`
 }
 
 func (q *Queries) GetUserWithPasswordByEmail(ctx context.Context, email string) (GetUserWithPasswordByEmailRow, error) {
 	row := q.db.QueryRow(ctx, getUserWithPasswordByEmail, email)
 	var i GetUserWithPasswordByEmailRow
-	err := row.Scan(&i.ID, &i.Password, &i.Role)
+	err := row.Scan(
+		&i.ID,
+		&i.Password,
+		&i.Role,
+		&i.Email,
+	)
 	return i, err
 }
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"log"
 
@@ -31,7 +30,7 @@ func main() {
 	config.Init()
 
 	db.Init()
-	defer db.Conn.Close(context.Background())
+	defer db.Conn.Close()
 
 	if err := app.Run(); err != nil {
 		log.Fatal(err)

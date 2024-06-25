@@ -3,16 +3,12 @@ package test_utils
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"net/http/cookiejar"
 	"net/http/httptest"
-	"net/url"
 	"os"
 	"reflect"
 	"sync"
 
 	"github.com/joho/godotenv"
-	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/io/routes"
@@ -35,18 +31,16 @@ func BeforeAll() *httptest.Server {
 
 	config.Init()
 
-	wg := &sync.WaitGroup{}
-	runInParallel(wg, func() {
-		pgContainer := test_container.SetupPG()
-		runningContainers = append(runningContainers, pgContainer)
-		config.Envs.DBPort = fmt.Sprintf("%d", pgContainer.Port)
-	})
-	wg.Wait()
+	pgContainer := test_container.SetupPG()
+	runningContainers = append(runningContainers, pgContainer)
+	config.Envs.DBPort = fmt.Sprintf("%d", pgContainer.Port)
 
 	db.Init()
-	migration.Up()
 
-	return httptest.NewServer(routes.Bind())
+	server := httptest.NewServer(routes.Bind())
+	config.Envs.PublicHost = fmt.Sprintf("http://localhost:%s", server.URL)
+
+	return server
 }
 
 func Finish() {
@@ -81,24 +75,4 @@ func PrintStruct(s interface{}) {
 		value := v.Field(i)
 		fmt.Printf("Key: %v Value: %v\n", key.Name, value)
 	}
-}
-
-func NewHTTPClient(serverUrl *url.URL, role string) *http.Client {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		log.Fatalf("integration [LOG]: %v", err)
-	}
-
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	cookie := &http.Cookie{
-		Name:  config.Envs.CookieName,
-		Value: GenerateJwtToken(role),
-	}
-
-	client.Jar.SetCookies(serverUrl, []*http.Cookie{cookie})
-
-	return client
 }

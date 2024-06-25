@@ -23,7 +23,7 @@ WHERE
 
 -- name: GetUserWithPasswordByEmail :one
 SELECT 
-    id, password, role
+    id, password, role, email
 FROM 
    users
 WHERE

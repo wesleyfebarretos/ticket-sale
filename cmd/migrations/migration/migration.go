@@ -44,6 +44,13 @@ func Up() {
 	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
 }
 
+func Down() {
+	pool, driver := openConnection()
+	defer pool.Close()
+
+	downMigration(createMigrationInstance(driver, MigrationTypeTable))
+}
+
 func openConnection() (*pgxpool.Pool, database.Driver) {
 	stringConn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		config.Envs.DBUser,
@@ -71,10 +78,6 @@ func openConnection() (*pgxpool.Pool, database.Driver) {
 	return pool, driver
 }
 
-func Down() {
-	fmt.Println("In development...")
-}
-
 func createMigrationInstance(driver database.Driver, migrationType MigrationType) *migrate.Migrate {
 	migration, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://cmd/migrations/%s", migrationType),
@@ -90,18 +93,6 @@ func createMigrationInstance(driver database.Driver, migrationType MigrationType
 	return migration
 }
 
-func fileNotFoundErr(err error) bool {
-	return strings.Contains(err.Error(), "file does not exist")
-}
-
-func migrationLog(logMessage string) {
-	log.Printf("migration [LOG]: %s", logMessage)
-}
-
-func migrationLogWarning(logMessage string) {
-	log.Printf("migration [LOG_WARNING]: %s", logMessage)
-}
-
 func upMigration(migration *migrate.Migrate) {
 	err := migration.Up()
 
@@ -113,4 +104,29 @@ func upMigration(migration *migrate.Migrate) {
 	if err != nil && err != migrate.ErrNoChange {
 		log.Fatalf("could not apply up migrations: %v", err)
 	}
+}
+
+func downMigration(migration *migrate.Migrate) {
+	err := migration.Down()
+
+	if err != nil && fileNotFoundErr(err) {
+		migrationLogWarning("not found files to tables migrations")
+		err = nil
+	}
+
+	if err != nil && err != migrate.ErrNoChange {
+		log.Fatalf("could not apply down migrations: %v", err)
+	}
+}
+
+func fileNotFoundErr(err error) bool {
+	return strings.Contains(err.Error(), "file does not exist")
+}
+
+func migrationLog(logMessage string) {
+	log.Printf("migration [LOG]: %s", logMessage)
+}
+
+func migrationLogWarning(logMessage string) {
+	log.Printf("migration [LOG_WARNING]: %s", logMessage)
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
+	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
@@ -81,12 +82,14 @@ func loginHandler(c *gin.Context) (interface{}, error) {
 		return nil, jwt.ErrFailedAuthentication
 	}
 
-	userClaims := &UserClaims{
-		Id:   user.ID,
-		Role: string(user.Role),
-	}
+	// userClaims := &UserClaims{
+	// 	Id:   user.ID,
+	// 	Role: string(user.Role),
+	// }
 
-	return userClaims, nil
+	return user, nil
+
+	// return userClaims, nil
 }
 
 func BuildJwtTimeOut() time.Duration {
@@ -104,10 +107,10 @@ func readBody(c *gin.Context, body any) {
 }
 
 func payloadHandler(data interface{}) jwt.MapClaims {
-	user := data.(*UserClaims)
+	user := data.(sqlc.GetUserWithPasswordByEmailRow)
 
 	return jwt.MapClaims{
-		"id":   user.Id,
+		"id":   user.ID,
 		"role": user.Role,
 	}
 }

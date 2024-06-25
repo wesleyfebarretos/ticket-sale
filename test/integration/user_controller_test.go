@@ -34,7 +34,7 @@ func TestUsersController(t *testing.T) {
 		},
 	}
 
-	t.Run("it should create a user", func(t *testing.T) {
+	t.Run("it should create a user", TRun(func(t *testing.T) {
 		res := TMakeRequest(t, http.MethodPost, "users", newUserRequest)
 
 		newUserResponse := &user_controller.CreateUserResponse{}
@@ -63,20 +63,29 @@ func TestUsersController(t *testing.T) {
 			},
 		}
 
+		fmt.Printf("%+v", newUserResponse)
+
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, expectedUser, newUserResponse)
-	})
+	}))
 
-	t.Run("it should login", func(t *testing.T) {
+	t.Run("it should login", TRun(func(t *testing.T) {
+		user := CreateUserAndGetToken()
+
+		fmt.Println(user)
 		loginRequest := middleware.SignInRequest{
-			Email:    newUserRequest.Email,
-			Password: newUserRequest.Password,
+			Email:    user.Email,
+			Password: user.Password,
 		}
 
 		res := TMakeRequest(t, http.MethodPost, "auth", loginRequest)
 
 		responseBody := middleware.SignInResponse{}
 
+// func TDecode[T any](t *testing.T, input io.Reader, into *T) { if err := json.NewDecoder(input).Decode(&into); err != nil {
+// 		TErrorFatal(t, "failed to decode response body: %v", err)
+// 	}
+}
 		TDecode(t, res.Body, &responseBody)
 
 		jwtTimeOut := middleware.BuildJwtTimeOut()
@@ -87,7 +96,7 @@ func TestUsersController(t *testing.T) {
 		assert.NotEmpty(t, responseBody.Token)
 		assert.IsType(t, "", responseBody.Token)
 		assert.True(t, responseBody.Expire.After(jwtTimeOutMinusOne), "Expected expiration time to be after actual expiration time")
-	})
+	}))
 
 	t.Run("it should make sure that the user created has the role user", func(t *testing.T) {
 		assert.Equal(t, expectedUser.Role, enum.USER_ROLE)
@@ -105,7 +114,11 @@ func TestUsersController(t *testing.T) {
 		assert.IsType(t, sqlc.GetUsersRow{}, users[0])
 	})
 
-	t.Run("it should get user full profile", func(t *testing.T) {
+	t.Run("it should get user full profile", TRun(func(t *testing.T) {
+		user := CreateUserAndGetToken()
+
+		SetCookieWithUser(user)
+
 		res := TMakeRequest(t, http.MethodGet, "users/full-profile", nil)
 
 		bSlice, err := io.ReadAll(res.Body)
@@ -160,9 +173,9 @@ func TestUsersController(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, expectedUserFullProfile, userFullProfileRes)
-	})
+	}))
 
-	t.Run("it should get user by id", func(t *testing.T) {
+	t.Run("it should get user by id", TRun(func(t *testing.T) {
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", expectedUser.Id), nil)
 
 		userResponse := &sqlc.GetUserRow{}
@@ -179,9 +192,9 @@ func TestUsersController(t *testing.T) {
 		assert.Equal(t, expectedUser.ID, userResponse.ID)
 		assert.Equal(t, expectedUser.Email, userResponse.Email)
 		assert.Equal(t, expectedUser.Role, userResponse.Role)
-	})
+	}))
 
-	t.Run("it should be able to update an user", func(t *testing.T) {
+	t.Run("it should be able to update an user", TRun(func(t *testing.T) {
 		updateUser := user_controller.UpdateUserRequest{
 			FirstName: "Update John",
 			LastName:  "Update Doe",
@@ -196,11 +209,11 @@ func TestUsersController(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.True(t, response)
-	})
+	}))
 
-	t.Run("it should throw a user not found error", func(t *testing.T) {
+	t.Run("it should throw a user not found error", TRun(func(t *testing.T) {
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", 100), nil)
 
 		assert.Equal(t, http.StatusNotFound, res.StatusCode)
-	})
+	}))
 }
