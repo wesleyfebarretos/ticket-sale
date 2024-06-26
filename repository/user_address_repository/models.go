@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package sqlc
+package user_address_repository
 
 import (
 	"database/sql/driver"
@@ -51,6 +51,24 @@ func (ns NullRoles) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	return string(ns.Roles), nil
+}
+
+func (e Roles) Valid() bool {
+	switch e {
+	case RolesAdmin,
+		RolesUser,
+		RolesWebservice:
+		return true
+	}
+	return false
+}
+
+func AllRolesValues() []Roles {
+	return []Roles{
+		RolesAdmin,
+		RolesUser,
+		RolesWebservice,
+	}
 }
 
 type User struct {

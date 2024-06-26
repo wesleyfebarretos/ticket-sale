@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: users_addresses_query.sql
 
-package sqlc
+package user_address_repository
 
 import (
 	"context"
