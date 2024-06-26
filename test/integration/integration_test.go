@@ -2,7 +2,6 @@ package integration_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -15,10 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 	_ "github.com/wesleyfebarretos/ticket-sale/test/test_init"
@@ -68,6 +65,14 @@ func TMakeRequest(t *testing.T, method, endpoint string, data any) *http.Respons
 		t.Fatalf("request failed %v", err)
 	}
 
+	if res.StatusCode == http.StatusUnauthorized {
+		t.Fatalf("unauthorized with status code: %v", res.StatusCode)
+	}
+
+	if res.StatusCode == http.StatusForbidden {
+		t.Fatalf("unauthorized: status code: %v", res.StatusCode)
+	}
+
 	return res
 }
 
@@ -80,22 +85,6 @@ func TRun(testFunc func(*testing.T)) func(*testing.T) {
 		beforeEach()
 		testFunc(t)
 	}
-}
-
-func TCreateUser() sqlc.GetUserWithPasswordByEmailRow {
-	newUser := sqlc.CreateUserParams{
-		FirstName: "John",
-		LastName:  "Doe",
-		Email:     "johndoe@gmail.com",
-		Password:  "123",
-		Role:      enum.USER_ROLE,
-	}
-
-	user, _ := db.Query.CreateUser(context.Background(), newUser)
-
-	nUser, _ := db.Query.GetUserWithPasswordByEmail(context.Background(), user.Email)
-
-	return nUser
 }
 
 func TSetCookieWithUser(t *testing.T, user sqlc.GetUserWithPasswordByEmailRow) {
@@ -141,7 +130,6 @@ func TSetCookie(t *testing.T, role string) {
 func beforeEach() {
 	ClientRequest.Jar = nil
 	db.TruncateAll()
-	migration.Up()
 }
 
 func fileNotFoundErr(err error) bool {

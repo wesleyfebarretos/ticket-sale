@@ -23,7 +23,7 @@ WHERE
 
 -- name: GetUserWithPasswordByEmail :one
 SELECT 
-    id, password, role, email
+    id, password, role, email, first_name, last_name, created_at, updated_at
 FROM 
    users
 WHERE
@@ -72,6 +72,7 @@ ON
 WHERE 
     u.id = $1 
 GROUP BY 
+
 	u.id 
 LIMIT 1;
 

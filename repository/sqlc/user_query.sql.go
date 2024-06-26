@@ -210,6 +210,7 @@ ON
 WHERE 
     u.id = $1 
 GROUP BY 
+
 	u.id 
 LIMIT 1
 `
@@ -243,7 +244,7 @@ func (q *Queries) GetUserFullProfile(ctx context.Context, id int32) (GetUserFull
 
 const getUserWithPasswordByEmail = `-- name: GetUserWithPasswordByEmail :one
 SELECT 
-    id, password, role, email
+    id, password, role, email, first_name, last_name, created_at, updated_at
 FROM 
    users
 WHERE
@@ -251,10 +252,14 @@ WHERE
 `
 
 type GetUserWithPasswordByEmailRow struct {
-	ID       int32  `json:"id"`
-	Password string `json:"password"`
-	Role     Roles  `json:"role"`
-	Email    string `json:"email"`
+	ID        int32      `json:"id"`
+	Password  string     `json:"password"`
+	Role      Roles      `json:"role"`
+	Email     string     `json:"email"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetUserWithPasswordByEmail(ctx context.Context, email string) (GetUserWithPasswordByEmailRow, error) {
@@ -265,6 +270,10 @@ func (q *Queries) GetUserWithPasswordByEmail(ctx context.Context, email string) 
 		&i.Password,
 		&i.Role,
 		&i.Email,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }

@@ -13,35 +13,34 @@ import (
 	user_controller "github.com/wesleyfebarretos/ticket-sale/io/http/controller/user"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
 
 func TestUsersController(t *testing.T) {
-	expectedUser := &user_controller.CreateUserResponse{}
-	newUserRequest := user_controller.CreateUserRequest{
-		FirstName: "John",
-		LastName:  "Doe",
-		Email:     "johndoe@gmail.com",
-		Password:  "123",
-		Address: user_controller.AddressRequest{
-			City:          "Orlando",
-			State:         "FL",
-			Favorite:      TPointer(true),
-			Complement:    TPointer("Apartment 101"),
-			PostalCode:    TPointer("32801"),
-			AddressType:   TPointer("Residential"),
-			StreetAddress: "123 Main St",
-			Country:       "USA",
-		},
-	}
-
 	t.Run("it should create a user", TRun(func(t *testing.T) {
+		newUserRequest := user_controller.CreateUserRequest{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Password:  "123",
+			Address: user_controller.AddressRequest{
+				City:          "Orlando",
+				State:         "FL",
+				Favorite:      TPointer(true),
+				Complement:    TPointer("Apartment 101"),
+				PostalCode:    TPointer("32801"),
+				AddressType:   TPointer("Residential"),
+				StreetAddress: "123 Main St",
+				Country:       "USA",
+			},
+		}
 		res := TMakeRequest(t, http.MethodPost, "users", newUserRequest)
 
 		newUserResponse := &user_controller.CreateUserResponse{}
 
-		TDecode(t, res.Body, newUserResponse)
+		test_utils.Decode(t, res.Body, &newUserResponse)
 
-		expectedUser = &user_controller.CreateUserResponse{
+		expectedUser := &user_controller.CreateUserResponse{
 			Id:        1,
 			Role:      enum.USER_ROLE,
 			FirstName: newUserResponse.FirstName,
@@ -63,30 +62,24 @@ func TestUsersController(t *testing.T) {
 			},
 		}
 
-		fmt.Printf("%+v", newUserResponse)
-
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, expectedUser, newUserResponse)
+		assert.Equal(t, newUserResponse.Role, enum.USER_ROLE)
 	}))
 
 	t.Run("it should login", TRun(func(t *testing.T) {
-		user := CreateUserAndGetToken()
+		user := test_utils.CreateUser(enum.USER_ROLE)
 
-		fmt.Println(user)
 		loginRequest := middleware.SignInRequest{
 			Email:    user.Email,
-			Password: user.Password,
+			Password: test_utils.UserTestPassword,
 		}
 
 		res := TMakeRequest(t, http.MethodPost, "auth", loginRequest)
 
 		responseBody := middleware.SignInResponse{}
 
-// func TDecode[T any](t *testing.T, input io.Reader, into *T) { if err := json.NewDecoder(input).Decode(&into); err != nil {
-// 		TErrorFatal(t, "failed to decode response body: %v", err)
-// 	}
-}
-		TDecode(t, res.Body, &responseBody)
+		test_utils.Decode(t, res.Body, &responseBody)
 
 		jwtTimeOut := middleware.BuildJwtTimeOut()
 
@@ -98,32 +91,31 @@ func TestUsersController(t *testing.T) {
 		assert.True(t, responseBody.Expire.After(jwtTimeOutMinusOne), "Expected expiration time to be after actual expiration time")
 	}))
 
-	t.Run("it should make sure that the user created has the role user", func(t *testing.T) {
-		assert.Equal(t, expectedUser.Role, enum.USER_ROLE)
-	})
+	t.Run("it should get all", TRun(func(t *testing.T) {
+		user := test_utils.CreateUser(enum.USER_ROLE)
+		TSetCookieWithUser(t, user)
 
-	t.Run("it should get all", func(t *testing.T) {
 		res := TMakeRequest(t, http.MethodGet, "users", nil)
 
 		users := []sqlc.GetUsersRow{}
 
-		TDecode(t, res.Body, &users)
+		test_utils.Decode(t, res.Body, &users)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, 1, len(users))
 		assert.IsType(t, sqlc.GetUsersRow{}, users[0])
-	})
+	}))
 
 	t.Run("it should get user full profile", TRun(func(t *testing.T) {
-		user := CreateUserAndGetToken()
-
-		SetCookieWithUser(user)
+		user := test_utils.CreateUser(enum.USER_ROLE)
+		TSetCookieWithUser(t, user)
+		userAddress := test_utils.CreateUserAddress(user.ID)
 
 		res := TMakeRequest(t, http.MethodGet, "users/full-profile", nil)
 
 		bSlice, err := io.ReadAll(res.Body)
 		if err != nil {
-			TErrorFatal(t, "could not read response body: %v", err)
+			t.Fatalf("could not read response body: %v", err)
 		}
 
 		defer res.Body.Close()
@@ -132,43 +124,43 @@ func TestUsersController(t *testing.T) {
 
 		err = json.Unmarshal(bSlice, &userFullProfileRes)
 		if err != nil {
-			TErrorFatal(t, "could not parse to json: %v", err)
+			t.Fatalf("could not parse to json: %v", err)
 		}
 
 		expectedJsonUser := map[string]interface{}{
-			"id":        expectedUser.Id,
-			"firstName": expectedUser.FirstName,
-			"lastName":  expectedUser.LastName,
-			"email":     expectedUser.Email,
-			"role":      expectedUser.Role,
-			"createdAt": userFullProfileRes.CreatedAt,
-			"UpdatedAt": userFullProfileRes.UpdatedAt,
+			"id":        user.ID,
+			"firstName": user.FirstName,
+			"lastName":  user.LastName,
+			"email":     user.Email,
+			"role":      user.Role,
+			"createdAt": user.CreatedAt,
+			"UpdatedAt": user.UpdatedAt,
 			"addresses": []map[string]interface{}{
 				{
-					"id":            expectedUser.Id,
-					"userId":        expectedUser.Id,
-					"streetAddress": expectedUser.Address.StreetAddress,
-					"city":          expectedUser.Address.City,
-					"complement":    expectedUser.Address.Complement,
-					"state":         expectedUser.Address.State,
-					"postalCode":    expectedUser.Address.PostalCode,
-					"country":       expectedUser.Address.Country,
-					"addressType":   expectedUser.Address.AddressType,
-					"favorite":      expectedUser.Address.Favorite,
+					"id":            userAddress.ID,
+					"userId":        userAddress.UserID,
+					"streetAddress": userAddress.StreetAddress,
+					"city":          userAddress.City,
+					"complement":    userAddress.Complement,
+					"state":         userAddress.State,
+					"postalCode":    userAddress.PostalCode,
+					"country":       userAddress.Country,
+					"addressType":   userAddress.AddressType,
+					"favorite":      userAddress.Favorite,
 				},
 			},
 		}
 
 		expectedBSlice, err := json.Marshal(expectedJsonUser)
 		if err != nil {
-			TErrorFatal(t, "could not marshal json to bytes: %v", err)
+			t.Fatalf("could not marshal json to bytes: %v", err)
 		}
 
 		expectedUserFullProfile := sqlc.GetUserFullProfileRow{}
 
 		err = json.Unmarshal(expectedBSlice, &expectedUserFullProfile)
 		if err != nil {
-			TErrorFatal(t, "could not parse to json: %v", err)
+			t.Fatalf("could not parse to json: %v", err)
 		}
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
@@ -176,16 +168,18 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get user by id", TRun(func(t *testing.T) {
-		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", expectedUser.Id), nil)
+		user := test_utils.CreateUser(enum.USER_ROLE)
+		TSetCookieWithUser(t, user)
+		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", user.ID), nil)
 
 		userResponse := &sqlc.GetUserRow{}
 		expectedUser := sqlc.GetUserRow{
-			ID:    int32(expectedUser.Id),
-			Email: expectedUser.Email,
-			Role:  sqlc.Roles(expectedUser.Role),
+			ID:    user.ID,
+			Email: user.Email,
+			Role:  user.Role,
 		}
 
-		TDecode(t, res.Body, &userResponse)
+		test_utils.Decode(t, res.Body, &userResponse)
 
 		assert.NotEmpty(t, userResponse)
 		assert.Equal(t, http.StatusOK, res.StatusCode)
@@ -195,6 +189,9 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should be able to update an user", TRun(func(t *testing.T) {
+		user := test_utils.CreateUser(enum.USER_ROLE)
+		TSetCookieWithUser(t, user)
+
 		updateUser := user_controller.UpdateUserRequest{
 			FirstName: "Update John",
 			LastName:  "Update Doe",
@@ -205,13 +202,15 @@ func TestUsersController(t *testing.T) {
 
 		response := false
 
-		TDecode(t, res.Body, &response)
+		test_utils.Decode(t, res.Body, &response)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.True(t, response)
 	}))
 
 	t.Run("it should throw a user not found error", TRun(func(t *testing.T) {
+		user := test_utils.CreateUser(enum.USER_ROLE)
+		TSetCookieWithUser(t, user)
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", 100), nil)
 
 		assert.Equal(t, http.StatusNotFound, res.StatusCode)

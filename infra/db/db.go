@@ -72,12 +72,12 @@ func TruncateAll() {
 		if err != nil {
 			log.Fatalf("Failed to truncate table %s: %v\n", tableName, err)
 		}
-		fmt.Printf("Truncated table: %s\n", tableName)
+		// fmt.Printf("Truncated table: %s\n", tableName)
 	}
 
 	if err := rows.Err(); err != nil {
 		log.Fatalf("Error iterating rows: %v\n", err)
 	}
 
-	fmt.Println("All tables truncated successfully.")
+	// fmt.Println("All tables truncated successfully.")
 }

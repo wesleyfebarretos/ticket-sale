@@ -54,9 +54,9 @@ func Create(c *gin.Context) {
 	newUser := &CreateUserResponse{
 		Id:        int(newUserResponse.ID),
 		Email:     newUserResponse.Email,
-		Role:      string(newUserResponse.Role),
 		FirstName: newUserResponse.FirstName,
 		LastName:  newUserResponse.LastName,
+		Role:      string(newUserResponse.Role),
 		Address: &AddressResponse{
 			ID:            newUserAddress.ID,
 			UserID:        newUserAddress.UserID,
