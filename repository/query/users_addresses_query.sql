@@ -1,12 +1,11 @@
-
--- name: CreateUserAddress :one
+-- name: Create :one
 INSERT INTO users_addresses
 (user_id, street_address, city, complement, state, postal_code, country, address_type, favorite)
 VALUES 
 ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
 RETURNING *;
 
--- name: UpdateUserAddress :exec
+-- name: Update :exec
 UPDATE users_addresses
 SET 
     street_address = $2,

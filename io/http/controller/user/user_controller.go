@@ -4,32 +4,56 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	user_service "github.com/wesleyfebarretos/ticket-sale/internal/service/user"
-	user_address_service "github.com/wesleyfebarretos/ticket-sale/internal/service/user_address"
+	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_address_service"
+	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_service"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_address_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 )
 
 func GetAll(c *gin.Context) {
 	users := user_service.GetAll(c)
 
-	c.JSON(http.StatusOK, users)
+	usersResponse := []GetAllResponseDto{}
+
+	for _, u := range users {
+		usersResponse = append(usersResponse, GetAllResponseDto{
+			Id:        u.ID,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
+			Email:     u.Email,
+			Role:      string(u.Role),
+			CreatedAt: u.CreatedAt,
+			UpdatedAt: u.UpdatedAt,
+		})
+	}
+
+	c.JSON(http.StatusOK, usersResponse)
 }
 
-func GetById(c *gin.Context) {
+func GetOneById(c *gin.Context) {
 	id := controller.GetId(c)
 
 	user := user_service.GetOneById(c, id)
 
-	c.JSON(http.StatusOK, user)
+	userResponse := GetOneByIdDto{
+		Id:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
+		Role:      string(user.Role),
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+	c.JSON(http.StatusOK, userResponse)
 }
 
 func Create(c *gin.Context) {
-	body := CreateUserRequest{}
+	body := CreateRequestDto{}
 
 	controller.ReadBody(c, &body)
 
-	createUser := sqlc.CreateUserParams{
+	createUser := user_repository.CreateParams{
 		Email:     body.Email,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
@@ -38,7 +62,7 @@ func Create(c *gin.Context) {
 
 	newUserResponse := user_service.Create(c, createUser)
 
-	createUserAddress := sqlc.CreateUserAddressParams{
+	createUserAddress := user_address_repository.CreateParams{
 		UserID:        int32(newUserResponse.ID),
 		AddressType:   body.Address.AddressType,
 		StreetAddress: body.Address.StreetAddress,
@@ -51,13 +75,13 @@ func Create(c *gin.Context) {
 	}
 	newUserAddress := user_address_service.Create(c, createUserAddress)
 
-	newUser := &CreateUserResponse{
+	newUser := CreateResponseDto{
 		Id:        int(newUserResponse.ID),
 		Email:     newUserResponse.Email,
 		FirstName: newUserResponse.FirstName,
 		LastName:  newUserResponse.LastName,
 		Role:      string(newUserResponse.Role),
-		Address: &AddressResponse{
+		Address: AddressResponseDto{
 			ID:            newUserAddress.ID,
 			UserID:        newUserAddress.UserID,
 			City:          newUserAddress.City,
@@ -76,11 +100,11 @@ func Create(c *gin.Context) {
 
 func Update(c *gin.Context) {
 	user := controller.GetClaims(c)
-	body := UpdateUserRequest{}
+	body := UpdateRequestDto{}
 
 	controller.ReadBody(c, &body)
 
-	updateUser := sqlc.UpdateUserParams{
+	updateUser := user_repository.UpdateParams{
 		ID:        user.Id,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
@@ -93,7 +117,9 @@ func Update(c *gin.Context) {
 }
 
 func GetFullProfile(c *gin.Context) {
-	user := user_service.GetFullProfile(c)
+	claims := controller.GetClaims(c)
+
+	user := user_service.GetFullProfile(c, claims.Id)
 
 	c.JSON(http.StatusOK, user)
 }

@@ -5,16 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
-	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
-func GetAll(c *gin.Context) []sqlc.GetUsersRow {
-	users, err := db.Query.GetUsers(c)
+func GetAll(c *gin.Context) []user_repository.GetAllRow {
+	users, err := repository.User.GetAll(c)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -22,8 +21,8 @@ func GetAll(c *gin.Context) []sqlc.GetUsersRow {
 	return users
 }
 
-func GetOneById(c *gin.Context, id int32) sqlc.GetUserRow {
-	user, err := db.Query.GetUser(c, id)
+func GetOneById(c *gin.Context, id int32) user_repository.GetOneByIdRow {
+	user, err := repository.User.GetOneById(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
@@ -31,10 +30,10 @@ func GetOneById(c *gin.Context, id int32) sqlc.GetUserRow {
 	return user
 }
 
-func Create(c *gin.Context, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
-	var createdUser sqlc.CreateUserRow
+func Create(c *gin.Context, newUser user_repository.CreateParams) user_repository.CreateRow {
+	var createdUser user_repository.CreateRow
 
-	_, err := db.Query.GetUserByEmail(c, newUser.Email)
+	_, err := repository.User.GetOneByEmail(c, newUser.Email)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -51,7 +50,7 @@ func Create(c *gin.Context, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
 	newUser.Password = string(hashPassword)
 	newUser.Role = enum.USER_ROLE
 
-	createdUser, err = db.Query.CreateUser(c, newUser)
+	createdUser, err = repository.User.Create(c, newUser)
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
@@ -59,8 +58,8 @@ func Create(c *gin.Context, newUser sqlc.CreateUserParams) sqlc.CreateUserRow {
 	return createdUser
 }
 
-func Update(c *gin.Context, user sqlc.UpdateUserParams) {
-	_, err := db.Query.GetDifferentUserByEmail(c, sqlc.GetDifferentUserByEmailParams{
+func Update(c *gin.Context, user user_repository.UpdateParams) {
+	_, err := repository.User.CheckIfEmailExists(c, user_repository.CheckIfEmailExistsParams{
 		Email: user.Email,
 		ID:    user.ID,
 	})
@@ -75,24 +74,23 @@ func Update(c *gin.Context, user sqlc.UpdateUserParams) {
 
 	user.Role = enum.USER_ROLE
 
-	err = db.Query.UpdateUser(c, user)
+	err = repository.User.Update(c, user)
 	if err != nil {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
 
 func Delete(c *gin.Context, id int32) {
-	err := db.Query.DeleteUser(c, id)
+	err := repository.User.Delete(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
 }
 
-func GetFullProfile(c *gin.Context) sqlc.GetUserFullProfileRow {
-	claims := controller.GetClaims(c)
-	user, err := db.Query.GetUserFullProfile(c, claims.Id)
+func GetFullProfile(c *gin.Context, id int32) user_repository.GetFullProfileRow {
+	user, err := repository.User.GetFullProfile(c, id)
 	if err != nil {
-		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", claims.Id)))
+		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}
 
 	return user

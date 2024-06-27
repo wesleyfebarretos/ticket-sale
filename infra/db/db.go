@@ -8,13 +8,11 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/wesleyfebarretos/ticket-sale/config"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
 )
 
 const DRIVER = "postgres"
 
 var (
-	Query    *sqlc.Queries
 	Conn     *pgxpool.Pool
 	initOnce sync.Once
 )
@@ -32,7 +30,6 @@ func openConnection(connector string) {
 		log.Fatal(err)
 	}
 	Conn = insideConn
-	Query = sqlc.New(Conn)
 }
 
 func getStringConnection() string {

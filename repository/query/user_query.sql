@@ -1,18 +1,18 @@
--- name: GetUsers :many
+-- name: GetAll :many
 SELECT 
     id, first_name, last_name,
     email, role, created_at, updated_at
 FROM 
    users ORDER BY id;
 
--- name: GetUser :one
+-- name: GetOneById :one
 SELECT 
     id, first_name, last_name,
     email, role, created_at, updated_at
 FROM
    users WHERE id = $1 LIMIT 1;
 
--- name: GetUserByEmail :one
+-- name: GetOneByEmail :one
 SELECT 
     id, first_name, last_name,
     email, role, created_at, updated_at
@@ -21,7 +21,7 @@ FROM
 WHERE
    email = $1 LIMIT 1;
 
--- name: GetUserWithPasswordByEmail :one
+-- name: GetOneWithPasswordByEmail :one
 SELECT 
     id, password, role, email, first_name, last_name, created_at, updated_at
 FROM 
@@ -29,7 +29,7 @@ FROM
 WHERE
    email = $1 LIMIT 1;
 
--- name: GetDifferentUserByEmail :one
+-- name: CheckIfEmailExists :one
 SELECT 
     id, first_name, last_name,
     email, role, created_at, updated_at
@@ -38,7 +38,7 @@ FROM
 WHERE
    email = $1 AND id != $2 LIMIT 1;
 
--- name: GetUserFullProfile :one
+-- name: GetFullProfile :one
 SELECT 
     u.id, 
     u.first_name,
@@ -76,7 +76,7 @@ GROUP BY
 	u.id 
 LIMIT 1;
 
--- name: CreateUser :one
+-- name: Create :one
 INSERT INTO users 
 (first_name, last_name, email, password, role)
 VALUES 
@@ -85,7 +85,7 @@ RETURNING
     id, first_name, last_name,
     email, role, created_at, updated_at;
 
--- name: UpdateUser :exec
+-- name: Update :exec
 UPDATE users 
 SET 
     first_name = $2,
@@ -94,5 +94,5 @@ SET
     role = $5
 WHERE id = $1;
 
--- name: DeleteUser :exec
+-- name: Delete :exec
 DELETE FROM users WHERE id = $1;

@@ -17,6 +17,6 @@ func HandleUser(router *gin.Engine) {
 
 	userRoute.GET("", user_controller.GetAll)
 	userRoute.GET("full-profile", user_controller.GetFullProfile)
-	userRoute.GET(":id", user_controller.GetById)
+	userRoute.GET(":id", user_controller.GetOneById)
 	userRoute.PUT("", user_controller.Update)
 }

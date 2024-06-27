@@ -12,7 +12,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
@@ -73,7 +73,8 @@ func InitJWT() {
 func loginHandler(c *gin.Context) (interface{}, error) {
 	body := SignInRequest{}
 	readBody(c, &body)
-	user, err := db.Query.GetUserWithPasswordByEmail(c, body.Email)
+	userRepository := user_repository.New(db.Conn)
+	user, err := userRepository.GetOneWithPasswordByEmail(c, body.Email)
 	if err != nil {
 		return nil, jwt.ErrFailedAuthentication
 	}
@@ -107,7 +108,7 @@ func readBody(c *gin.Context, body any) {
 }
 
 func payloadHandler(data interface{}) jwt.MapClaims {
-	user := data.(sqlc.GetUserWithPasswordByEmailRow)
+	user := data.(user_repository.GetOneWithPasswordByEmailRow)
 
 	return jwt.MapClaims{
 		"id":   user.ID,

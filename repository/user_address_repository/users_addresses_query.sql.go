@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createUserAddress = `-- name: CreateUserAddress :one
+const create = `-- name: Create :one
 INSERT INTO users_addresses
 (user_id, street_address, city, complement, state, postal_code, country, address_type, favorite)
 VALUES 
@@ -17,7 +17,7 @@ VALUES
 RETURNING id, user_id, street_address, city, complement, state, postal_code, country, address_type, favorite, created_at, updated_at
 `
 
-type CreateUserAddressParams struct {
+type CreateParams struct {
 	UserID        int32   `json:"userId"`
 	StreetAddress string  `json:"streetAddress"`
 	City          string  `json:"city"`
@@ -29,8 +29,8 @@ type CreateUserAddressParams struct {
 	Favorite      *bool   `json:"favorite"`
 }
 
-func (q *Queries) CreateUserAddress(ctx context.Context, arg CreateUserAddressParams) (UsersAddress, error) {
-	row := q.db.QueryRow(ctx, createUserAddress,
+func (q *Queries) Create(ctx context.Context, arg CreateParams) (UsersAddress, error) {
+	row := q.db.QueryRow(ctx, create,
 		arg.UserID,
 		arg.StreetAddress,
 		arg.City,
@@ -59,7 +59,7 @@ func (q *Queries) CreateUserAddress(ctx context.Context, arg CreateUserAddressPa
 	return i, err
 }
 
-const updateUserAddress = `-- name: UpdateUserAddress :exec
+const update = `-- name: Update :exec
 UPDATE users_addresses
 SET 
     street_address = $2,
@@ -73,7 +73,7 @@ SET
 WHERE id = $1
 `
 
-type UpdateUserAddressParams struct {
+type UpdateParams struct {
 	ID            int32   `json:"id"`
 	StreetAddress string  `json:"streetAddress"`
 	City          string  `json:"city"`
@@ -85,8 +85,8 @@ type UpdateUserAddressParams struct {
 	Favorite      *bool   `json:"favorite"`
 }
 
-func (q *Queries) UpdateUserAddress(ctx context.Context, arg UpdateUserAddressParams) error {
-	_, err := q.db.Exec(ctx, updateUserAddress,
+func (q *Queries) Update(ctx context.Context, arg UpdateParams) error {
+	_, err := q.db.Exec(ctx, update,
 		arg.ID,
 		arg.StreetAddress,
 		arg.City,
