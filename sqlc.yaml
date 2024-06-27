@@ -24,3 +24,11 @@ sql:
         <<: *default_configs
         package: "user_address_repository"
         out: "repository/user_address_repository"
+
+  - <<: *schema
+    queries: "repository/query/admin_user_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_user_repository"
+        out: "repository/admin_user_repository"

@@ -13,7 +13,7 @@ import (
 )
 
 func GetAll(c *gin.Context) []user_repository.GetAllRow {
-	users, err := repository.User.GetAll(c)
+	users, err := repository.User.GetAll(c, enum.USER_ROLE)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
