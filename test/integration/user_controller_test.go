@@ -10,20 +10,20 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
-	user_controller "github.com/wesleyfebarretos/ticket-sale/io/http/controller/user"
+	"github.com/wesleyfebarretos/ticket-sale/io/http/controller/user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
 
 func TestUsersController(t *testing.T) {
 	t.Run("it should create a user", TRun(func(t *testing.T) {
-		newUserRequest := user_controller.CreateUserRequest{
+		newUserRequest := user_controller.CreateRequestDto{
 			FirstName: "John",
 			LastName:  "Doe",
 			Email:     "johndoe@gmail.com",
 			Password:  "123",
-			Address: user_controller.AddressRequest{
+			Address: user_controller.AddressRequestDto{
 				City:          "Orlando",
 				State:         "FL",
 				Favorite:      TPointer(true),
@@ -36,17 +36,17 @@ func TestUsersController(t *testing.T) {
 		}
 		res := TMakeRequest(t, http.MethodPost, "users", newUserRequest)
 
-		newUserResponse := &user_controller.CreateUserResponse{}
+		newUserResponse := &user_controller.CreateResponseDto{}
 
 		test_utils.Decode(t, res.Body, &newUserResponse)
 
-		expectedUser := &user_controller.CreateUserResponse{
+		expectedUser := &user_controller.CreateResponseDto{
 			Id:        1,
 			Role:      enum.USER_ROLE,
 			FirstName: newUserResponse.FirstName,
 			LastName:  newUserRequest.LastName,
 			Email:     newUserRequest.Email,
-			Address: &user_controller.AddressResponse{
+			Address: user_controller.AddressResponseDto{
 				ID:            newUserResponse.Address.ID,
 				UserID:        newUserResponse.Address.UserID,
 				Country:       newUserRequest.Address.Country,
@@ -97,13 +97,13 @@ func TestUsersController(t *testing.T) {
 
 		res := TMakeRequest(t, http.MethodGet, "users", nil)
 
-		users := []sqlc.GetUsersRow{}
+		users := []user_repository.GetAllRow{}
 
 		test_utils.Decode(t, res.Body, &users)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, 1, len(users))
-		assert.IsType(t, sqlc.GetUsersRow{}, users[0])
+		assert.IsType(t, user_repository.GetAllRow{}, users[0])
 	}))
 
 	t.Run("it should get user full profile", TRun(func(t *testing.T) {
@@ -120,7 +120,7 @@ func TestUsersController(t *testing.T) {
 
 		defer res.Body.Close()
 
-		userFullProfileRes := sqlc.GetUserFullProfileRow{}
+		userFullProfileRes := user_repository.GetFullProfileRow{}
 
 		err = json.Unmarshal(bSlice, &userFullProfileRes)
 		if err != nil {
@@ -156,7 +156,7 @@ func TestUsersController(t *testing.T) {
 			t.Fatalf("could not marshal json to bytes: %v", err)
 		}
 
-		expectedUserFullProfile := sqlc.GetUserFullProfileRow{}
+		expectedUserFullProfile := user_repository.GetFullProfileRow{}
 
 		err = json.Unmarshal(expectedBSlice, &expectedUserFullProfile)
 		if err != nil {
@@ -172,8 +172,8 @@ func TestUsersController(t *testing.T) {
 		TSetCookieWithUser(t, user)
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", user.ID), nil)
 
-		userResponse := &sqlc.GetUserRow{}
-		expectedUser := sqlc.GetUserRow{
+		userResponse := &user_repository.GetOneByIdRow{}
+		expectedUser := user_repository.GetOneByIdRow{
 			ID:    user.ID,
 			Email: user.Email,
 			Role:  user.Role,
@@ -192,7 +192,7 @@ func TestUsersController(t *testing.T) {
 		user := test_utils.CreateUser(enum.USER_ROLE)
 		TSetCookieWithUser(t, user)
 
-		updateUser := user_controller.UpdateUserRequest{
+		updateUser := user_controller.UpdateRequestDto{
 			FirstName: "Update John",
 			LastName:  "Update Doe",
 			Email:     "updatejohndoe@gmail.com",

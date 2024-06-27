@@ -18,7 +18,9 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/io/routes"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
-	"github.com/wesleyfebarretos/ticket-sale/repository/sqlc"
+	"github.com/wesleyfebarretos/ticket-sale/repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_address_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
@@ -47,6 +49,7 @@ func BeforeAll() *httptest.Server {
 
 	db.Init()
 	migration.Up()
+	repository.BindAll()
 
 	server := httptest.NewServer(routes.Bind())
 	config.Envs.PublicHost = fmt.Sprintf("http://localhost:%s", server.URL)
@@ -94,34 +97,34 @@ func Decode[T any](t *testing.T, input io.Reader, into *T) {
 	}
 }
 
-func CreateUser(role string) sqlc.GetUserWithPasswordByEmailRow {
+func CreateUser(role string) user_repository.GetOneWithPasswordByEmailRow {
 	password, err := utils.HashPassword(UserTestPassword)
 	if err != nil {
 		log.Fatalf("could not hash password: %v", err)
 	}
 
-	newUser := sqlc.CreateUserParams{
+	newUser := user_repository.CreateParams{
 		FirstName: "John",
 		LastName:  "Doe",
 		Email:     "johndoe@gmail.com",
 		Password:  password,
-		Role:      sqlc.Roles(role),
+		Role:      user_repository.Roles(role),
 	}
 
-	user, _ := db.Query.CreateUser(context.Background(), newUser)
+	user, _ := repository.User.Create(context.Background(), newUser)
 
-	nUser, _ := db.Query.GetUserWithPasswordByEmail(context.Background(), user.Email)
+	nUser, _ := repository.User.GetOneWithPasswordByEmail(context.Background(), user.Email)
 
 	return nUser
 }
 
-func CreateUserAddress(userId int32) sqlc.UsersAddress {
+func CreateUserAddress(userId int32) user_address_repository.UsersAddress {
 	favorite := true
 	complement := "Moon"
 	postalCode := "Jupiter"
 	addressType := "House"
 
-	newAddress := sqlc.CreateUserAddressParams{
+	newAddress := user_address_repository.CreateParams{
 		Favorite:      &favorite,
 		Complement:    &complement,
 		PostalCode:    &postalCode,
@@ -132,7 +135,8 @@ func CreateUserAddress(userId int32) sqlc.UsersAddress {
 		Country:       "James Webb",
 		UserID:        userId,
 	}
-	address, _ := db.Query.CreateUserAddress(context.Background(), newAddress)
+
+	address, _ := repository.UserAdress.Create(context.Background(), newAddress)
 
 	return address
 }
