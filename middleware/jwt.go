@@ -83,14 +83,7 @@ func loginHandler(c *gin.Context) (interface{}, error) {
 		return nil, jwt.ErrFailedAuthentication
 	}
 
-	// userClaims := &UserClaims{
-	// 	Id:   user.ID,
-	// 	Role: string(user.Role),
-	// }
-
 	return user, nil
-
-	// return userClaims, nil
 }
 
 func BuildJwtTimeOut() time.Duration {

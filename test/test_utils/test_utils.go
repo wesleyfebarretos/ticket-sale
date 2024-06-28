@@ -140,3 +140,9 @@ func CreateUserAddress(userId int32) user_address_repository.UsersAddress {
 
 	return address
 }
+
+func DebugResponse(body io.Reader) {
+	b, _ := io.ReadAll(body)
+	fmt.Println(string(b))
+	os.Exit(1)
+}

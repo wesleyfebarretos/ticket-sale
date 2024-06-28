@@ -18,7 +18,6 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	_ "github.com/wesleyfebarretos/ticket-sale/test/test_init"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
@@ -88,7 +87,7 @@ func TRun(testFunc func(*testing.T)) func(*testing.T) {
 	}
 }
 
-func TSetCookieWithUser(t *testing.T, user user_repository.GetOneWithPasswordByEmailRow) {
+func TSetCookieWithUser(t *testing.T, user any) {
 	token, _, _ := middleware.JWT.TokenGenerator(user)
 
 	cookie := &http.Cookie{
@@ -131,7 +130,7 @@ func TSetCookie(t *testing.T, role string) {
 func beforeEach() {
 	ClientRequest.Jar = nil
 	db.TruncateAll()
-	migration.UpSeeders()
+	migration.UpSeeders(false)
 }
 
 func fileNotFoundErr(err error) bool {

@@ -43,9 +43,9 @@ func Up() {
 	defer pool.Close()
 	defer pool2.Close()
 
-	upMigration(createMigrationInstance(driver, MigrationTypeTable))
+	upMigration(createMigrationInstance(driver, MigrationTypeTable, true))
 
-	upMigration(createMigrationInstance(driver2, MigrationTypeSeeders))
+	upMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
 }
 
 func Down() {
@@ -55,24 +55,24 @@ func Down() {
 	defer pool2.Close()
 
 	driver2.SetVersion(1, false)
-	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders))
+	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
 
 	driver.SetVersion(1, false)
-	downMigration(createMigrationInstance(driver, MigrationTypeTable))
+	downMigration(createMigrationInstance(driver, MigrationTypeTable, true))
 }
 
 func UpTables() {
 	pool, driver := openConnection(tablesMigrationsTable)
 	defer pool.Close()
 
-	upMigration(createMigrationInstance(driver, MigrationTypeTable))
+	upMigration(createMigrationInstance(driver, MigrationTypeTable, true))
 }
 
-func UpSeeders() {
+func UpSeeders(activeLogger bool) {
 	pool, driver := openConnection(seedersMigrationsTable)
 	defer pool.Close()
 
-	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
+	upMigration(createMigrationInstance(driver, MigrationTypeSeeders, activeLogger))
 }
 
 func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
@@ -104,7 +104,7 @@ func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
 	return pool, driver
 }
 
-func createMigrationInstance(driver database.Driver, migrationType MigrationType) *migrate.Migrate {
+func createMigrationInstance(driver database.Driver, migrationType MigrationType, activeLogger bool) *migrate.Migrate {
 	migration, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://cmd/migrations/%s", migrationType),
 		config.Envs.DBName,
@@ -116,7 +116,9 @@ func createMigrationInstance(driver database.Driver, migrationType MigrationType
 		log.Fatalf("could not create migrate instance: %v", err)
 	}
 
-	migration.Log = &MigrationLog{}
+	if activeLogger {
+		migration.Log = &MigrationLog{}
+	}
 
 	return migration
 }
