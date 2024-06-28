@@ -273,8 +273,6 @@ SET
     role = $5
 WHERE 
     id = $1
-AND
-    role = $2
 `
 
 type UpdateParams struct {

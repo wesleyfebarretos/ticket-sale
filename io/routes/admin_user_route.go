@@ -17,6 +17,6 @@ func HandleAdminUser(router *gin.Engine) {
 	userRoute.POST("/get-by-email", admin_user_controller.GetOneByEmail)
 	userRoute.GET("", admin_user_controller.GetAll)
 	userRoute.GET(":id", admin_user_controller.GetOneById)
-	userRoute.PUT("", admin_user_controller.Update)
+	userRoute.PUT(":id", admin_user_controller.Update)
 	userRoute.DELETE(":id", admin_user_controller.Delete)
 }

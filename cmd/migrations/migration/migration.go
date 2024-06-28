@@ -110,8 +110,7 @@ func createMigrationInstance(driver database.Driver, migrationType MigrationType
 		config.Envs.DBName,
 		driver,
 	)
-
-	fmt.Printf("file://cmd/migrations/%s\n", migrationType)
+	// fmt.Printf("file://cmd/migrations/%s\n", migrationType)
 	if err != nil {
 		log.Fatalf("could not create migrate instance: %v", err)
 	}

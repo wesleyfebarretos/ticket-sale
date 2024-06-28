@@ -70,9 +70,7 @@ SET
     email = $4,
     role = $5
 WHERE 
-    id = $1
-AND
-    role = $2;
+    id = $1;
 
 -- name: Delete :exec
 DELETE FROM users WHERE id = $1;
