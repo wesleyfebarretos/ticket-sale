@@ -18,6 +18,7 @@ func Bind() *gin.Engine {
 	HandleHealthCheck(router)
 	HandleAuth(router)
 	HandleUser(router)
+	HandleAdminUser(router)
 
 	return router
 }

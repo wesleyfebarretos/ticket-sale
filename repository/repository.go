@@ -13,7 +13,7 @@ var (
 	AdminUser  = &admin_user_repository.Queries{}
 )
 
-func BindAll() {
+func Bind() {
 	User = user_repository.New(db.Conn)
 	UserAdress = user_address_repository.New(db.Conn)
 	AdminUser = admin_user_repository.New(db.Conn)

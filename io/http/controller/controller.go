@@ -21,8 +21,8 @@ func GetId(c *gin.Context) int32 {
 	return int32(intId)
 }
 
-func ReadBody(c *gin.Context, body any) {
-	err := c.ShouldBindJSON(&body)
+func ReadBody[B any](c *gin.Context, body *B) {
+	err := c.ShouldBindJSON(body)
 	if err == io.EOF {
 		panic(exception.BadRequestException("empty request body"))
 	}

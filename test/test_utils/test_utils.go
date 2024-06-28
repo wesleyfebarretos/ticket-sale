@@ -49,7 +49,7 @@ func BeforeAll() *httptest.Server {
 
 	db.Init()
 	migration.Up()
-	repository.BindAll()
+	repository.Bind()
 
 	server := httptest.NewServer(routes.Bind())
 	config.Envs.PublicHost = fmt.Sprintf("http://localhost:%s", server.URL)

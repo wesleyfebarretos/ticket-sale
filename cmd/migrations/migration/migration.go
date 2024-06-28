@@ -44,6 +44,13 @@ func Up() {
 	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
 }
 
+func UpSeeders() {
+	pool, driver := openConnection()
+	defer pool.Close()
+
+	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
+}
+
 func Down() {
 	pool, driver := openConnection()
 	defer pool.Close()
@@ -97,7 +104,7 @@ func upMigration(migration *migrate.Migrate) {
 	err := migration.Up()
 
 	if err != nil && fileNotFoundErr(err) {
-		migrationLogWarning("not found files to tables migrations")
+		migrationLogWarning("files not found")
 		err = nil
 	}
 

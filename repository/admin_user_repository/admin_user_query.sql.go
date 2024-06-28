@@ -105,16 +105,11 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (CreateRow, erro
 }
 
 const delete = `-- name: Delete :exec
-DELETE FROM users WHERE id = $1 AND role = $2
+DELETE FROM users WHERE id = $1
 `
 
-type DeleteParams struct {
-	ID   int32 `json:"id"`
-	Role Roles `json:"role"`
-}
-
-func (q *Queries) Delete(ctx context.Context, arg DeleteParams) error {
-	_, err := q.db.Exec(ctx, delete, arg.ID, arg.Role)
+func (q *Queries) Delete(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, delete, id)
 	return err
 }
 

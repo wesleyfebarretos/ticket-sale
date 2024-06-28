@@ -10,7 +10,7 @@ import (
 
 func Run() error {
 	router := routes.Bind()
-	repository.BindAll()
+	repository.Bind()
 
 	return router.Run(fmt.Sprintf(":%s", config.Envs.Port))
 }

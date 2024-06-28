@@ -80,13 +80,6 @@ func Update(c *gin.Context, user user_repository.UpdateParams) {
 	}
 }
 
-func Delete(c *gin.Context, id int32) {
-	err := repository.User.Delete(c, id)
-	if err != nil {
-		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
-	}
-}
-
 func GetFullProfile(c *gin.Context, id int32) user_repository.GetFullProfileRow {
 	user, err := repository.User.GetFullProfile(c, id)
 	if err != nil {

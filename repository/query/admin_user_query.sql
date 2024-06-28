@@ -75,7 +75,7 @@ AND
     role = $2;
 
 -- name: Delete :exec
-DELETE FROM users WHERE id = $1 AND role = $2;
+DELETE FROM users WHERE id = $1;
 
 -- name: CheckIfEmailExists :one
 SELECT 

@@ -94,3 +94,10 @@ func Update(c *gin.Context, adminUser admin_user_repository.UpdateParams) {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
+
+func Delete(c *gin.Context, id int32) {
+	err := repository.AdminUser.Delete(c, id)
+	if err != nil {
+		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
+	}
+}

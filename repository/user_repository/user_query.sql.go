@@ -99,15 +99,6 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (CreateRow, erro
 	return i, err
 }
 
-const delete = `-- name: Delete :exec
-DELETE FROM users WHERE id = $1
-`
-
-func (q *Queries) Delete(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, delete, id)
-	return err
-}
-
 const getAll = `-- name: GetAll :many
 SELECT 
     id, first_name, last_name,

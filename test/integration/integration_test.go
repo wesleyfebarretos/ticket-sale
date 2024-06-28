@@ -14,6 +14,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
@@ -130,6 +131,7 @@ func TSetCookie(t *testing.T, role string) {
 func beforeEach() {
 	ClientRequest.Jar = nil
 	db.TruncateAll()
+	migration.UpSeeders()
 }
 
 func fileNotFoundErr(err error) bool {
