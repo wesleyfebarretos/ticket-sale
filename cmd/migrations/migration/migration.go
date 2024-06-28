@@ -31,34 +31,51 @@ func (m *MigrationLog) Printf(format string, v ...interface{}) {
 type MigrationType string
 
 const (
-	MigrationTypeTable   MigrationType = "tables"
-	MigrationTypeSeeders MigrationType = "seeders"
+	MigrationTypeTable     MigrationType = "tables"
+	MigrationTypeSeeders   MigrationType = "seeders"
+	tablesMigrationsTable  string        = "tables_migrations"
+	seedersMigrationsTable string        = "seeders_migrations"
 )
 
 func Up() {
-	pool, driver := openConnection()
+	pool, driver := openConnection(tablesMigrationsTable)
+	pool2, driver2 := openConnection(seedersMigrationsTable)
 	defer pool.Close()
+	defer pool2.Close()
 
 	upMigration(createMigrationInstance(driver, MigrationTypeTable))
 
-	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
-}
-
-func UpSeeders() {
-	pool, driver := openConnection()
-	defer pool.Close()
-
-	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
+	upMigration(createMigrationInstance(driver2, MigrationTypeSeeders))
 }
 
 func Down() {
-	pool, driver := openConnection()
+	pool, driver := openConnection(tablesMigrationsTable)
+	pool2, driver2 := openConnection(seedersMigrationsTable)
 	defer pool.Close()
+	defer pool2.Close()
 
+	driver2.SetVersion(1, false)
+	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders))
+
+	driver.SetVersion(1, false)
 	downMigration(createMigrationInstance(driver, MigrationTypeTable))
 }
 
-func openConnection() (*pgxpool.Pool, database.Driver) {
+func UpTables() {
+	pool, driver := openConnection(tablesMigrationsTable)
+	defer pool.Close()
+
+	upMigration(createMigrationInstance(driver, MigrationTypeTable))
+}
+
+func UpSeeders() {
+	pool, driver := openConnection(seedersMigrationsTable)
+	defer pool.Close()
+
+	upMigration(createMigrationInstance(driver, MigrationTypeSeeders))
+}
+
+func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
 	stringConn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		config.Envs.DBUser,
 		config.Envs.DBPassword,
@@ -78,7 +95,9 @@ func openConnection() (*pgxpool.Pool, database.Driver) {
 
 	sqlDB := stdlib.OpenDB(*poolConfig.ConnConfig)
 
-	driver, err := pgx.WithInstance(sqlDB, &pgx.Config{})
+	driver, err := pgx.WithInstance(sqlDB, &pgx.Config{
+		MigrationsTable: migrationsTable,
+	})
 	if err != nil {
 		log.Fatalf("error on create db instance: %v", err)
 	}
@@ -91,6 +110,8 @@ func createMigrationInstance(driver database.Driver, migrationType MigrationType
 		config.Envs.DBName,
 		driver,
 	)
+
+	fmt.Printf("file://cmd/migrations/%s\n", migrationType)
 	if err != nil {
 		log.Fatalf("could not create migrate instance: %v", err)
 	}

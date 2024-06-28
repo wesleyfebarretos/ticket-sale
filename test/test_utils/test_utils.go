@@ -48,7 +48,7 @@ func BeforeAll() *httptest.Server {
 	config.Envs.DBPort = fmt.Sprintf("%d", pgContainer.Port)
 
 	db.Init()
-	migration.Up()
+	migration.UpTables()
 	repository.Bind()
 
 	server := httptest.NewServer(routes.Bind())

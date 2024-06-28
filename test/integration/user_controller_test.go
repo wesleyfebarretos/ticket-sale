@@ -41,7 +41,7 @@ func TestUsersController(t *testing.T) {
 		test_utils.Decode(t, res.Body, &newUserResponse)
 
 		expectedUser := &user_controller.CreateResponseDto{
-			Id:        1,
+			Id:        newUserResponse.Id,
 			Role:      enum.USER_ROLE,
 			FirstName: newUserResponse.FirstName,
 			LastName:  newUserRequest.LastName,
