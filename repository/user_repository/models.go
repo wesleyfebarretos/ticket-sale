@@ -16,6 +16,7 @@ const (
 	RolesAdmin      Roles = "admin"
 	RolesUser       Roles = "user"
 	RolesWebservice Roles = "webservice"
+	RolesSuperadmin Roles = "super admin"
 )
 
 func (e *Roles) Scan(src interface{}) error {
@@ -57,7 +58,8 @@ func (e Roles) Valid() bool {
 	switch e {
 	case RolesAdmin,
 		RolesUser,
-		RolesWebservice:
+		RolesWebservice,
+		RolesSuperadmin:
 		return true
 	}
 	return false
@@ -68,6 +70,7 @@ func AllRolesValues() []Roles {
 		RolesAdmin,
 		RolesUser,
 		RolesWebservice,
+		RolesSuperadmin,
 	}
 }
 

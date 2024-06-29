@@ -1,5 +1,5 @@
 BEGIN;
-CREATE TYPE roles AS ENUM ('admin', 'user', 'webservice');
+CREATE TYPE roles AS ENUM ('admin', 'user', 'webservice', 'super admin');
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -10,4 +10,5 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP
 );
+CREATE INDEX on users(role);
 COMMIT;

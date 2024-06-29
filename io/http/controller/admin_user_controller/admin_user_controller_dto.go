@@ -28,8 +28,8 @@ type GetOneByIdResponseDto struct {
 	LastName  string     `json:"lastName"`
 	Email     string     `json:"email"`
 	Role      string     `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt *time.Time `json:"updatedAt"`
+	CreatedAt time.Time  `json:"createdAt"`
 }
 
 type GetOneByEmailResponseDto struct {

@@ -14,4 +14,5 @@ CREATE TABLE IF NOT EXISTS users_addresses (
     updated_at TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE INDEX ON users_addresses(user_id);
 COMMIT;
