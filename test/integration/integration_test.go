@@ -65,14 +65,6 @@ func TMakeRequest(t *testing.T, method, endpoint string, data any) *http.Respons
 		t.Fatalf("request failed %v", err)
 	}
 
-	if res.StatusCode == http.StatusUnauthorized {
-		t.Fatalf("unauthorized with status code: %v", res.StatusCode)
-	}
-
-	if res.StatusCode == http.StatusForbidden {
-		t.Fatalf("unauthorized: status code: %v", res.StatusCode)
-	}
-
 	return res
 }
 

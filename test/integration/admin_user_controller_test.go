@@ -24,7 +24,7 @@ func TestAdminUsersController(t *testing.T) {
 			Email:     "adminjohndoe@gmail.com",
 			FirstName: "John",
 			LastName:  "Doe",
-			Password:  "123",
+			Password:  "123456",
 		}
 
 		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
@@ -56,7 +56,7 @@ func TestAdminUsersController(t *testing.T) {
 		updateAdminUser := admin_user_controller.UpdateRequestDto{
 			FirstName: "updateJohn",
 			LastName:  "updateDoe",
-			Email:     "updateadminjohndoe.gmail.com",
+			Email:     "updateadminjohndoe@gmail.com",
 			Role:      enum.ADMIN_ROLE,
 		}
 
@@ -191,5 +191,336 @@ func TestAdminUsersController(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.GreaterOrEqual(t, len(adminUsersResponse), 10)
 		assert.LessOrEqual(t, len(adminUsersResponse), 12)
+	}))
+
+	t.Run("it should fail with an unauthorized error", TRun(func(t *testing.T) {
+		user := test_utils.CreateUser(enum.USER_ROLE)
+
+		TSetCookieWithUser(t, user)
+
+		res := TMakeRequest(t, http.MethodGet, "admin/users", nil)
+
+		assert.Equal(t, http.StatusForbidden, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an first name required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an last name required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "John",
+			LastName:  "",
+			Email:     "johndoe@gmail.com",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an email required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an password required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Password:  "",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an first name min length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "Jo",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an password min length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "John",
+			LastName:  "D",
+			Email:     "johndoe@gmail.com",
+			Password:  "12345",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an first name max length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		firstName := ""
+
+		for i := 0; i < 51; i++ {
+			firstName += "a"
+		}
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: firstName,
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to create and fail with an last name max length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		lastName := ""
+
+		for i := 0; i < 51; i++ {
+			lastName += "a"
+		}
+
+		newAdminUser := admin_user_controller.CreateRequestDto{
+			FirstName: "John",
+			LastName:  lastName,
+			Email:     "johndoe@gmail.com",
+			Password:  "123456",
+		}
+
+		res := TMakeRequest(t, http.MethodPost, "admin/users", newAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an first name required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an last name required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  "",
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an email required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an role required error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an first name min length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "Jo",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an last name min length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  "D",
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an invid role error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Role:      "teste",
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an first name max length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		firstName := ""
+
+		for i := 0; i < 51; i++ {
+			firstName += "a"
+		}
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: firstName,
+			LastName:  "Doe",
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should try to update and fail with an last name max length error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+
+		TSetCookieWithUser(t, adminUser)
+
+		lastName := ""
+
+		for i := 0; i < 51; i++ {
+			lastName += "a"
+		}
+
+		updateAdminUser := admin_user_controller.UpdateRequestDto{
+			FirstName: "John",
+			LastName:  lastName,
+			Email:     "johndoe@gmail.com",
+			Role:      enum.ADMIN_ROLE,
+		}
+
+		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/users/%d", adminUser.ID), updateAdminUser)
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	}))
+
+	t.Run("it should fail with a not found admin user error", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(enum.ADMIN_ROLE)
+		TSetCookieWithUser(t, adminUser)
+
+		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/users/%d", 100), nil)
+
+		assert.Equal(t, http.StatusNotFound, res.StatusCode)
 	}))
 }

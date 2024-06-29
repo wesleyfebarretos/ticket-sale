@@ -106,7 +106,7 @@ func CreateUser(role string) user_repository.GetOneWithPasswordByEmailRow {
 	newUser := user_repository.CreateParams{
 		FirstName: "John",
 		LastName:  "Doe",
-		Email:     "johndoe@gmail.com",
+		Email:     "johndoetest@gmail.com",
 		Password:  password,
 		Role:      user_repository.Roles(role),
 	}
