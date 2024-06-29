@@ -38,14 +38,8 @@ const (
 )
 
 func Up() {
-	pool, driver := openConnection(tablesMigrationsTable)
-	pool2, driver2 := openConnection(seedersMigrationsTable)
-	defer pool.Close()
-	defer pool2.Close()
-
-	upMigration(createMigrationInstance(driver, MigrationTypeTable, true))
-
-	upMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
+	UpTables()
+	UpSeeders(true)
 }
 
 func Down() {
@@ -54,10 +48,7 @@ func Down() {
 	defer pool.Close()
 	defer pool2.Close()
 
-	driver2.SetVersion(1, false)
 	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
-
-	driver.SetVersion(1, false)
 	downMigration(createMigrationInstance(driver, MigrationTypeTable, true))
 }
 
@@ -110,7 +101,6 @@ func createMigrationInstance(driver database.Driver, migrationType MigrationType
 		config.Envs.DBName,
 		driver,
 	)
-	// fmt.Printf("file://cmd/migrations/%s\n", migrationType)
 	if err != nil {
 		log.Fatalf("could not create migrate instance: %v", err)
 	}
