@@ -24,6 +24,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/auth": {
+            "post": {
+                "description": "Sign In",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Sign In",
+                "parameters": [
+                    {
+                        "description": "Sign In",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_auth_controller.SignInRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_auth_controller.SignInResponseDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "description": "Get All Admin Users",
@@ -34,15 +74,6 @@ const docTemplate = `{
                     "Admin Users"
                 ],
                 "summary": "Get All",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "default": "token=xxx",
-                        "description": "token",
-                        "name": "Cookie",
-                        "in": "header"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -59,6 +90,290 @@ const docTemplate = `{
                             "$ref": "#/definitions/middleware.AuthenticationError"
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create an admin user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Create An Admin User",
+                "parameters": [
+                    {
+                        "description": "New Admin User",
+                        "name": "AdminUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.CreateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.CreateResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/get-by-email": {
+            "post": {
+                "description": "Get one admin user by email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Get One By Email",
+                "parameters": [
+                    {
+                        "description": "Admin User Email",
+                        "name": "email",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.GetOneByEmailRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.GetOneByEmailResponseDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}": {
+            "get": {
+                "description": "Get one admin user by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Get One By Id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Admin User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.GetOneByIdResponseDto"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an admin user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Update An Admin User",
+                "parameters": [
+                    {
+                        "description": "Update Admin User",
+                        "name": "AdminUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_user_controller.UpdateRequestDto"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Admin User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an admin user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Users"
+                ],
+                "summary": "Delete An Admin User",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Admin User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -70,7 +385,7 @@ const docTemplate = `{
         },
         "/auth": {
             "post": {
-                "description": "Sign In with and User",
+                "description": "Sign In",
                 "consumes": [
                     "application/json"
                 ],
@@ -88,7 +403,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/middleware.SignInRequest"
+                            "$ref": "#/definitions/auth_controller.SignInRequestDto"
                         }
                     }
                 ],
@@ -96,7 +411,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/middleware.SignInResponse"
+                            "$ref": "#/definitions/auth_controller.SignInResponseDto"
                         }
                     },
                     "401": {
@@ -186,6 +501,115 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "admin_auth_controller.SignInRequestDto": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "ticketsale@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123"
+                }
+            }
+        },
+        "admin_auth_controller.SignInResponseDto": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "expire": {
+                    "type": "string",
+                    "example": "2024-06-30T20:46:13-03:00"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"
+                }
+            }
+        },
+        "admin_user_controller.CreateRequestDto": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3,
+                    "example": "Admin John"
+                },
+                "lastName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2,
+                    "example": "Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "minLength": 6,
+                    "example": "123456"
+                }
+            }
+        },
+        "admin_user_controller.CreateResponseDto": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3,
+                    "example": "Admin John"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "lastName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2,
+                    "example": "Doe"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                }
+            }
+        },
         "admin_user_controller.GetAllResponseDto": {
             "type": "object",
             "properties": {
@@ -219,6 +643,153 @@ const docTemplate = `{
                 }
             }
         },
+        "admin_user_controller.GetOneByEmailRequestDto": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                }
+            }
+        },
+        "admin_user_controller.GetOneByEmailResponseDto": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Admin John"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                }
+            }
+        },
+        "admin_user_controller.GetOneByIdResponseDto": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Admin John"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2024-06-29T06:29:44.999929Z"
+                }
+            }
+        },
+        "admin_user_controller.UpdateRequestDto": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "role"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "adminjohndoe@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3,
+                    "example": "Admin John"
+                },
+                "lastName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 2,
+                    "example": "Doe"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "admin",
+                        "user",
+                        "webservice"
+                    ]
+                }
+            }
+        },
+        "auth_controller.SignInRequestDto": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
+        "auth_controller.SignInResponseDto": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "expire": {
+                    "type": "string",
+                    "example": "2024-06-30T20:46:13-03:00"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"
+                }
+            }
+        },
         "exception.HttpException": {
             "type": "object",
             "properties": {
@@ -245,37 +816,16 @@ const docTemplate = `{
                 }
             }
         },
-        "middleware.SignInRequest": {
+        "middleware.RolePermissionError": {
             "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
             "properties": {
-                "email": {
+                "message": {
                     "type": "string",
-                    "example": "johndoe@gmail.com"
+                    "example": "permission denied."
                 },
-                "password": {
-                    "type": "string",
-                    "example": "123456"
-                }
-            }
-        },
-        "middleware.SignInResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
+                "statusCode": {
                     "type": "integer",
-                    "example": 200
-                },
-                "expire": {
-                    "type": "string",
-                    "example": "2024-06-30T20:46:13-03:00"
-                },
-                "token": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"
+                    "example": 403
                 }
             }
         },
@@ -466,13 +1016,6 @@ const docTemplate = `{
                 }
             }
         }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "jwt_ticket_sale",
-            "in": "cookie"
-        }
     }
 }`
 
@@ -483,7 +1026,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "Ticket Sale",
-	Description:      "This is a simple ticket selling application.",
+	Description:      "This is a simple ticket sales application.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

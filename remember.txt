@@ -1,1 +1,5 @@
 Run MarkdownPreview to edit README.md
+
+	// @securityDefinitions.apikey	ApiKeyAuth
+	// @in							cookie
+	// @name						jwt_ticket_sale

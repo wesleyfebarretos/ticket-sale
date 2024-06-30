@@ -27,6 +27,13 @@ func BadRequestException(message string) *HttpException {
 	}
 }
 
+func UnauthorizedException(message string) *HttpException {
+	return &HttpException{
+		StatusCode: http.StatusUnauthorized,
+		Message:    message,
+	}
+}
+
 func InternalServerException(message string) *HttpException {
 	return &HttpException{
 		StatusCode: http.StatusInternalServerError,

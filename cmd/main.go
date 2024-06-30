@@ -14,7 +14,7 @@ import (
 
 // @title						Ticket Sale
 // @version					1.0
-// @description				This is a simple ticket selling application.
+// @description				This is a simple ticket sales application.
 // @termsOfService				http://swagger.io/terms/
 // @contact.name				Ticket Sale Support
 // @contact.url				http://www.swagger.io/support
@@ -23,9 +23,6 @@ import (
 // @license.url				http://www.apache.org/licenses/LICENSE-2.0.html
 // @host						localhost:8080
 // @BasePath					/v1
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in							cookie
-// @name						jwt_ticket_sale
 func main() {
 	testMode := flag.Bool("test", false, "")
 	flag.Parse()
