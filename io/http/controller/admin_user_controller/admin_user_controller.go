@@ -9,6 +9,17 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
 )
 
+// GetAdminUsers godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Get All
+//	@Description	Get All Admin Users
+//	@Produce		json
+//	@Param			Cookie	header		string	false	"token"	default(token=xxx)
+//	@Success		200		{object}	[]GetAllResponseDto
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Router			/admin/users [get]
 func GetAll(c *gin.Context) {
 	adminUsers := admin_user_service.GetAll(c)
 

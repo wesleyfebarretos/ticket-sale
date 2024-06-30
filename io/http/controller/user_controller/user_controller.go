@@ -11,6 +11,16 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 )
 
+// GetAll godoc
+//
+//	@Summary		Get All
+//	@Description	Get All Users
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}		GetAllResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Router			/users [get]
 func GetAll(c *gin.Context) {
 	users := user_service.GetAll(c)
 
@@ -48,6 +58,18 @@ func GetOneById(c *gin.Context) {
 	c.JSON(http.StatusOK, userResponse)
 }
 
+// Create godoc
+//
+//	@Summary		Create
+//	@Description	Create an new User
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			user	body		CreateRequestDto	true	"Add user"
+//	@Success		201		{object}	CreateResponseDto
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		400		{object}	exception.HttpException
+//	@Router			/users [post]
 func Create(c *gin.Context) {
 	body := CreateRequestDto{}
 

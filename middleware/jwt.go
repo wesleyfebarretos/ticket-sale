@@ -17,14 +17,14 @@ import (
 )
 
 type SignInRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required,email" example:"johndoe@gmail.com"`
+	Password string `json:"password" binding:"required" example:"123456"`
 }
 
 type SignInResponse struct {
-	Expire time.Time `json:"expire"`
-	Token  string    `json:"token"`
-	Code   int       `json:"code"`
+	Expire time.Time `json:"expire" example:"2024-06-30T20:46:13-03:00"`
+	Token  string    `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"`
+	Code   int       `json:"code" example:"200"`
 }
 
 type UserClaims struct {
@@ -33,8 +33,8 @@ type UserClaims struct {
 }
 
 type AuthenticationError struct {
-	Message string
-	Code    int
+	Message    string `json:"message" example:"Access denied"`
+	StatusCode int    `json:"statusCode" example:"401"`
 }
 
 var JWT *jwt.GinJWTMiddleware
@@ -70,6 +70,17 @@ func InitJWT() {
 	JWT = authMiddleware
 }
 
+// Auth godoc
+//
+//	@Summary		Sign In
+//	@Description	Sign In with and User
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			login	body		SignInRequest	true	"Sign In"
+//	@Success		200		{object}	SignInResponse
+//	@Failure		401		{object}	AuthenticationError
+//	@Router			/auth [post]
 func loginHandler(c *gin.Context) (interface{}, error) {
 	body := SignInRequest{}
 	readBody(c, &body)
@@ -119,8 +130,8 @@ func autorizatorHandler(data interface{}, c *gin.Context) bool {
 
 func unauthorizedHandler(c *gin.Context, code int, message string) {
 	c.JSON(code, AuthenticationError{
-		Code:    http.StatusForbidden,
-		Message: "Access denied",
+		StatusCode: http.StatusUnauthorized,
+		Message:    "Access denied",
 	})
 }
 

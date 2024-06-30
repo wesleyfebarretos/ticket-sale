@@ -1,0 +1,328 @@
+basePath: /v1
+definitions:
+  admin_user_controller.GetAllResponseDto:
+    properties:
+      createdAt:
+        example: "2024-06-29T06:29:44.999929Z"
+        type: string
+      email:
+        example: johndoe@gmail.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      id:
+        example: 1
+        type: integer
+      lastName:
+        example: Doe
+        type: string
+      role:
+        example: admin
+        type: string
+      updatedAt:
+        example: "2024-06-29T06:29:44.999929Z"
+        type: string
+    type: object
+  exception.HttpException:
+    properties:
+      message:
+        example: Invalid path parameter
+        type: string
+      statusCode:
+        example: 400
+        type: integer
+    type: object
+  middleware.AuthenticationError:
+    properties:
+      message:
+        example: Access denied
+        type: string
+      statusCode:
+        example: 401
+        type: integer
+    type: object
+  middleware.SignInRequest:
+    properties:
+      email:
+        example: johndoe@gmail.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  middleware.SignInResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      expire:
+        example: "2024-06-30T20:46:13-03:00"
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0
+        type: string
+    type: object
+  user_controller.AddressRequestDto:
+    properties:
+      addressType:
+        example: home
+        type: string
+      city:
+        example: Springfield
+        type: string
+      complement:
+        example: Apt 101
+        type: string
+      country:
+        example: USA
+        type: string
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      favorite:
+        example: true
+        type: boolean
+      postalCode:
+        example: "12345"
+        type: string
+      state:
+        example: IL
+        type: string
+      streetAddress:
+        example: 123 Main St
+        type: string
+      updatedAt:
+        example: "2023-01-02T00:00:00Z"
+        type: string
+    type: object
+  user_controller.AddressResponseDto:
+    properties:
+      addressType:
+        example: home
+        type: string
+      city:
+        example: Springfield
+        type: string
+      complement:
+        example: Apt 101
+        type: string
+      country:
+        example: USA
+        type: string
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      favorite:
+        example: true
+        type: boolean
+      id:
+        example: 1
+        type: integer
+      postalCode:
+        example: "12345"
+        type: string
+      state:
+        example: IL
+        type: string
+      streetAddress:
+        example: 123 Main St
+        type: string
+      updatedAt:
+        example: "2023-01-02T00:00:00Z"
+        type: string
+      userId:
+        example: 1
+        type: integer
+    type: object
+  user_controller.CreateRequestDto:
+    properties:
+      address:
+        $ref: '#/definitions/user_controller.AddressRequestDto'
+      email:
+        example: johndoe@gmail.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      lastName:
+        example: Doe
+        type: string
+      password:
+        example: "123456"
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  user_controller.CreateResponseDto:
+    properties:
+      address:
+        $ref: '#/definitions/user_controller.AddressResponseDto'
+      email:
+        example: johndoe@gmail.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      id:
+        example: 1
+        type: integer
+      lastName:
+        example: Doe
+        type: string
+      role:
+        example: user
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    type: object
+  user_controller.GetAllResponseDto:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      role:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: Ticket Sale Support
+    url: http://www.swagger.io/support
+  description: This is a simple ticket selling application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Ticket Sale
+  version: "1.0"
+paths:
+  /admin/users:
+    get:
+      description: Get All Admin Users
+      parameters:
+      - default: token=xxx
+        description: token
+        in: header
+        name: Cookie
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_user_controller.GetAllResponseDto'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get All
+      tags:
+      - Admin Users
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Sign In with and User
+      parameters:
+      - description: Sign In
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/middleware.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/middleware.SignInResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+      summary: Sign In
+      tags:
+      - Users
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get All Users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user_controller.GetAllResponseDto'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get All
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create an new User
+      parameters:
+      - description: Add user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user_controller.CreateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user_controller.CreateResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Create
+      tags:
+      - Users
+securityDefinitions:
+  ApiKeyAuth:
+    in: cookie
+    name: jwt_ticket_sale
+    type: apiKey
+swagger: "2.0"

@@ -5,7 +5,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
-func HandleAuth(router *gin.Engine) {
+func HandleAuth(router *gin.RouterGroup) {
 	authRoute := router.Group("auth")
 
 	authRoute.POST("", middleware.JWT.LoginHandler)

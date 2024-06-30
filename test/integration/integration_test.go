@@ -44,7 +44,7 @@ func TestMain(m *testing.M) {
 }
 
 func TMakeRequest(t *testing.T, method, endpoint string, data any) *http.Response {
-	url := fmt.Sprintf("%s/%s", Server.URL, endpoint)
+	url := fmt.Sprintf("%s/v1/%s", Server.URL, endpoint)
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {

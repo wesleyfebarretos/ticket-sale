@@ -7,7 +7,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
-func HandleAdminUser(router *gin.Engine) {
+func HandleAdminUser(router *gin.RouterGroup) {
 	userRoute := router.Group("admin/users")
 
 	userRoute.Use(middleware.JWT.MiddlewareFunc())

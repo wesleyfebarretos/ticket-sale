@@ -11,14 +11,16 @@ func Bind() *gin.Engine {
 	router.Use(gin.LoggerWithConfig(gin.LoggerConfig{
 		SkipPaths: []string{"/metrics"},
 	}))
-
 	// Init JWT instance
 	middleware.InitJWT()
 
-	HandleHealthCheck(router)
-	HandleAuth(router)
-	HandleUser(router)
-	HandleAdminUser(router)
+	v1 := router.Group("/v1")
+
+	HandleHealthCheck(v1)
+	HandleSwagger(v1)
+	HandleAuth(v1)
+	HandleUser(v1)
+	HandleAdminUser(v1)
 
 	return router
 }

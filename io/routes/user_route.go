@@ -7,7 +7,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
-func HandleUser(router *gin.Engine) {
+func HandleUser(router *gin.RouterGroup) {
 	userRoute := router.Group("users")
 
 	userRoute.POST("", user_controller.Create)

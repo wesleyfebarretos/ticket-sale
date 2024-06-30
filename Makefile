@@ -22,3 +22,11 @@ mdown: #MIGRATIONS DOWN
 #Tests
 it: #Integration Tests
 	@go test -v ./test/integration/
+
+#Swagger
+swg: #Gen swagger config
+	@rm -rf swagger
+	@swag init -g ./cmd/main.go -o ./swagger
+swgf: #Swagger format
+	@swag fmt
+

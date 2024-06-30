@@ -53,11 +53,11 @@ type CreateResponseDto struct {
 }
 
 type GetAllResponseDto struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      string     `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32      `json:"id" example:"1"`
+	FirstName string     `json:"firstName" example:"John"`
+	LastName  string     `json:"lastName" example:"Doe"`
+	Email     string     `json:"email" example:"johndoe@gmail.com"`
+	Role      string     `json:"role" example:"admin"`
+	CreatedAt time.Time  `json:"createdAt" example:"2024-06-29T06:29:44.999929Z"`
+	UpdatedAt *time.Time `json:"updatedAt" example:"2024-06-29T06:29:44.999929Z"`
 }
