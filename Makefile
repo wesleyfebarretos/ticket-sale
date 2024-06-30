@@ -1,3 +1,4 @@
+#Database
 db:
 	@docker compose up -d
 db-stop:
@@ -20,13 +21,13 @@ mdown: #MIGRATIONS DOWN
 	@go run ./cmd/migrations/main.go down 
 
 #Tests
-it: #Integration Tests
+it: #INTEGRATION TESTS
 	@go test -v ./test/integration/
 
 #Swagger
-swg: #Gen swagger config
+swg: #GEN SWAGGER CONFIG
 	@rm -rf swagger
 	@swag init -g ./cmd/main.go -o ./swagger
-swgf: #Swagger format
+swgf: #SWAGGER FORMAT
 	@swag fmt
 
