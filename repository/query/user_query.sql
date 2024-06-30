@@ -25,6 +25,20 @@ FROM
 WHERE
    email = $1 LIMIT 1;
 
+
+-- name: GetOneByEmailAndRole :one
+SELECT 
+    id, first_name, last_name,
+    email, role, created_at, updated_at
+FROM 
+   users
+WHERE
+   email = $1 
+AND
+    role = $2 
+LIMIT 
+    1;
+
 -- name: GetOneWithPasswordByEmail :one
 SELECT 
     id, password, role, email, first_name, last_name, created_at, updated_at

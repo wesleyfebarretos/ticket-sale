@@ -10,8 +10,8 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/config"
-	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
+	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
@@ -70,22 +70,10 @@ func InitJWT() {
 	JWT = authMiddleware
 }
 
-// Auth godoc
-//
-//	@Summary		Sign In
-//	@Description	Sign In with and User
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Param			login	body		SignInRequest	true	"Sign In"
-//	@Success		200		{object}	SignInResponse
-//	@Failure		401		{object}	AuthenticationError
-//	@Router			/auth [post]
 func loginHandler(c *gin.Context) (interface{}, error) {
 	body := SignInRequest{}
 	readBody(c, &body)
-	userRepository := user_repository.New(db.Conn)
-	user, err := userRepository.GetOneWithPasswordByEmail(c, body.Email)
+	user, err := repository.User.GetOneWithPasswordByEmail(c, body.Email)
 	if err != nil {
 		return nil, jwt.ErrFailedAuthentication
 	}

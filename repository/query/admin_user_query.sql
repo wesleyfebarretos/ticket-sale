@@ -83,3 +83,20 @@ FROM
    users
 WHERE
    email = $1 AND id != $2 LIMIT 1;
+
+-- name: GetOneByEmailAndRoles :one
+SELECT 
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
+FROM 
+   users
+WHERE
+   email = $1 
+AND
+    role IN($2,$3)
+LIMIT 1;

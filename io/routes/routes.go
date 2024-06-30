@@ -19,6 +19,7 @@ func Bind() *gin.Engine {
 	HandleHealthCheck(v1)
 	HandleSwagger(v1)
 	HandleAuth(v1)
+	HandleAdminAuth(v1)
 	HandleUser(v1)
 	HandleAdminUser(v1)
 

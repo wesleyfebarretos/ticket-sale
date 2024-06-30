@@ -15,10 +15,10 @@ import (
 //	@Summary		Get All
 //	@Description	Get All Admin Users
 //	@Produce		json
-//	@Param			Cookie	header		string	false	"token"	default(token=xxx)
-//	@Success		200		{object}	[]GetAllResponseDto
-//	@Failure		500		{object}	exception.HttpException
-//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Success		200	{object}	[]GetAllResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Failure		403	{object}	middleware.RolePermissionError
 //	@Router			/admin/users [get]
 func GetAll(c *gin.Context) {
 	adminUsers := admin_user_service.GetAll(c)
@@ -39,6 +39,19 @@ func GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, adminUsersResponse)
 }
 
+// GetAdminUserById godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Get One By Id
+//	@Description	Get one admin user by id
+//	@Produce		json
+//	@Param			id	path		int	true	"Admin User ID"
+//	@Success		200	{object}	GetOneByIdResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		404	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/users/{id} [get]
 func GetOneById(c *gin.Context) {
 	id := controller.GetId(c)
 
@@ -57,6 +70,19 @@ func GetOneById(c *gin.Context) {
 	c.JSON(http.StatusOK, adminUserResponse)
 }
 
+// GetAdminUserByEmail godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Get One By Email
+//	@Description	Get one admin user by email
+//	@Produce		json
+//	@Param			email	body		GetOneByEmailRequestDto	true	"Admin User Email"
+//	@Success		200		{object}	GetOneByEmailResponseDto
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		404		{object}	exception.HttpException
+//	@Failure		403		{object}	middleware.RolePermissionError
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Router			/admin/users/get-by-email [post]
 func GetOneByEmail(c *gin.Context) {
 	body := GetOneByEmailRequestDto{}
 
@@ -77,6 +103,19 @@ func GetOneByEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, adminUserResponse)
 }
 
+// CreateAdminUser godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Create An Admin User
+//	@Description	Create an admin user
+//	@Produce		json
+//	@Param			AdminUser	body		CreateRequestDto	true	"New Admin User"
+//	@Success		200			{object}	CreateResponseDto
+//	@Failure		500			{object}	exception.HttpException
+//	@Failure		400			{object}	exception.HttpException
+//	@Failure		403			{object}	middleware.RolePermissionError
+//	@Failure		401			{object}	middleware.AuthenticationError
+//	@Router			/admin/users [post]
 func Create(c *gin.Context) {
 	body := CreateRequestDto{}
 
@@ -102,6 +141,21 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, newAdminUserResponse)
 }
 
+// UpdateAdminUser godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Update An Admin User
+//	@Description	Update an admin user
+//	@Produce		json
+//	@Param			AdminUser	body		UpdateRequestDto	true	"Update Admin User"
+//	@Param			id			path		int					true	"Admin User ID"
+//	@Success		200			{object}	bool
+//	@Failure		500			{object}	exception.HttpException
+//	@Failure		400			{object}	exception.HttpException
+//	@Failure		404			{object}	exception.HttpException
+//	@Failure		403			{object}	middleware.RolePermissionError
+//	@Failure		401			{object}	middleware.AuthenticationError
+//	@Router			/admin/users/{id} [put]
 func Update(c *gin.Context) {
 	id := controller.GetId(c)
 
@@ -120,6 +174,19 @@ func Update(c *gin.Context) {
 	c.JSON(http.StatusOK, true)
 }
 
+// DeleteAdminUser godoc
+//
+//	@Tags			Admin Users
+//	@Summary		Delete An Admin User
+//	@Description	Delete an admin user
+//	@Produce		json
+//	@Param			id	path		int	true	"Admin User ID"
+//	@Success		200	{object}	bool
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		404	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/users/{id} [delete]
 func Delete(c *gin.Context) {
 	id := controller.GetId(c)
 

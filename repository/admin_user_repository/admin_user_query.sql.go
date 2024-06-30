@@ -216,6 +216,55 @@ func (q *Queries) GetOneByEmail(ctx context.Context, arg GetOneByEmailParams) (G
 	return i, err
 }
 
+const getOneByEmailAndRoles = `-- name: GetOneByEmailAndRoles :one
+SELECT 
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
+FROM 
+   users
+WHERE
+   email = $1 
+AND
+    role IN($2,$3)
+LIMIT 1
+`
+
+type GetOneByEmailAndRolesParams struct {
+	Email  string `json:"email"`
+	Role   Roles  `json:"role"`
+	Role_2 Roles  `json:"role2"`
+}
+
+type GetOneByEmailAndRolesRow struct {
+	ID        int32      `json:"id"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Role      Roles      `json:"role"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
+}
+
+func (q *Queries) GetOneByEmailAndRoles(ctx context.Context, arg GetOneByEmailAndRolesParams) (GetOneByEmailAndRolesRow, error) {
+	row := q.db.QueryRow(ctx, getOneByEmailAndRoles, arg.Email, arg.Role, arg.Role_2)
+	var i GetOneByEmailAndRolesRow
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getOneById = `-- name: GetOneById :one
 SELECT 
     id,
