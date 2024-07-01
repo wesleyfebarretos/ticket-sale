@@ -111,9 +111,9 @@ func CreateUser(role string) users_repository.GetOneWithPasswordByEmailRow {
 		Role:      users_repository.Roles(role),
 	}
 
-	user, _ := repository.User.Create(context.Background(), newUser)
+	user, _ := repository.Users.Create(context.Background(), newUser)
 
-	nUser, _ := repository.User.GetOneWithPasswordByEmail(context.Background(), user.Email)
+	nUser, _ := repository.Users.GetOneWithPasswordByEmail(context.Background(), user.Email)
 
 	return nUser
 }
@@ -136,7 +136,7 @@ func CreateUserAddress(userId int32) users_addresses_repository.UsersAddress {
 		UserID:        userId,
 	}
 
-	address, _ := repository.UserAdress.Create(context.Background(), newAddress)
+	address, _ := repository.UsersAdresses.Create(context.Background(), newAddress)
 
 	return address
 }

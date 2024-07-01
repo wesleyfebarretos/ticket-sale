@@ -73,7 +73,7 @@ func InitJWT() {
 func loginHandler(c *gin.Context) (interface{}, error) {
 	body := SignInRequest{}
 	readBody(c, &body)
-	user, err := repository.User.GetOneWithPasswordByEmail(c, body.Email)
+	user, err := repository.Users.GetOneWithPasswordByEmail(c, body.Email)
 	if err != nil {
 		return nil, jwt.ErrFailedAuthentication
 	}

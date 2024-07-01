@@ -8,7 +8,7 @@ import (
 )
 
 func Create(c *gin.Context, newAddress users_addresses_repository.CreateParams) users_addresses_repository.UsersAddress {
-	newUserAddress, err := repository.UserAdress.Create(c, newAddress)
+	newUserAddress, err := repository.UsersAdresses.Create(c, newAddress)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}

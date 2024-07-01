@@ -9,7 +9,7 @@ import (
 )
 
 func Auth(c *gin.Context, email string) {
-	_, err := repository.AdminUser.GetOneByEmailAndRoles(c, admin_users_repository.GetOneByEmailAndRolesParams{
+	_, err := repository.AdminUsers.GetOneByEmailAndRoles(c, admin_users_repository.GetOneByEmailAndRolesParams{
 		Email:  email,
 		Role:   roles_enum.ADMIN,
 		Role_2: roles_enum.SUPER_ADMIN,

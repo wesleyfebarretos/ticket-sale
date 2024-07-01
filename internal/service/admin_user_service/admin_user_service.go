@@ -13,7 +13,7 @@ import (
 )
 
 func GetAll(c *gin.Context) []admin_users_repository.GetAllRow {
-	adminUsers, err := repository.AdminUser.GetAll(c, roles_enum.ADMIN)
+	adminUsers, err := repository.AdminUsers.GetAll(c, roles_enum.ADMIN)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -22,7 +22,7 @@ func GetAll(c *gin.Context) []admin_users_repository.GetAllRow {
 }
 
 func GetOneById(c *gin.Context, id int32) admin_users_repository.GetOneByIdRow {
-	adminUser, err := repository.AdminUser.GetOneById(c, admin_users_repository.GetOneByIdParams{
+	adminUser, err := repository.AdminUsers.GetOneById(c, admin_users_repository.GetOneByIdParams{
 		ID:   id,
 		Role: roles_enum.ADMIN,
 	})
@@ -34,7 +34,7 @@ func GetOneById(c *gin.Context, id int32) admin_users_repository.GetOneByIdRow {
 }
 
 func GetOneByEmail(c *gin.Context, email string) admin_users_repository.GetOneByEmailRow {
-	adminUser, err := repository.AdminUser.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
+	adminUser, err := repository.AdminUsers.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
 		Email: email,
 		Role:  roles_enum.ADMIN,
 	})
@@ -46,7 +46,7 @@ func GetOneByEmail(c *gin.Context, email string) admin_users_repository.GetOneBy
 }
 
 func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) admin_users_repository.CreateRow {
-	_, err := repository.AdminUser.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
+	_, err := repository.AdminUsers.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
 		Email: newAdminUser.Email,
 		Role:  roles_enum.ADMIN,
 	})
@@ -67,7 +67,7 @@ func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) ad
 	newAdminUser.Password = string(hashPassword)
 	newAdminUser.Role = roles_enum.ADMIN
 
-	createdAdminUser, err := repository.AdminUser.Create(c, newAdminUser)
+	createdAdminUser, err := repository.AdminUsers.Create(c, newAdminUser)
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
@@ -76,7 +76,7 @@ func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) ad
 }
 
 func Update(c *gin.Context, adminUser admin_users_repository.UpdateParams) {
-	_, err := repository.AdminUser.CheckIfEmailExists(c, admin_users_repository.CheckIfEmailExistsParams{
+	_, err := repository.AdminUsers.CheckIfEmailExists(c, admin_users_repository.CheckIfEmailExistsParams{
 		Email: adminUser.Email,
 		ID:    adminUser.ID,
 	})
@@ -89,14 +89,14 @@ func Update(c *gin.Context, adminUser admin_users_repository.UpdateParams) {
 		panic(exception.BadRequestException(fmt.Sprintf("email %s already registered", adminUser.Email)))
 	}
 
-	err = repository.AdminUser.Update(c, adminUser)
+	err = repository.AdminUsers.Update(c, adminUser)
 	if err != nil {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
 
 func Delete(c *gin.Context, id int32) {
-	err := repository.AdminUser.Delete(c, id)
+	err := repository.AdminUsers.Delete(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}

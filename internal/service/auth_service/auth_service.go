@@ -11,7 +11,7 @@ import (
 )
 
 func Auth(c *gin.Context, email string) {
-	_, err := repository.User.GetOneByEmailAndRole(c, users_repository.GetOneByEmailAndRoleParams{
+	_, err := repository.Users.GetOneByEmailAndRole(c, users_repository.GetOneByEmailAndRoleParams{
 		Email: email,
 		Role:  roles_enum.USER,
 	})

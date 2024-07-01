@@ -66,7 +66,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &updateAdminUserResponse)
 
-		updatedUser, err := repository.AdminUser.GetOneById(context.Background(), admin_users_repository.GetOneByIdParams{
+		updatedUser, err := repository.AdminUsers.GetOneById(context.Background(), admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -91,7 +91,7 @@ func TestAdminUsersController(t *testing.T) {
 		TSetCookieWithUser(t, adminUser)
 		ctx := context.Background()
 
-		beforeDeleteAdminUser, err := repository.AdminUser.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
+		beforeDeleteAdminUser, err := repository.AdminUsers.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -105,7 +105,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &deleteAdminUsersResponse)
 
-		_, err = repository.AdminUser.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
+		_, err = repository.AdminUsers.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -173,7 +173,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		ctx := context.Background()
 		for i := 0; i < 10; i++ {
-			repository.AdminUser.Create(ctx, admin_users_repository.CreateParams{
+			repository.AdminUsers.Create(ctx, admin_users_repository.CreateParams{
 				FirstName: "John",
 				LastName:  "Doe",
 				Email:     fmt.Sprintf("johndoefor%d@gmail.com", i),

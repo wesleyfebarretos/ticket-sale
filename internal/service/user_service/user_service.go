@@ -13,7 +13,7 @@ import (
 )
 
 func GetAll(c *gin.Context) []users_repository.GetAllRow {
-	users, err := repository.User.GetAll(c, roles_enum.USER)
+	users, err := repository.Users.GetAll(c, roles_enum.USER)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -22,7 +22,7 @@ func GetAll(c *gin.Context) []users_repository.GetAllRow {
 }
 
 func GetOneById(c *gin.Context, id int32) users_repository.GetOneByIdRow {
-	user, err := repository.User.GetOneById(c, users_repository.GetOneByIdParams{
+	user, err := repository.Users.GetOneById(c, users_repository.GetOneByIdParams{
 		ID:   id,
 		Role: roles_enum.USER,
 	})
@@ -36,7 +36,7 @@ func GetOneById(c *gin.Context, id int32) users_repository.GetOneByIdRow {
 func Create(c *gin.Context, newUser users_repository.CreateParams) users_repository.CreateRow {
 	var createdUser users_repository.CreateRow
 
-	_, err := repository.User.GetOneByEmail(c, newUser.Email)
+	_, err := repository.Users.GetOneByEmail(c, newUser.Email)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -53,7 +53,7 @@ func Create(c *gin.Context, newUser users_repository.CreateParams) users_reposit
 	newUser.Password = string(hashPassword)
 	newUser.Role = roles_enum.USER
 
-	createdUser, err = repository.User.Create(c, newUser)
+	createdUser, err = repository.Users.Create(c, newUser)
 	if err != nil {
 		panic(exception.BadRequestException(err.Error()))
 	}
@@ -62,7 +62,7 @@ func Create(c *gin.Context, newUser users_repository.CreateParams) users_reposit
 }
 
 func Update(c *gin.Context, user users_repository.UpdateParams) {
-	_, err := repository.User.CheckIfEmailExists(c, users_repository.CheckIfEmailExistsParams{
+	_, err := repository.Users.CheckIfEmailExists(c, users_repository.CheckIfEmailExistsParams{
 		Email: user.Email,
 		ID:    user.ID,
 	})
@@ -77,14 +77,14 @@ func Update(c *gin.Context, user users_repository.UpdateParams) {
 
 	user.Role = roles_enum.USER
 
-	err = repository.User.Update(c, user)
+	err = repository.Users.Update(c, user)
 	if err != nil {
 		panic(exception.NotFoundException(err.Error()))
 	}
 }
 
 func GetFullProfile(c *gin.Context, id int32) users_repository.GetFullProfileRow {
-	user, err := repository.User.GetFullProfile(c, id)
+	user, err := repository.Users.GetFullProfile(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}

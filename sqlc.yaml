@@ -32,3 +32,11 @@ sql:
         <<: *default_configs
         package: "admin_users_repository"
         out: "repository/admin_users_repository"
+
+  - <<: *schema
+    queries: "repository/query/users_phones_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "users_phones_repository"
+        out: "repository/users_phones_repository"
