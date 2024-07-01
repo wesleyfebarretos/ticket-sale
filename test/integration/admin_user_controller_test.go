@@ -11,7 +11,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller/admin_user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/admin_users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
 
@@ -66,7 +66,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &updateAdminUserResponse)
 
-		updatedUser, err := repository.AdminUser.GetOneById(context.Background(), admin_user_repository.GetOneByIdParams{
+		updatedUser, err := repository.AdminUser.GetOneById(context.Background(), admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -91,7 +91,7 @@ func TestAdminUsersController(t *testing.T) {
 		TSetCookieWithUser(t, adminUser)
 		ctx := context.Background()
 
-		beforeDeleteAdminUser, err := repository.AdminUser.GetOneById(ctx, admin_user_repository.GetOneByIdParams{
+		beforeDeleteAdminUser, err := repository.AdminUser.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -105,7 +105,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &deleteAdminUsersResponse)
 
-		_, err = repository.AdminUser.GetOneById(ctx, admin_user_repository.GetOneByIdParams{
+		_, err = repository.AdminUser.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -173,7 +173,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		ctx := context.Background()
 		for i := 0; i < 10; i++ {
-			repository.AdminUser.Create(ctx, admin_user_repository.CreateParams{
+			repository.AdminUser.Create(ctx, admin_users_repository.CreateParams{
 				FirstName: "John",
 				LastName:  "Doe",
 				Email:     fmt.Sprintf("johndoefor%d@gmail.com", i),

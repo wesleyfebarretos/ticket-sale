@@ -2,19 +2,19 @@ package repository
 
 import (
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
-	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_address_repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/admin_users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 )
 
 var (
-	User       = &user_repository.Queries{}
-	UserAdress = &user_address_repository.Queries{}
-	AdminUser  = &admin_user_repository.Queries{}
+	User       = &users_repository.Queries{}
+	UserAdress = &users_addresses_repository.Queries{}
+	AdminUser  = &admin_users_repository.Queries{}
 )
 
 func Bind() {
-	User = user_repository.New(db.Conn)
-	UserAdress = user_address_repository.New(db.Conn)
-	AdminUser = admin_user_repository.New(db.Conn)
+	User = users_repository.New(db.Conn)
+	UserAdress = users_addresses_repository.New(db.Conn)
+	AdminUser = admin_users_repository.New(db.Conn)
 }

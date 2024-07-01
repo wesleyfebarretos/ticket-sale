@@ -19,8 +19,8 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/io/routes"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_address_repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
@@ -97,18 +97,18 @@ func Decode[T any](t *testing.T, input io.Reader, into *T) {
 	}
 }
 
-func CreateUser(role string) user_repository.GetOneWithPasswordByEmailRow {
+func CreateUser(role string) users_repository.GetOneWithPasswordByEmailRow {
 	password, err := utils.HashPassword(UserTestPassword)
 	if err != nil {
 		log.Fatalf("could not hash password: %v", err)
 	}
 
-	newUser := user_repository.CreateParams{
+	newUser := users_repository.CreateParams{
 		FirstName: "John",
 		LastName:  "Doe",
 		Email:     "johndoetest@gmail.com",
 		Password:  password,
-		Role:      user_repository.Roles(role),
+		Role:      users_repository.Roles(role),
 	}
 
 	user, _ := repository.User.Create(context.Background(), newUser)
@@ -118,13 +118,13 @@ func CreateUser(role string) user_repository.GetOneWithPasswordByEmailRow {
 	return nUser
 }
 
-func CreateUserAddress(userId int32) user_address_repository.UsersAddress {
+func CreateUserAddress(userId int32) users_addresses_repository.UsersAddress {
 	favorite := true
 	complement := "Moon"
 	postalCode := "Jupiter"
 	addressType := "House"
 
-	newAddress := user_address_repository.CreateParams{
+	newAddress := users_addresses_repository.CreateParams{
 		Favorite:      &favorite,
 		Complement:    &complement,
 		PostalCode:    &postalCode,

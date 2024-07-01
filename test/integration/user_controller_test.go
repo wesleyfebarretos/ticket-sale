@@ -12,7 +12,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller/user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_utils"
 )
 
@@ -97,13 +97,13 @@ func TestUsersController(t *testing.T) {
 
 		res := TMakeRequest(t, http.MethodGet, "users", nil)
 
-		users := []user_repository.GetAllRow{}
+		users := []users_repository.GetAllRow{}
 
 		test_utils.Decode(t, res.Body, &users)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, 1, len(users))
-		assert.IsType(t, user_repository.GetAllRow{}, users[0])
+		assert.IsType(t, users_repository.GetAllRow{}, users[0])
 	}))
 
 	t.Run("it should get user full profile", TRun(func(t *testing.T) {
@@ -120,7 +120,7 @@ func TestUsersController(t *testing.T) {
 
 		defer res.Body.Close()
 
-		userFullProfileRes := user_repository.GetFullProfileRow{}
+		userFullProfileRes := users_repository.GetFullProfileRow{}
 
 		err = json.Unmarshal(bSlice, &userFullProfileRes)
 		if err != nil {
@@ -156,7 +156,7 @@ func TestUsersController(t *testing.T) {
 			t.Fatalf("could not marshal json to bytes: %v", err)
 		}
 
-		expectedUserFullProfile := user_repository.GetFullProfileRow{}
+		expectedUserFullProfile := users_repository.GetFullProfileRow{}
 
 		err = json.Unmarshal(expectedBSlice, &expectedUserFullProfile)
 		if err != nil {
@@ -172,8 +172,8 @@ func TestUsersController(t *testing.T) {
 		TSetCookieWithUser(t, user)
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", user.ID), nil)
 
-		userResponse := &user_repository.GetOneByIdRow{}
-		expectedUser := user_repository.GetOneByIdRow{
+		userResponse := &users_repository.GetOneByIdRow{}
+		expectedUser := users_repository.GetOneByIdRow{
 			ID:    user.ID,
 			Email: user.Email,
 			Role:  user.Role,

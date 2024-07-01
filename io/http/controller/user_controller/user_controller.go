@@ -7,8 +7,8 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_address_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_service"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_address_repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 )
 
 // GetAll godoc
@@ -88,7 +88,7 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	createUser := user_repository.CreateParams{
+	createUser := users_repository.CreateParams{
 		Email:     body.Email,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
@@ -97,7 +97,7 @@ func Create(c *gin.Context) {
 
 	newUserResponse := user_service.Create(c, createUser)
 
-	createUserAddress := user_address_repository.CreateParams{
+	createUserAddress := users_addresses_repository.CreateParams{
 		UserID:        int32(newUserResponse.ID),
 		AddressType:   body.Address.AddressType,
 		StreetAddress: body.Address.StreetAddress,
@@ -154,7 +154,7 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	updateUser := user_repository.UpdateParams{
+	updateUser := users_repository.UpdateParams{
 		ID:        user.Id,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,

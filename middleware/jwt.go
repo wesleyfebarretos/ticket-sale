@@ -12,7 +12,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
@@ -100,7 +100,7 @@ func readBody(c *gin.Context, body any) {
 }
 
 func payloadHandler(data interface{}) jwt.MapClaims {
-	user := data.(user_repository.GetOneWithPasswordByEmailRow)
+	user := data.(users_repository.GetOneWithPasswordByEmailRow)
 
 	return jwt.MapClaims{
 		"id":   user.ID,

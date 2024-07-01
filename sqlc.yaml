@@ -4,11 +4,11 @@ sql:
   - &schema
     engine: "postgresql"
     schema: "cmd/migrations/tables"
-    queries: "repository/query/user_query.sql"
+    queries: "repository/query/users_query.sql"
     gen:
       go: &default_configs
-        package: "user_repository"
-        out: "repository/user_repository"
+        package: "users_repository"
+        out: "repository/users_repository"
         sql_package: "pgx/v4"
         emit_json_tags: true
         emit_empty_slices: true
@@ -22,13 +22,13 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "user_address_repository"
-        out: "repository/user_address_repository"
+        package: "users_addresses_repository"
+        out: "repository/users_addresses_repository"
 
   - <<: *schema
-    queries: "repository/query/admin_user_query.sql"
+    queries: "repository/query/admin_users_query.sql"
     gen:
       go: 
         <<: *default_configs
-        package: "admin_user_repository"
-        out: "repository/admin_user_repository"
+        package: "admin_users_repository"
+        out: "repository/admin_users_repository"

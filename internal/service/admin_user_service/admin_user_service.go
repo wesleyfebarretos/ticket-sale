@@ -8,11 +8,11 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/admin_users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
-func GetAll(c *gin.Context) []admin_user_repository.GetAllRow {
+func GetAll(c *gin.Context) []admin_users_repository.GetAllRow {
 	adminUsers, err := repository.AdminUser.GetAll(c, roles_enum.ADMIN)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
@@ -21,8 +21,8 @@ func GetAll(c *gin.Context) []admin_user_repository.GetAllRow {
 	return adminUsers
 }
 
-func GetOneById(c *gin.Context, id int32) admin_user_repository.GetOneByIdRow {
-	adminUser, err := repository.AdminUser.GetOneById(c, admin_user_repository.GetOneByIdParams{
+func GetOneById(c *gin.Context, id int32) admin_users_repository.GetOneByIdRow {
+	adminUser, err := repository.AdminUser.GetOneById(c, admin_users_repository.GetOneByIdParams{
 		ID:   id,
 		Role: roles_enum.ADMIN,
 	})
@@ -33,8 +33,8 @@ func GetOneById(c *gin.Context, id int32) admin_user_repository.GetOneByIdRow {
 	return adminUser
 }
 
-func GetOneByEmail(c *gin.Context, email string) admin_user_repository.GetOneByEmailRow {
-	adminUser, err := repository.AdminUser.GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
+func GetOneByEmail(c *gin.Context, email string) admin_users_repository.GetOneByEmailRow {
+	adminUser, err := repository.AdminUser.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
 		Email: email,
 		Role:  roles_enum.ADMIN,
 	})
@@ -45,8 +45,8 @@ func GetOneByEmail(c *gin.Context, email string) admin_user_repository.GetOneByE
 	return adminUser
 }
 
-func Create(c *gin.Context, newAdminUser admin_user_repository.CreateParams) admin_user_repository.CreateRow {
-	_, err := repository.AdminUser.GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
+func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) admin_users_repository.CreateRow {
+	_, err := repository.AdminUser.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
 		Email: newAdminUser.Email,
 		Role:  roles_enum.ADMIN,
 	})
@@ -75,8 +75,8 @@ func Create(c *gin.Context, newAdminUser admin_user_repository.CreateParams) adm
 	return createdAdminUser
 }
 
-func Update(c *gin.Context, adminUser admin_user_repository.UpdateParams) {
-	_, err := repository.AdminUser.CheckIfEmailExists(c, admin_user_repository.CheckIfEmailExistsParams{
+func Update(c *gin.Context, adminUser admin_users_repository.UpdateParams) {
+	_, err := repository.AdminUser.CheckIfEmailExists(c, admin_users_repository.CheckIfEmailExistsParams{
 		Email: adminUser.Email,
 		ID:    adminUser.ID,
 	})

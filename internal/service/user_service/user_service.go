@@ -8,11 +8,11 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
 )
 
-func GetAll(c *gin.Context) []user_repository.GetAllRow {
+func GetAll(c *gin.Context) []users_repository.GetAllRow {
 	users, err := repository.User.GetAll(c, roles_enum.USER)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
@@ -21,8 +21,8 @@ func GetAll(c *gin.Context) []user_repository.GetAllRow {
 	return users
 }
 
-func GetOneById(c *gin.Context, id int32) user_repository.GetOneByIdRow {
-	user, err := repository.User.GetOneById(c, user_repository.GetOneByIdParams{
+func GetOneById(c *gin.Context, id int32) users_repository.GetOneByIdRow {
+	user, err := repository.User.GetOneById(c, users_repository.GetOneByIdParams{
 		ID:   id,
 		Role: roles_enum.USER,
 	})
@@ -33,8 +33,8 @@ func GetOneById(c *gin.Context, id int32) user_repository.GetOneByIdRow {
 	return user
 }
 
-func Create(c *gin.Context, newUser user_repository.CreateParams) user_repository.CreateRow {
-	var createdUser user_repository.CreateRow
+func Create(c *gin.Context, newUser users_repository.CreateParams) users_repository.CreateRow {
+	var createdUser users_repository.CreateRow
 
 	_, err := repository.User.GetOneByEmail(c, newUser.Email)
 	if err != nil && err != pgx.ErrNoRows {
@@ -61,8 +61,8 @@ func Create(c *gin.Context, newUser user_repository.CreateParams) user_repositor
 	return createdUser
 }
 
-func Update(c *gin.Context, user user_repository.UpdateParams) {
-	_, err := repository.User.CheckIfEmailExists(c, user_repository.CheckIfEmailExistsParams{
+func Update(c *gin.Context, user users_repository.UpdateParams) {
+	_, err := repository.User.CheckIfEmailExists(c, users_repository.CheckIfEmailExistsParams{
 		Email: user.Email,
 		ID:    user.ID,
 	})
@@ -83,7 +83,7 @@ func Update(c *gin.Context, user user_repository.UpdateParams) {
 	}
 }
 
-func GetFullProfile(c *gin.Context, id int32) user_repository.GetFullProfileRow {
+func GetFullProfile(c *gin.Context, id int32) users_repository.GetFullProfileRow {
 	user, err := repository.User.GetFullProfile(c, id)
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))

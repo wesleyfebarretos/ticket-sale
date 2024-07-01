@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/internal/service/admin_user_service"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/admin_users_repository"
 )
 
 // GetAdminUsers godoc
@@ -121,7 +121,7 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	newAdminUser := admin_user_service.Create(c, admin_user_repository.CreateParams{
+	newAdminUser := admin_user_service.Create(c, admin_users_repository.CreateParams{
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
 		Email:     body.Email,
@@ -163,12 +163,12 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	admin_user_service.Update(c, admin_user_repository.UpdateParams{
+	admin_user_service.Update(c, admin_users_repository.UpdateParams{
 		ID:        id,
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
 		Email:     body.Email,
-		Role:      admin_user_repository.Roles(body.Role),
+		Role:      admin_users_repository.Roles(body.Role),
 	})
 
 	c.JSON(http.StatusOK, true)

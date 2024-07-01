@@ -7,11 +7,11 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
-	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 )
 
 func Auth(c *gin.Context, email string) {
-	_, err := repository.User.GetOneByEmailAndRole(c, user_repository.GetOneByEmailAndRoleParams{
+	_, err := repository.User.GetOneByEmailAndRole(c, users_repository.GetOneByEmailAndRoleParams{
 		Email: email,
 		Role:  roles_enum.USER,
 	})
