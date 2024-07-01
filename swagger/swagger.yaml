@@ -353,27 +353,70 @@ definitions:
       role:
         example: user
         type: string
-    required:
-    - email
-    - firstName
-    - lastName
     type: object
   user_controller.GetAllResponseDto:
     properties:
       createdAt:
+        example: "2023-01-01T00:00:00Z"
         type: string
       email:
+        example: johndoe@gmail.com
         type: string
       firstName:
+        example: John
         type: string
       id:
+        example: 1
         type: integer
       lastName:
+        example: Doe
         type: string
       role:
+        example: user
         type: string
       updatedAt:
+        example: "2023-01-01T00:00:00Z"
         type: string
+    type: object
+  user_controller.GetOneByIdResponseDto:
+    properties:
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      email:
+        example: johndoe@gmail.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      id:
+        example: 1
+        type: integer
+      lastName:
+        example: Doe
+        type: string
+      role:
+        example: user
+        type: string
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+    type: object
+  user_controller.UpdateRequestDto:
+    properties:
+      email:
+        example: johndoeupdate@gmail.com
+        type: string
+      firstName:
+        example: John Update
+        type: string
+      lastName:
+        example: Doe update
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
     type: object
 host: localhost:8080
 info:
@@ -700,6 +743,83 @@ paths:
           schema:
             $ref: '#/definitions/exception.HttpException'
       summary: Create
+      tags:
+      - Users
+  /users/{id}:
+    get:
+      description: Get one user by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_controller.GetOneByIdResponseDto'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get One By Id
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update an user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Add user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user_controller.UpdateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Update An User
       tags:
       - Users
 swagger: "2.0"

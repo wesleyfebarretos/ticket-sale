@@ -1,7 +1,12 @@
 -- name: GetAll :many
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users 
 WHERE
@@ -11,25 +16,46 @@ ORDER BY
 
 -- name: GetOneById :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM
-   users WHERE id = $1 LIMIT 1;
+   users 
+WHERE 
+    id = $1 
+AND
+    role = $2
+LIMIT 1;
 
 -- name: GetOneByEmail :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 LIMIT 1;
+   email = $1 
+LIMIT 1;
 
 
 -- name: GetOneByEmailAndRole :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
@@ -41,20 +67,36 @@ LIMIT
 
 -- name: GetOneWithPasswordByEmail :one
 SELECT 
-    id, password, role, email, first_name, last_name, created_at, updated_at
+    id,
+    password,
+    role,
+    email,
+    first_name,
+    last_name,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 LIMIT 1;
+   email = $1 
+LIMIT 1;
 
 -- name: CheckIfEmailExists :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 AND id != $2 LIMIT 1;
+   email = $1 
+AND 
+    id != $2 
+LIMIT 1;
 
 -- name: GetFullProfile :one
 SELECT 
@@ -89,9 +131,7 @@ ON
     u.id = ua.user_id
 WHERE 
     u.id = $1 
-GROUP BY 
-
-	u.id 
+GROUP BY u.id 
 LIMIT 1;
 
 -- name: Create :one
@@ -100,8 +140,13 @@ INSERT INTO users
 VALUES 
 ($1, $2, $3, $4, $5) 
 RETURNING
-    id, first_name, last_name,
-    email, role, created_at, updated_at;
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at;
 
 -- name: Update :exec
 UPDATE users 

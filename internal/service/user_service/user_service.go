@@ -22,7 +22,10 @@ func GetAll(c *gin.Context) []user_repository.GetAllRow {
 }
 
 func GetOneById(c *gin.Context, id int32) user_repository.GetOneByIdRow {
-	user, err := repository.User.GetOneById(c, id)
+	user, err := repository.User.GetOneById(c, user_repository.GetOneByIdParams{
+		ID:   id,
+		Role: enum.USER_ROLE,
+	})
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
 	}

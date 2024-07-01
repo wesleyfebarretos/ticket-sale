@@ -41,12 +41,25 @@ func GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, usersResponse)
 }
 
+// GetOneById godoc
+//
+//	@Summary		Get One By Id
+//	@Description	Get one user by id
+//	@Tags			Users
+//	@Produce		json
+//	@Param			id	path		int	true	"User ID"
+//	@Success		200	{object}	GetOneByIdResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		404	{object}	exception.HttpException
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Router			/users/{id} [get]
 func GetOneById(c *gin.Context) {
 	id := controller.GetId(c)
 
 	user := user_service.GetOneById(c, id)
 
-	userResponse := GetOneByIdDto{
+	userResponse := GetOneByIdResponseDto{
 		Id:        user.ID,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
@@ -120,6 +133,21 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, newUser)
 }
 
+// UpdateUser godoc
+//
+//	@Summary		Update An User
+//	@Description	Update an user
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		int					true	"User ID"
+//	@Param			user	body		UpdateRequestDto	true	"Add user"
+//	@Success		200		{object}	bool
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		404		{object}	exception.HttpException
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Failure		403		{object}	middleware.RolePermissionError
+//	@Router			/users/{id} [put]
 func Update(c *gin.Context) {
 	user := controller.GetClaims(c)
 	body := UpdateRequestDto{}

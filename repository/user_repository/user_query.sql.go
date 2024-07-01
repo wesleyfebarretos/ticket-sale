@@ -12,12 +12,20 @@ import (
 
 const checkIfEmailExists = `-- name: CheckIfEmailExists :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 AND id != $2 LIMIT 1
+   email = $1 
+AND 
+    id != $2 
+LIMIT 1
 `
 
 type CheckIfEmailExistsParams struct {
@@ -56,8 +64,13 @@ INSERT INTO users
 VALUES 
 ($1, $2, $3, $4, $5) 
 RETURNING
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 `
 
 type CreateParams struct {
@@ -101,8 +114,13 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (CreateRow, erro
 
 const getAll = `-- name: GetAll :many
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users 
 WHERE
@@ -182,9 +200,7 @@ ON
     u.id = ua.user_id
 WHERE 
     u.id = $1 
-GROUP BY 
-
-	u.id 
+GROUP BY u.id 
 LIMIT 1
 `
 
@@ -217,12 +233,18 @@ func (q *Queries) GetFullProfile(ctx context.Context, id int32) (GetFullProfileR
 
 const getOneByEmail = `-- name: GetOneByEmail :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 LIMIT 1
+   email = $1 
+LIMIT 1
 `
 
 type GetOneByEmailRow struct {
@@ -252,8 +274,13 @@ func (q *Queries) GetOneByEmail(ctx context.Context, email string) (GetOneByEmai
 
 const getOneByEmailAndRole = `-- name: GetOneByEmailAndRole :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
@@ -296,11 +323,26 @@ func (q *Queries) GetOneByEmailAndRole(ctx context.Context, arg GetOneByEmailAnd
 
 const getOneById = `-- name: GetOneById :one
 SELECT 
-    id, first_name, last_name,
-    email, role, created_at, updated_at
+    id,
+    first_name,
+    last_name,
+    email,
+    role,
+    created_at,
+    updated_at
 FROM
-   users WHERE id = $1 LIMIT 1
+   users 
+WHERE 
+    id = $1 
+AND
+    role = $2
+LIMIT 1
 `
+
+type GetOneByIdParams struct {
+	ID   int32 `json:"id"`
+	Role Roles `json:"role"`
+}
 
 type GetOneByIdRow struct {
 	ID        int32      `json:"id"`
@@ -312,8 +354,8 @@ type GetOneByIdRow struct {
 	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
-func (q *Queries) GetOneById(ctx context.Context, id int32) (GetOneByIdRow, error) {
-	row := q.db.QueryRow(ctx, getOneById, id)
+func (q *Queries) GetOneById(ctx context.Context, arg GetOneByIdParams) (GetOneByIdRow, error) {
+	row := q.db.QueryRow(ctx, getOneById, arg.ID, arg.Role)
 	var i GetOneByIdRow
 	err := row.Scan(
 		&i.ID,
@@ -329,11 +371,19 @@ func (q *Queries) GetOneById(ctx context.Context, id int32) (GetOneByIdRow, erro
 
 const getOneWithPasswordByEmail = `-- name: GetOneWithPasswordByEmail :one
 SELECT 
-    id, password, role, email, first_name, last_name, created_at, updated_at
+    id,
+    password,
+    role,
+    email,
+    first_name,
+    last_name,
+    created_at,
+    updated_at
 FROM 
    users
 WHERE
-   email = $1 LIMIT 1
+   email = $1 
+LIMIT 1
 `
 
 type GetOneWithPasswordByEmailRow struct {
