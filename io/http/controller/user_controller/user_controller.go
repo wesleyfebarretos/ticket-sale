@@ -4,10 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/phone_types_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_address_service"
+	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_phone_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/service/user_service"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/repository/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_phones_repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 )
 
@@ -110,6 +113,13 @@ func Create(c *gin.Context) {
 	}
 	newUserAddress := user_address_service.Create(c, createUserAddress)
 
+	newUserPhone := user_phone_service.Create(c, users_phones_repository.CreateParams{
+		UserID: newUserResponse.ID,
+		Ddd:    body.Phone.Ddd,
+		Number: body.Phone.Number,
+		Type:   phone_types_enum.PHONE,
+	})
+
 	newUser := CreateResponseDto{
 		Id:        int(newUserResponse.ID),
 		Email:     newUserResponse.Email,
@@ -127,6 +137,12 @@ func Create(c *gin.Context) {
 			PostalCode:    newUserAddress.PostalCode,
 			AddressType:   newUserAddress.AddressType,
 			StreetAddress: newUserAddress.StreetAddress,
+		},
+		Phone: PhoneResponseDto{
+			ID:     newUserPhone.ID,
+			UserID: newUserPhone.UserID,
+			Ddd:    newUserPhone.Ddd,
+			Number: newUserPhone.Number,
 		},
 	}
 

@@ -30,6 +30,12 @@ type CreateRequestDto struct {
 	Email     string            `json:"email" binding:"required,email" example:"johndoe@gmail.com"`
 	Password  string            `json:"password" binding:"required" example:"123456"`
 	Address   AddressRequestDto `json:"address"`
+	Phone     PhoneRequestDto   `json:"phone"`
+}
+
+type PhoneRequestDto struct {
+	Ddd    string `json:"ddd" binding:"required,number,max=5" example:"021"`
+	Number string `json:"number" binding:"required,number,max=10" example:"999999999"`
 }
 
 // RESPONSES
@@ -60,6 +66,7 @@ type CreateResponseDto struct {
 	LastName  string             `json:"lastName" example:"Doe"`
 	Email     string             `json:"email" example:"johndoe@gmail.com"`
 	Address   AddressResponseDto `json:"address"`
+	Phone     PhoneResponseDto   `json:"phone"`
 }
 
 type AddressResponseDto struct {
@@ -75,4 +82,11 @@ type AddressResponseDto struct {
 	Country       string     `json:"country" example:"USA"`
 	CreatedAt     *time.Time `json:"createdAt" example:"2023-01-01T00:00:00Z"`
 	UpdatedAt     *time.Time `json:"updatedAt" example:"2023-01-02T00:00:00Z"`
+}
+
+type PhoneResponseDto struct {
+	ID     int32  `json:"id" example:"1"`
+	UserID int32  `json:"userId" example:"2"`
+	Ddd    string `json:"ddd" example:"021"`
+	Number string `json:"number" example:"999999999"`
 }

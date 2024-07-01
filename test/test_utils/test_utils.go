@@ -16,10 +16,12 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
 	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/infra/db"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/phone_types_enum"
 	"github.com/wesleyfebarretos/ticket-sale/io/routes"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/users_phones_repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/test/test_container"
 	"github.com/wesleyfebarretos/ticket-sale/utils"
@@ -139,6 +141,19 @@ func CreateUserAddress(userId int32) users_addresses_repository.UsersAddress {
 	address, _ := repository.UsersAdresses.Create(context.Background(), newAddress)
 
 	return address
+}
+
+func CreateUserPhone(userID int32) users_phones_repository.UsersPhone {
+	newPhone := users_phones_repository.CreateParams{
+		UserID: userID,
+		Ddd:    "021",
+		Number: "999999999",
+		Type:   phone_types_enum.PHONE,
+	}
+
+	userPhone, _ := repository.UsersPhones.Create(context.Background(), newPhone)
+
+	return userPhone
 }
 
 func DebugResponse(body io.Reader) {

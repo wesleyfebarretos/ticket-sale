@@ -191,13 +191,28 @@ SELECT
                 'favorite', ua.favorite
             ) ORDER BY ua.favorite DESC
         ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
-    ) AS addresses
+    ) AS addresses,
+    COALESCE(
+        json_agg(
+            json_build_object(
+                'id', up.id,
+                'userId', up.user_id,
+                'ddd', up.ddd,
+                'number', up.number,
+                'type', up.type
+            ) ORDER BY up.id ASC
+        ) FILTER (WHERE up.id IS NOT NULL), '[]'::json
+    ) AS phones
 FROM 
     users AS u
 LEFT JOIN 
     users_addresses AS ua
 ON 
     u.id = ua.user_id
+LEFT JOIN
+    users_phones as up
+ON
+    u.id = up.user_id
 WHERE 
     u.id = $1 
 GROUP BY u.id 
@@ -213,6 +228,7 @@ type GetFullProfileRow struct {
 	CreatedAt time.Time   `json:"createdAt"`
 	UpdatedAt *time.Time  `json:"updatedAt"`
 	Addresses interface{} `json:"addresses"`
+	Phones    interface{} `json:"phones"`
 }
 
 func (q *Queries) GetFullProfile(ctx context.Context, id int32) (GetFullProfileRow, error) {
@@ -227,6 +243,7 @@ func (q *Queries) GetFullProfile(ctx context.Context, id int32) (GetFullProfileR
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Addresses,
+		&i.Phones,
 	)
 	return i, err
 }

@@ -33,6 +33,10 @@ func TestUsersController(t *testing.T) {
 				StreetAddress: "123 Main St",
 				Country:       "USA",
 			},
+			Phone: user_controller.PhoneRequestDto{
+				Ddd:    "407",
+				Number: "5551234",
+			},
 		}
 		res := TMakeRequest(t, http.MethodPost, "users", newUserRequest)
 
@@ -59,6 +63,12 @@ func TestUsersController(t *testing.T) {
 				City:          newUserRequest.Address.City,
 				UpdatedAt:     newUserRequest.Address.UpdatedAt,
 				CreatedAt:     newUserRequest.Address.CreatedAt,
+			},
+			Phone: user_controller.PhoneResponseDto{
+				ID:     newUserResponse.Phone.ID,
+				UserID: int32(newUserResponse.Id),
+				Ddd:    newUserResponse.Phone.Ddd,
+				Number: newUserResponse.Phone.Number,
 			},
 		}
 
@@ -110,6 +120,7 @@ func TestUsersController(t *testing.T) {
 		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 		userAddress := test_utils.CreateUserAddress(user.ID)
+		userPhone := test_utils.CreateUserPhone(user.ID)
 
 		res := TMakeRequest(t, http.MethodGet, "users/full-profile", nil)
 
@@ -147,6 +158,15 @@ func TestUsersController(t *testing.T) {
 					"country":       userAddress.Country,
 					"addressType":   userAddress.AddressType,
 					"favorite":      userAddress.Favorite,
+				},
+			},
+			"phones": []map[string]interface{}{
+				{
+					"id":     userPhone.ID,
+					"userId": userPhone.UserID,
+					"ddd":    userPhone.Ddd,
+					"number": userPhone.Number,
+					"type":   userPhone.Type,
 				},
 			},
 		}
