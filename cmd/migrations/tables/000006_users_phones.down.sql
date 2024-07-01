@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS users_phones;
+DROP TYPE IF EXISTS roles CASCADE;
