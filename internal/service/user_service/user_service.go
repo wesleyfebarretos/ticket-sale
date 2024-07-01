@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
@@ -13,7 +13,7 @@ import (
 )
 
 func GetAll(c *gin.Context) []user_repository.GetAllRow {
-	users, err := repository.User.GetAll(c, enum.USER_ROLE)
+	users, err := repository.User.GetAll(c, roles_enum.USER)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -24,7 +24,7 @@ func GetAll(c *gin.Context) []user_repository.GetAllRow {
 func GetOneById(c *gin.Context, id int32) user_repository.GetOneByIdRow {
 	user, err := repository.User.GetOneById(c, user_repository.GetOneByIdParams{
 		ID:   id,
-		Role: enum.USER_ROLE,
+		Role: roles_enum.USER,
 	})
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
@@ -51,7 +51,7 @@ func Create(c *gin.Context, newUser user_repository.CreateParams) user_repositor
 	}
 
 	newUser.Password = string(hashPassword)
-	newUser.Role = enum.USER_ROLE
+	newUser.Role = roles_enum.USER
 
 	createdUser, err = repository.User.Create(c, newUser)
 	if err != nil {
@@ -75,7 +75,7 @@ func Update(c *gin.Context, user user_repository.UpdateParams) {
 		panic(exception.BadRequestException(fmt.Sprintf("email %s already registered", user.Email)))
 	}
 
-	user.Role = enum.USER_ROLE
+	user.Role = roles_enum.USER
 
 	err = repository.User.Update(c, user)
 	if err != nil {

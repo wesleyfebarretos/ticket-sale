@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller/admin_user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
@@ -11,7 +11,7 @@ func HandleAdminUser(router *gin.RouterGroup) {
 	userRoute := router.Group("admin/users")
 
 	userRoute.Use(middleware.JWT.MiddlewareFunc())
-	userRoute.Use(middleware.Authorization(enum.ADMIN_ROLE))
+	userRoute.Use(middleware.Authorization(roles_enum.ADMIN))
 
 	userRoute.POST("", admin_user_controller.Create)
 	userRoute.POST("/get-by-email", admin_user_controller.GetOneByEmail)

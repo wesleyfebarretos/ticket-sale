@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_user_repository"
@@ -13,7 +13,7 @@ import (
 )
 
 func GetAll(c *gin.Context) []admin_user_repository.GetAllRow {
-	adminUsers, err := repository.AdminUser.GetAll(c, enum.ADMIN_ROLE)
+	adminUsers, err := repository.AdminUser.GetAll(c, roles_enum.ADMIN)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -24,7 +24,7 @@ func GetAll(c *gin.Context) []admin_user_repository.GetAllRow {
 func GetOneById(c *gin.Context, id int32) admin_user_repository.GetOneByIdRow {
 	adminUser, err := repository.AdminUser.GetOneById(c, admin_user_repository.GetOneByIdParams{
 		ID:   id,
-		Role: enum.ADMIN_ROLE,
+		Role: roles_enum.ADMIN,
 	})
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("admin user of id %d not found", id)))
@@ -36,7 +36,7 @@ func GetOneById(c *gin.Context, id int32) admin_user_repository.GetOneByIdRow {
 func GetOneByEmail(c *gin.Context, email string) admin_user_repository.GetOneByEmailRow {
 	adminUser, err := repository.AdminUser.GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
 		Email: email,
-		Role:  enum.ADMIN_ROLE,
+		Role:  roles_enum.ADMIN,
 	})
 	if err != nil {
 		panic(exception.NotFoundException(fmt.Sprintf("admin user of email %s not found", email)))
@@ -48,7 +48,7 @@ func GetOneByEmail(c *gin.Context, email string) admin_user_repository.GetOneByE
 func Create(c *gin.Context, newAdminUser admin_user_repository.CreateParams) admin_user_repository.CreateRow {
 	_, err := repository.AdminUser.GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
 		Email: newAdminUser.Email,
-		Role:  enum.ADMIN_ROLE,
+		Role:  roles_enum.ADMIN,
 	})
 
 	if err != nil && err != pgx.ErrNoRows {
@@ -65,7 +65,7 @@ func Create(c *gin.Context, newAdminUser admin_user_repository.CreateParams) adm
 	}
 
 	newAdminUser.Password = string(hashPassword)
-	newAdminUser.Role = enum.ADMIN_ROLE
+	newAdminUser.Role = roles_enum.ADMIN
 
 	createdAdminUser, err := repository.AdminUser.Create(c, newAdminUser)
 	if err != nil {

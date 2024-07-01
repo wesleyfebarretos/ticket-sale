@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
@@ -13,7 +13,7 @@ import (
 func Auth(c *gin.Context, email string) {
 	_, err := repository.User.GetOneByEmailAndRole(c, user_repository.GetOneByEmailAndRoleParams{
 		Email: email,
-		Role:  enum.USER_ROLE,
+		Role:  roles_enum.USER,
 	})
 	if err != nil {
 		fmt.Println(err)

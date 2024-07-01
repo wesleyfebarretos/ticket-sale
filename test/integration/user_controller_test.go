@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wesleyfebarretos/ticket-sale/internal/enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/io/http/controller/user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/repository/user_repository"
@@ -42,7 +42,7 @@ func TestUsersController(t *testing.T) {
 
 		expectedUser := &user_controller.CreateResponseDto{
 			Id:        newUserResponse.Id,
-			Role:      enum.USER_ROLE,
+			Role:      roles_enum.USER,
 			FirstName: newUserResponse.FirstName,
 			LastName:  newUserRequest.LastName,
 			Email:     newUserRequest.Email,
@@ -64,11 +64,11 @@ func TestUsersController(t *testing.T) {
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
 		assert.Equal(t, expectedUser, newUserResponse)
-		assert.Equal(t, newUserResponse.Role, enum.USER_ROLE)
+		assert.Equal(t, newUserResponse.Role, roles_enum.USER)
 	}))
 
 	t.Run("it should login", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 
 		loginRequest := middleware.SignInRequest{
 			Email:    user.Email,
@@ -92,7 +92,7 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get all", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
 		res := TMakeRequest(t, http.MethodGet, "users", nil)
@@ -107,7 +107,7 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get user full profile", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 		userAddress := test_utils.CreateUserAddress(user.ID)
 
@@ -168,7 +168,7 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get user by id", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", user.ID), nil)
 
@@ -189,7 +189,7 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should be able to update an user", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
 		updateUser := user_controller.UpdateRequestDto{
@@ -209,7 +209,7 @@ func TestUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should throw a user not found error", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(enum.USER_ROLE)
+		user := test_utils.CreateUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", 100), nil)
 
