@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
@@ -19,6 +20,17 @@ func GetId(c *gin.Context) int32 {
 	}
 
 	return int32(intId)
+}
+
+func GetUuid(c *gin.Context) uuid.UUID {
+	uuidRequest := c.Param("uuid")
+
+	parsedUuid, err := uuid.Parse(uuidRequest)
+	if err != nil {
+		panic(exception.InternalServerException(fmt.Sprintf("invalid uuid parameter %s", uuidRequest)))
+	}
+
+	return parsedUuid
 }
 
 func ReadBody[B any](c *gin.Context, body *B) {

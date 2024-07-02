@@ -8,15 +8,15 @@ import (
 )
 
 func HandleAdminUser(router *gin.RouterGroup) {
-	userRoute := router.Group("admin/users")
+	adminUserRoute := router.Group("admin/users")
 
-	userRoute.Use(middleware.JWT.MiddlewareFunc())
-	userRoute.Use(middleware.Authorization(roles_enum.ADMIN))
+	adminUserRoute.Use(middleware.JWT.MiddlewareFunc())
+	adminUserRoute.Use(middleware.Authorization(roles_enum.ADMIN))
 
-	userRoute.POST("", admin_user_controller.Create)
-	userRoute.POST("/get-by-email", admin_user_controller.GetOneByEmail)
-	userRoute.GET("", admin_user_controller.GetAll)
-	userRoute.GET(":id", admin_user_controller.GetOneById)
-	userRoute.PUT(":id", admin_user_controller.Update)
-	userRoute.DELETE(":id", admin_user_controller.Delete)
+	adminUserRoute.POST("", admin_user_controller.Create)
+	adminUserRoute.POST("/get-by-email", admin_user_controller.GetOneByEmail)
+	adminUserRoute.GET("", admin_user_controller.GetAll)
+	adminUserRoute.GET(":id", admin_user_controller.GetOneById)
+	adminUserRoute.PUT(":id", admin_user_controller.Update)
+	adminUserRoute.DELETE(":id", admin_user_controller.Delete)
 }

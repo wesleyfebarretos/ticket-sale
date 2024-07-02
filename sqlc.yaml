@@ -40,3 +40,11 @@ sql:
         <<: *default_configs
         package: "users_phones_repository"
         out: "repository/users_phones_repository"
+
+  - <<: *schema
+    queries: "repository/query/admin_products_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_products_repository"
+        out: "repository/admin_products_repository"
