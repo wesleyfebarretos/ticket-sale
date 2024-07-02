@@ -7,7 +7,6 @@ package admin_products_repository
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -70,6 +69,20 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (Product, error)
 	return i, err
 }
 
+const createWithStock = `-- name: CreateWithStock :one
+BEGIN
+`
+
+type CreateWithStockRow struct {
+}
+
+func (q *Queries) CreateWithStock(ctx context.Context) (CreateWithStockRow, error) {
+	row := q.db.QueryRow(ctx, createWithStock)
+	var i CreateWithStockRow
+	err := row.Scan()
+	return i, err
+}
+
 const getAll = `-- name: GetAll :many
 SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at FROM products 
 WHERE 
@@ -118,75 +131,24 @@ func (q *Queries) GetAll(ctx context.Context) ([]Product, error) {
 }
 
 const getAllWithRelations = `-- name: GetAllWithRelations :many
-SELECT 
-    p.id, p.name, p.description, p.uuid, p.price, p.discount_price, p.active, p.is_deleted, p.image, p.image_mobile, p.image_thumbnail, p.category_id, p.created_by, p.updated_by, p.created_at, p.updated_at,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
 WHERE 
-    p.is_deleted IS FALSE 
+    is_deleted IS FALSE 
 AND
-    p.active IS TRUE
+    active IS TRUE
 ORDER BY 
-    p.created_at DESC
+    created_at DESC
 `
 
-type GetAllWithRelationsRow struct {
-	ID             int32       `json:"id"`
-	Name           string      `json:"name"`
-	Description    *string     `json:"description"`
-	Uuid           uuid.UUID   `json:"uuid"`
-	Price          float64     `json:"price"`
-	DiscountPrice  *float64    `json:"discountPrice"`
-	Active         bool        `json:"active"`
-	IsDeleted      bool        `json:"isDeleted"`
-	Image          *string     `json:"image"`
-	ImageMobile    *string     `json:"imageMobile"`
-	ImageThumbnail *string     `json:"imageThumbnail"`
-	CategoryID     int32       `json:"categoryId"`
-	CreatedBy      int32       `json:"createdBy"`
-	UpdatedBy      *int32      `json:"updatedBy"`
-	CreatedAt      time.Time   `json:"createdAt"`
-	UpdatedAt      *time.Time  `json:"updatedAt"`
-	Stock          interface{} `json:"stock"`
-	Category       interface{} `json:"category"`
-}
-
-func (q *Queries) GetAllWithRelations(ctx context.Context) ([]GetAllWithRelationsRow, error) {
+func (q *Queries) GetAllWithRelations(ctx context.Context) ([]ProductsWithRelation, error) {
 	rows, err := q.db.Query(ctx, getAllWithRelations)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetAllWithRelationsRow{}
+	items := []ProductsWithRelation{}
 	for rows.Next() {
-		var i GetAllWithRelationsRow
+		var i ProductsWithRelation
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
@@ -218,66 +180,15 @@ func (q *Queries) GetAllWithRelations(ctx context.Context) ([]GetAllWithRelation
 }
 
 const getOneById = `-- name: GetOneById :one
-SELECT 
-    p.id, p.name, p.description, p.uuid, p.price, p.discount_price, p.active, p.is_deleted, p.image, p.image_mobile, p.image_thumbnail, p.category_id, p.created_by, p.updated_by, p.created_at, p.updated_at,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
 WHERE 
-    p.id = $1
+    id = $1
 LIMIT 1
 `
 
-type GetOneByIdRow struct {
-	ID             int32       `json:"id"`
-	Name           string      `json:"name"`
-	Description    *string     `json:"description"`
-	Uuid           uuid.UUID   `json:"uuid"`
-	Price          float64     `json:"price"`
-	DiscountPrice  *float64    `json:"discountPrice"`
-	Active         bool        `json:"active"`
-	IsDeleted      bool        `json:"isDeleted"`
-	Image          *string     `json:"image"`
-	ImageMobile    *string     `json:"imageMobile"`
-	ImageThumbnail *string     `json:"imageThumbnail"`
-	CategoryID     int32       `json:"categoryId"`
-	CreatedBy      int32       `json:"createdBy"`
-	UpdatedBy      *int32      `json:"updatedBy"`
-	CreatedAt      time.Time   `json:"createdAt"`
-	UpdatedAt      *time.Time  `json:"updatedAt"`
-	Stock          interface{} `json:"stock"`
-	Category       interface{} `json:"category"`
-}
-
-func (q *Queries) GetOneById(ctx context.Context, id int32) (GetOneByIdRow, error) {
+func (q *Queries) GetOneById(ctx context.Context, id int32) (ProductsWithRelation, error) {
 	row := q.db.QueryRow(ctx, getOneById, id)
-	var i GetOneByIdRow
+	var i ProductsWithRelation
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -302,66 +213,15 @@ func (q *Queries) GetOneById(ctx context.Context, id int32) (GetOneByIdRow, erro
 }
 
 const getOneByUuid = `-- name: GetOneByUuid :one
-SELECT 
-    p.id, p.name, p.description, p.uuid, p.price, p.discount_price, p.active, p.is_deleted, p.image, p.image_mobile, p.image_thumbnail, p.category_id, p.created_by, p.updated_by, p.created_at, p.updated_at,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
 WHERE 
-    p.uuid = $1
+    uuid = $1
 LIMIT 1
 `
 
-type GetOneByUuidRow struct {
-	ID             int32       `json:"id"`
-	Name           string      `json:"name"`
-	Description    *string     `json:"description"`
-	Uuid           uuid.UUID   `json:"uuid"`
-	Price          float64     `json:"price"`
-	DiscountPrice  *float64    `json:"discountPrice"`
-	Active         bool        `json:"active"`
-	IsDeleted      bool        `json:"isDeleted"`
-	Image          *string     `json:"image"`
-	ImageMobile    *string     `json:"imageMobile"`
-	ImageThumbnail *string     `json:"imageThumbnail"`
-	CategoryID     int32       `json:"categoryId"`
-	CreatedBy      int32       `json:"createdBy"`
-	UpdatedBy      *int32      `json:"updatedBy"`
-	CreatedAt      time.Time   `json:"createdAt"`
-	UpdatedAt      *time.Time  `json:"updatedAt"`
-	Stock          interface{} `json:"stock"`
-	Category       interface{} `json:"category"`
-}
-
-func (q *Queries) GetOneByUuid(ctx context.Context, argUuid uuid.UUID) (GetOneByUuidRow, error) {
+func (q *Queries) GetOneByUuid(ctx context.Context, argUuid uuid.UUID) (ProductsWithRelation, error) {
 	row := q.db.QueryRow(ctx, getOneByUuid, argUuid)
-	var i GetOneByUuidRow
+	var i ProductsWithRelation
 	err := row.Scan(
 		&i.ID,
 		&i.Name,

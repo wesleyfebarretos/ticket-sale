@@ -39,112 +39,36 @@ ORDER BY
     created_at DESC;
 
 -- name: GetAllWithRelations :many
-SELECT 
-    p.*,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT * FROM products_with_relation
 WHERE 
-    p.is_deleted IS FALSE 
+    is_deleted IS FALSE 
 AND
-    p.active IS TRUE
+    active IS TRUE
 ORDER BY 
-    p.created_at DESC;
+    created_at DESC;
 
 -- name: GetOneById :one
-SELECT 
-    p.*,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT * FROM products_with_relation
 WHERE 
-    p.id = $1
+    id = $1
 LIMIT 1;
 
 -- name: GetOneByUuid :one
-SELECT 
-    p.*,
-    CASE
-        WHEN ps.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', ps.id,
-                'productId', ps.product_id,
-                'qty', ps.qty,
-                'minQty', ps.min_qty
-            )
-    END as stock,
-    CASE
-        WHEN pc.id IS NULL THEN NULL
-        ELSE
-            json_build_object(
-                'id', pc.id,
-                'name', pc.name,
-                'description', pc.description
-            )
-    END as category
-FROM 
-    products as p
-LEFT JOIN 
-    product_stocks as ps 
-ON 
-    ps.product_id = p.id
-LEFT JOIN
-    product_categories as pc
-ON
-    pc.id = p.category_id
+SELECT * FROM products_with_relation
 WHERE 
-    p.uuid = $1
+    uuid = $1
 LIMIT 1;
+
+-- name: CreateWithStock :one
+BEGIN;
+    INSERT INTO products 
+        (name, description, uuid, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
+    VALUES 
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+    RETURNING *;
+    INSERT INTO product_stocks
+        (product_id, qty, min_qty, created_by)
+    VALUES
+        ($12,$13,$14,$15)
+    RETURNING *;
+COMMIT;

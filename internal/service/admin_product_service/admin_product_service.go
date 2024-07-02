@@ -6,12 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
+	"github.com/wesleyfebarretos/ticket-sale/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
+	"github.com/wesleyfebarretos/ticket-sale/repository/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_products_repository"
 )
 
-func Create(c *gin.Context, newProductRequest admin_products_repository.CreateParams) admin_products_repository.Product {
+func Create(
+	c *gin.Context,
+	newProductRequest admin_products_repository.CreateParams,
+	newProductStockRequest admin_product_stocks_repository.CreateParams,
+) (admin_products_repository.Product, admin_product_stocks_repository.ProductStock) {
 	uuid, err := uuid.NewV7()
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
@@ -19,12 +25,32 @@ func Create(c *gin.Context, newProductRequest admin_products_repository.CreatePa
 
 	newProductRequest.Uuid = uuid
 
-	newProduct, err := repository.AdminProducts.Create(c, newProductRequest)
+	tx, err := db.Conn.Begin(c)
+	if err != nil {
+		panic(exception.InternalServerException(err.Error()))
+	}
+	defer tx.Rollback(c)
+
+	adminProductsRepository := repository.AdminProducts.WithTx(tx)
+	adminProductStocksRepository := repository.AdminProductStocks.WithTx(tx)
+
+	newProduct, err := adminProductsRepository.Create(c, newProductRequest)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
 
-	return newProduct
+	newProductStockRequest.ProductID = newProduct.ID
+
+	newProductStock, err := adminProductStocksRepository.Create(c, newProductStockRequest)
+	if err != nil {
+		panic(exception.InternalServerException(err.Error()))
+	}
+
+	if err := tx.Commit(c); err != nil {
+		panic(exception.InternalServerException(err.Error()))
+	}
+
+	return newProduct, newProductStock
 }
 
 func Update(c *gin.Context, updateProductRequest admin_products_repository.UpdateParams) {
@@ -70,7 +96,7 @@ func GetAll(c *gin.Context) []admin_products_repository.Product {
 	return products
 }
 
-func GetAllWithRelations(c *gin.Context) []admin_products_repository.GetAllWithRelationsRow {
+func GetAllWithRelations(c *gin.Context) []admin_products_repository.ProductsWithRelation {
 	products, err := repository.AdminProducts.GetAllWithRelations(c)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
@@ -79,7 +105,7 @@ func GetAllWithRelations(c *gin.Context) []admin_products_repository.GetAllWithR
 	return products
 }
 
-func GetOneById(c *gin.Context, id int32) admin_products_repository.GetOneByIdRow {
+func GetOneById(c *gin.Context, id int32) admin_products_repository.ProductsWithRelation {
 	product, err := repository.AdminProducts.GetOneById(c, id)
 	if err == pgx.ErrNoRows {
 		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", id)))
@@ -92,10 +118,10 @@ func GetOneById(c *gin.Context, id int32) admin_products_repository.GetOneByIdRo
 	return product
 }
 
-func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_products_repository.GetOneByUuidRow {
+func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_products_repository.ProductsWithRelation {
 	product, err := repository.AdminProducts.GetOneByUuid(c, uuid)
 	if err == pgx.ErrNoRows {
-		panic(exception.NotFoundException(fmt.Sprintf("product of uuid %d not found", uuid)))
+		panic(exception.NotFoundException(fmt.Sprintf("product of uuid %s not found", uuid)))
 	}
 
 	if err != nil {

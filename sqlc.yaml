@@ -16,6 +16,7 @@ sql:
         emit_pointers_for_null_types: true
         emit_enum_valid_method: true
         emit_all_enum_values: true
+        omit_unused_structs: true
 
   - <<: *schema
     queries: "repository/query/users_addresses_query.sql"
@@ -48,3 +49,21 @@ sql:
         <<: *default_configs
         package: "admin_products_repository"
         out: "repository/admin_products_repository"
+        overrides:
+          - column: "products_with_relation.stock"
+            go_type: 
+              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              type: "ProductStock"
+              pointer: true
+          - column: "products_with_relation.category"
+            go_type: 
+              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              type: "ProductCategory"
+
+  - <<: *schema
+    queries: "repository/query/admin_product_stocks_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_product_stocks_repository"
+        out: "repository/admin_product_stocks_repository"
