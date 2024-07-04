@@ -23,6 +23,7 @@ mdown: #MIGRATIONS DOWN
 
 #Tests
 it: #INTEGRATION TESTS
+	@clear
 	@go test -v ./test/integration/
 
 #Swagger

@@ -2,8 +2,10 @@ package integration_test
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -116,6 +118,187 @@ func TestAdminProductController(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, true, deleteProductResponse)
+	}))
+
+	t.Run("it should get all products", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProduct(t, adminUser.ID)
+
+		res := TMakeRequest(t, http.MethodGet, "admin/products", nil)
+
+		getAllResponse := []admin_product_controller.GetAllResponseDto{}
+
+		test_utils.Decode(t, res.Body, &getAllResponse)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, 1, len(getAllResponse))
+		assert.IsType(t, admin_product_controller.GetAllResponseDto{}, getAllResponse[0])
+	}))
+
+	t.Run("it should get product by id", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProduct := newProduct(t, adminUser.ID)
+
+		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/products/%d", newProduct.ID), nil)
+
+		getOneByIdResponse := admin_product_controller.GetOneByIdResponseDto{}
+
+		test_utils.Decode(t, res.Body, &getOneByIdResponse)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, newProduct.ID, getOneByIdResponse.ID)
+		assert.IsType(t, admin_product_controller.GetOneByIdResponseDto{}, getOneByIdResponse)
+	}))
+
+	t.Run("it should get product by uuid", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProduct := newProduct(t, adminUser.ID)
+
+		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/products/uuid/%s", newProduct.Uuid), nil)
+
+		getOneByUuidResponse := admin_product_controller.GetOneByUuidResponseDto{}
+
+		test_utils.Decode(t, res.Body, &getOneByUuidResponse)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, newProduct.Uuid, getOneByUuidResponse.Uuid)
+		assert.IsType(t, admin_product_controller.GetOneByUuidResponseDto{}, getOneByUuidResponse)
+	}))
+
+	t.Run("it should validate required fields on create", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProductRequest := admin_product_controller.CreateRequestDto{
+			Name:           "Red Hot Chilly Peppers",
+			Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
+			Price:          5.99,
+			DiscountPrice:  TPointer(4.99),
+			Active:         true,
+			Image:          TPointer("https://example.com/images/red-hot-chilly-peppers.jpg"),
+			ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
+			ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
+			CategoryID:     product_categories_enum.EVENT,
+			Stock: admin_product_controller.CreateStockRequestDto{
+				Qty:    100,
+				MinQty: TPointer(int32(50)),
+			},
+		}
+
+		bStruct, err := json.Marshal(newProductRequest)
+		if err != nil {
+			t.Fatalf("error on marshal json :%v", err)
+		}
+
+		requiredFields := []string{
+			"name",
+			"price",
+			"image",
+			"imageMobile",
+			"imageThumbnail",
+			"categoryId",
+			"stock.qty",
+		}
+
+		for _, k := range requiredFields {
+			structMap := make(map[string]interface{})
+
+			json.Unmarshal(bStruct, &structMap)
+
+			if strings.Contains(k, ".") {
+				keys := strings.Split(k, ".")
+				delete(structMap[keys[0]].(map[string]any), keys[1])
+			} else {
+				delete(structMap, k)
+			}
+
+			res := TMakeRequest(t, http.MethodPost, "admin/products", structMap)
+
+			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+		}
+	}))
+
+	t.Run("it should validate required fields on update", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProduct := newProduct(t, adminUser.ID)
+
+		updateProductRequest := admin_product_controller.UpdateRequestDto{
+			Name:           "Red Hot Chilly Peppers",
+			Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
+			Price:          5.99,
+			DiscountPrice:  TPointer(4.99),
+			Active:         true,
+			Image:          TPointer("https://example.com/images/red-hot-chilly-peppers.jpg"),
+			ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
+			ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
+			CategoryID:     product_categories_enum.EVENT,
+		}
+
+		bStruct, err := json.Marshal(updateProductRequest)
+		if err != nil {
+			t.Fatalf("error on marshal json :%v", err)
+		}
+
+		requiredFields := []string{
+			"name",
+			"price",
+			"image",
+			"imageMobile",
+			"imageThumbnail",
+			"categoryId",
+		}
+
+		for _, k := range requiredFields {
+			structMap := make(map[string]interface{})
+
+			json.Unmarshal(bStruct, &structMap)
+
+			if strings.Contains(k, ".") {
+				keys := strings.Split(k, ".")
+				delete(structMap[keys[0]].(map[string]any), keys[1])
+			} else {
+				delete(structMap, k)
+			}
+
+			res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/products/%d", newProduct.ID), structMap)
+
+			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+		}
+
+		t.Run("it should make sure that only an admin can access this routes", TRun(func(t *testing.T) {
+			user := test_utils.CreateUser(roles_enum.USER)
+			TSetCookieWithUser(t, user)
+
+			methods := []string{
+				http.MethodGet,
+				http.MethodGet,
+				http.MethodGet,
+				http.MethodPost,
+				http.MethodPut,
+				http.MethodDelete,
+			}
+			routes := []string{
+				"admin/products",
+				"admin/products/1",
+				"admin/products/uuid/1",
+				"admin/products",
+				"admin/products/1",
+				"admin/products/1",
+			}
+
+			for i, route := range routes {
+				res := TMakeRequest(t, methods[i], route, nil)
+				assert.Equal(t, http.StatusForbidden, res.StatusCode)
+			}
+		}))
 	}))
 }
 

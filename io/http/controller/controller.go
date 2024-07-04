@@ -16,7 +16,7 @@ func GetId(c *gin.Context) int32 {
 
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		panic(exception.InternalServerException(fmt.Sprintf("invalid id parameter %s", id)))
+		panic(exception.BadRequestException(fmt.Sprintf("invalid id parameter %s", id)))
 	}
 
 	return int32(intId)
@@ -27,7 +27,7 @@ func GetUuid(c *gin.Context) uuid.UUID {
 
 	parsedUuid, err := uuid.Parse(uuidRequest)
 	if err != nil {
-		panic(exception.InternalServerException(fmt.Sprintf("invalid uuid parameter %s", uuidRequest)))
+		panic(exception.BadRequestException(fmt.Sprintf("invalid uuid parameter %s", uuidRequest)))
 	}
 
 	return parsedUuid
