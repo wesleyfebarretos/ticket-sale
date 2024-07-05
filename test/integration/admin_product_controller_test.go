@@ -137,6 +137,23 @@ func TestAdminProductController(t *testing.T) {
 		assert.IsType(t, admin_product_controller.GetAllResponseDto{}, getAllResponse[0])
 	}))
 
+	t.Run("it should get all products with relations", TRun(func(t *testing.T) {
+		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		TSetCookieWithUser(t, adminUser)
+
+		newProduct(t, adminUser.ID)
+
+		res := TMakeRequest(t, http.MethodGet, "admin/products/details", nil)
+
+		getAllWithRleationsResponse := []admin_product_controller.GetAllWithRelationsResponseDto{}
+
+		test_utils.Decode(t, res.Body, &getAllWithRleationsResponse)
+
+		assert.Equal(t, http.StatusOK, res.StatusCode)
+		assert.Equal(t, 1, len(getAllWithRleationsResponse))
+		assert.IsType(t, admin_product_controller.GetAllWithRelationsResponseDto{}, getAllWithRleationsResponse[0])
+	}))
+
 	t.Run("it should get product by id", TRun(func(t *testing.T) {
 		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
@@ -281,12 +298,15 @@ func TestAdminProductController(t *testing.T) {
 				http.MethodGet,
 				http.MethodGet,
 				http.MethodGet,
+				http.MethodGet,
 				http.MethodPost,
 				http.MethodPut,
 				http.MethodDelete,
 			}
+
 			routes := []string{
 				"admin/products",
+				"admin/products/details",
 				"admin/products/1",
 				"admin/products/uuid/1",
 				"admin/products",

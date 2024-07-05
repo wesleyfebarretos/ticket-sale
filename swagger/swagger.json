@@ -58,6 +58,388 @@
                 }
             }
         },
+        "/admin/products": {
+            "get": {
+                "description": "Get all products",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_product_controller.GetAllResponseDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Create a product",
+                "parameters": [
+                    {
+                        "description": "New product",
+                        "name": "Product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_product_controller.CreateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/admin_product_controller.CreateResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products/details": {
+            "get": {
+                "description": "Get all products with relations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get all products with relations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_product_controller.GetAllWithRelationsResponseDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products/uuid/{uuid}": {
+            "get": {
+                "description": "Get One By UUID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get One By UUID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product UUID",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_product_controller.GetOneByUuidResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/products/{id}": {
+            "get": {
+                "description": "Get One By Id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Get One By Id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_product_controller.GetOneByIdResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Update a product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update product",
+                        "name": "Product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_product_controller.UpdateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Soft Delete a product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product"
+                ],
+                "summary": "Soft Delete a product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "description": "Get All Admin Users",
@@ -645,6 +1027,569 @@
                 }
             }
         },
+        "admin_product_controller.CategoryResponseDto": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "EVENT"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "name": {
+                    "type": "string",
+                    "example": "event"
+                }
+            }
+        },
+        "admin_product_controller.CreateRequestDto": {
+            "type": "object",
+            "required": [
+                "categoryId",
+                "image",
+                "imageMobile",
+                "imageThumbnail",
+                "name",
+                "price"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 3
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "image": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_product_controller.CreateStockRequestDto"
+                }
+            }
+        },
+        "admin_product_controller.CreateResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_product_controller.CreateStockResponseDto"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_product_controller.CreateStockRequestDto": {
+            "type": "object",
+            "required": [
+                "qty"
+            ],
+            "properties": {
+                "minQty": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 100
+                }
+            }
+        },
+        "admin_product_controller.CreateStockResponseDto": {
+            "type": "object",
+            "required": [
+                "qty"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "minQty": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 100
+                }
+            }
+        },
+        "admin_product_controller.GetAllResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_product_controller.GetAllWithRelationsResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "category": {
+                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_product_controller.GetOneByIdResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "category": {
+                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_product_controller.GetOneByUuidResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "category": {
+                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_product_controller.StockResponseDto": {
+            "type": "object",
+            "required": [
+                "qty"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "minQty": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 100
+                }
+            }
+        },
+        "admin_product_controller.UpdateRequestDto": {
+            "type": "object",
+            "required": [
+                "categoryId",
+                "image",
+                "imageMobile",
+                "imageThumbnail",
+                "name",
+                "price"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "Update Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 5.11
+                },
+                "image": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers.png"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.png"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.png"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Update Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 6.11
+                }
+            }
+        },
         "admin_user_controller.CreateRequestDto": {
             "type": "object",
             "required": [
@@ -1064,6 +2009,9 @@
                 "password": {
                     "type": "string",
                     "example": "123456"
+                },
+                "phone": {
+                    "$ref": "#/definitions/user_controller.PhoneRequestDto"
                 }
             }
         },
@@ -1088,6 +2036,9 @@
                 "lastName": {
                     "type": "string",
                     "example": "Doe"
+                },
+                "phone": {
+                    "$ref": "#/definitions/user_controller.PhoneResponseDto"
                 },
                 "role": {
                     "type": "string",
@@ -1158,6 +2109,46 @@
                 "updatedAt": {
                     "type": "string",
                     "example": "2023-01-01T00:00:00Z"
+                }
+            }
+        },
+        "user_controller.PhoneRequestDto": {
+            "type": "object",
+            "required": [
+                "ddd",
+                "number"
+            ],
+            "properties": {
+                "ddd": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "021"
+                },
+                "number": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "999999999"
+                }
+            }
+        },
+        "user_controller.PhoneResponseDto": {
+            "type": "object",
+            "properties": {
+                "ddd": {
+                    "type": "string",
+                    "example": "021"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "number": {
+                    "type": "string",
+                    "example": "999999999"
+                },
+                "userId": {
+                    "type": "integer",
+                    "example": 2
                 }
             }
         },

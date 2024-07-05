@@ -25,6 +25,7 @@ func GetId(c *gin.Context) int32 {
 func GetUuid(c *gin.Context) uuid.UUID {
 	uuidRequest := c.Param("uuid")
 
+	fmt.Println(uuidRequest)
 	parsedUuid, err := uuid.Parse(uuidRequest)
 	if err != nil {
 		panic(exception.BadRequestException(fmt.Sprintf("invalid uuid parameter %s", uuidRequest)))

@@ -33,7 +33,7 @@ type CreateResponseDto struct {
 	CreatedBy      int32                  `json:"createdBy" example:"1"`
 	Uuid           uuid.UUID              `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
 	IsDeleted      bool                   `json:"isDeleted" example:"false"`
-	UpdatedBy      *int32                 `json:"updatedBy" example:"nil"`
+	UpdatedBy      *int32                 `json:"updatedBy" example:"1"`
 	CreatedAt      time.Time              `json:"createdAt" example:"2023-01-01T00:00:00Z"`
 	UpdatedAt      *time.Time             `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
 	Stock          CreateStockResponseDto `json:"stock"`

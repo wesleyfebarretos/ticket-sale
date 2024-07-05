@@ -12,6 +12,19 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_products_repository"
 )
 
+// CreateProduct godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Create a product
+//	@Description	Create a product
+//	@Produce		json
+//	@Param			Product	body		CreateRequestDto	true	"New product"
+//	@Success		201		{object}	CreateResponseDto
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		400		{object}	exception.HttpException
+//	@Failure		403		{object}	middleware.RolePermissionError
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Router			/admin/products [post]
 func Create(c *gin.Context) {
 	body := CreateRequestDto{}
 
@@ -68,6 +81,21 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, newProductResponse)
 }
 
+// UpdateProduct godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Update a product
+//	@Description	Update a product
+//	@Produce		json
+//	@Param			id		path		int					true	"Product ID"
+//	@Param			Product	body		UpdateRequestDto	true	"Update product"
+//	@Success		200		{object}	bool
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		404		{object}	exception.HttpException
+//	@Failure		400		{object}	exception.HttpException
+//	@Failure		403		{object}	middleware.RolePermissionError
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Router			/admin/products/{id} [put]
 func Update(c *gin.Context) {
 	body := UpdateRequestDto{}
 
@@ -94,6 +122,19 @@ func Update(c *gin.Context) {
 	c.JSON(http.StatusOK, true)
 }
 
+// SoftDeleteProduct godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Soft Delete a product
+//	@Description	Soft Delete a product
+//	@Produce		json
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	bool
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		400	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/products/{id} [delete]
 func SoftDelete(c *gin.Context) {
 	id := controller.GetId(c)
 
@@ -107,6 +148,18 @@ func SoftDelete(c *gin.Context) {
 	c.JSON(http.StatusOK, true)
 }
 
+// GetAllProducts godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Get all products
+//	@Description	Get all products
+//	@Produce		json
+//	@Success		200	{object}	[]GetAllResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		400	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/products [get]
 func GetAll(c *gin.Context) {
 	products := admin_product_service.GetAll(c)
 
@@ -136,6 +189,18 @@ func GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, productsResponse)
 }
 
+// GetAllProductsWithRelations godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Get all products with relations
+//	@Description	Get all products with relations
+//	@Produce		json
+//	@Success		200	{object}	[]GetAllWithRelationsResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		400	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/products/details [get]
 func GetAllWithRelations(c *gin.Context) {
 	products := admin_product_service.GetAllWithRelations(c)
 
@@ -187,6 +252,20 @@ func GetAllWithRelations(c *gin.Context) {
 	c.JSON(http.StatusOK, productsResponse)
 }
 
+// GetOneById godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Get One By Id
+//	@Description	Get One By Id
+//	@Produce		json
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	GetOneByIdResponseDto
+//	@Failure		500	{object}	exception.HttpException
+//	@Failure		404	{object}	exception.HttpException
+//	@Failure		400	{object}	exception.HttpException
+//	@Failure		403	{object}	middleware.RolePermissionError
+//	@Failure		401	{object}	middleware.AuthenticationError
+//	@Router			/admin/products/{id} [get]
 func GetOneById(c *gin.Context) {
 	id := controller.GetId(c)
 
@@ -237,6 +316,20 @@ func GetOneById(c *gin.Context) {
 	c.JSON(http.StatusOK, productResponse)
 }
 
+// GetOneByUuid godoc
+//
+//	@Tags			Admin Product
+//	@Summary		Get One By UUID
+//	@Description	Get One By UUID
+//	@Produce		json
+//	@Param			uuid	path		string	true	"Product UUID"
+//	@Success		200		{object}	GetOneByUuidResponseDto
+//	@Failure		500		{object}	exception.HttpException
+//	@Failure		404		{object}	exception.HttpException
+//	@Failure		400		{object}	exception.HttpException
+//	@Failure		403		{object}	middleware.RolePermissionError
+//	@Failure		401		{object}	middleware.AuthenticationError
+//	@Router			/admin/products/uuid/{uuid} [get]
 func GetOneByUuid(c *gin.Context) {
 	uuid := controller.GetUuid(c)
 

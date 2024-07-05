@@ -24,6 +24,430 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0
         type: string
     type: object
+  admin_product_controller.CategoryResponseDto:
+    properties:
+      description:
+        example: EVENT
+        type: string
+      id:
+        example: 3
+        type: integer
+      name:
+        example: event
+        type: string
+    type: object
+  admin_product_controller.CreateRequestDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      categoryId:
+        example: 3
+        minimum: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        maxLength: 2000
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        maxLength: 2000
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        maxLength: 2000
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        maxLength: 2000
+        type: string
+      name:
+        example: Red Hot Chilly Peppers
+        maxLength: 255
+        type: string
+      price:
+        example: 5.99
+        type: number
+      stock:
+        $ref: '#/definitions/admin_product_controller.CreateStockRequestDto'
+    required:
+    - categoryId
+    - image
+    - imageMobile
+    - imageThumbnail
+    - name
+    - price
+    type: object
+  admin_product_controller.CreateResponseDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      categoryId:
+        example: 3
+        type: integer
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        type: string
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Red Hot Chilly Peppers
+        type: string
+      price:
+        example: 5.99
+        type: number
+      stock:
+        $ref: '#/definitions/admin_product_controller.CreateStockResponseDto'
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      uuid:
+        example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
+        type: string
+    type: object
+  admin_product_controller.CreateStockRequestDto:
+    properties:
+      minQty:
+        example: 50
+        type: integer
+      qty:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - qty
+    type: object
+  admin_product_controller.CreateStockResponseDto:
+    properties:
+      id:
+        example: 1
+        type: integer
+      minQty:
+        example: 50
+        type: integer
+      productId:
+        example: 1
+        type: integer
+      qty:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - qty
+    type: object
+  admin_product_controller.GetAllResponseDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      categoryId:
+        example: 3
+        type: integer
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        type: string
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Red Hot Chilly Peppers
+        type: string
+      price:
+        example: 5.99
+        type: number
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      uuid:
+        example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
+        type: string
+    type: object
+  admin_product_controller.GetAllWithRelationsResponseDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      category:
+        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+      categoryId:
+        example: 3
+        type: integer
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        type: string
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Red Hot Chilly Peppers
+        type: string
+      price:
+        example: 5.99
+        type: number
+      stock:
+        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      uuid:
+        example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
+        type: string
+    type: object
+  admin_product_controller.GetOneByIdResponseDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      category:
+        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+      categoryId:
+        example: 3
+        type: integer
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        type: string
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Red Hot Chilly Peppers
+        type: string
+      price:
+        example: 5.99
+        type: number
+      stock:
+        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      uuid:
+        example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
+        type: string
+    type: object
+  admin_product_controller.GetOneByUuidResponseDto:
+    properties:
+      active:
+        example: true
+        type: boolean
+      category:
+        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+      categoryId:
+        example: 3
+        type: integer
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      description:
+        example: Fresh and fiery red hot chilly peppers, perfect for adding a spicy
+          kick to your dishes.
+        type: string
+      discountPrice:
+        example: 4.99
+        type: number
+      id:
+        example: 1
+        type: integer
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.jpg
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.jpg
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
+        type: string
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Red Hot Chilly Peppers
+        type: string
+      price:
+        example: 5.99
+        type: number
+      stock:
+        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      uuid:
+        example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
+        type: string
+    type: object
+  admin_product_controller.StockResponseDto:
+    properties:
+      id:
+        example: 1
+        type: integer
+      minQty:
+        example: 50
+        type: integer
+      productId:
+        example: 1
+        type: integer
+      qty:
+        example: 100
+        minimum: 1
+        type: integer
+    required:
+    - qty
+    type: object
+  admin_product_controller.UpdateRequestDto:
+    properties:
+      active:
+        example: false
+        type: boolean
+      categoryId:
+        example: 1
+        minimum: 1
+        type: integer
+      description:
+        example: Update Fresh and fiery red hot chilly peppers, perfect for adding
+          a spicy kick to your dishes.
+        maxLength: 2000
+        type: string
+      discountPrice:
+        example: 5.11
+        type: number
+      image:
+        example: https://example.com/images/red-hot-chilly-peppers.png
+        maxLength: 2000
+        type: string
+      imageMobile:
+        example: https://example.com/images/red-hot-chilly-peppers-mobile.png
+        maxLength: 2000
+        type: string
+      imageThumbnail:
+        example: https://example.com/images/red-hot-chilly-peppers-thumbnail.png
+        maxLength: 2000
+        type: string
+      name:
+        example: Update Red Hot Chilly Peppers
+        maxLength: 255
+        type: string
+      price:
+        example: 6.11
+        type: number
+    required:
+    - categoryId
+    - image
+    - imageMobile
+    - imageThumbnail
+    - name
+    - price
+    type: object
   admin_user_controller.CreateRequestDto:
     properties:
       email:
@@ -328,6 +752,8 @@ definitions:
       password:
         example: "123456"
         type: string
+      phone:
+        $ref: '#/definitions/user_controller.PhoneRequestDto'
     required:
     - email
     - firstName
@@ -350,6 +776,8 @@ definitions:
       lastName:
         example: Doe
         type: string
+      phone:
+        $ref: '#/definitions/user_controller.PhoneResponseDto'
       role:
         example: user
         type: string
@@ -401,6 +829,35 @@ definitions:
       updatedAt:
         example: "2023-01-01T00:00:00Z"
         type: string
+    type: object
+  user_controller.PhoneRequestDto:
+    properties:
+      ddd:
+        example: "021"
+        maxLength: 5
+        type: string
+      number:
+        example: "999999999"
+        maxLength: 10
+        type: string
+    required:
+    - ddd
+    - number
+    type: object
+  user_controller.PhoneResponseDto:
+    properties:
+      ddd:
+        example: "021"
+        type: string
+      id:
+        example: 1
+        type: integer
+      number:
+        example: "999999999"
+        type: string
+      userId:
+        example: 2
+        type: integer
     type: object
   user_controller.UpdateRequestDto:
     properties:
@@ -458,6 +915,259 @@ paths:
       summary: Sign In
       tags:
       - Admin Users
+  /admin/products:
+    get:
+      description: Get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_product_controller.GetAllResponseDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get all products
+      tags:
+      - Admin Product
+    post:
+      description: Create a product
+      parameters:
+      - description: New product
+        in: body
+        name: Product
+        required: true
+        schema:
+          $ref: '#/definitions/admin_product_controller.CreateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/admin_product_controller.CreateResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Create a product
+      tags:
+      - Admin Product
+  /admin/products/{id}:
+    delete:
+      description: Soft Delete a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Soft Delete a product
+      tags:
+      - Admin Product
+    get:
+      description: Get One By Id
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_product_controller.GetOneByIdResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get One By Id
+      tags:
+      - Admin Product
+    put:
+      description: Update a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update product
+        in: body
+        name: Product
+        required: true
+        schema:
+          $ref: '#/definitions/admin_product_controller.UpdateRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Update a product
+      tags:
+      - Admin Product
+  /admin/products/details:
+    get:
+      description: Get all products with relations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_product_controller.GetAllWithRelationsResponseDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get all products with relations
+      tags:
+      - Admin Product
+  /admin/products/uuid/{uuid}:
+    get:
+      description: Get One By UUID
+      parameters:
+      - description: Product UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_product_controller.GetOneByUuidResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get One By UUID
+      tags:
+      - Admin Product
   /admin/users:
     get:
       description: Get All Admin Users
