@@ -49,30 +49,21 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (Event, error) {
 	return i, err
 }
 
-const delete = `-- name: Delete :exec
-DELETE  FROM events WHERE id = $1
-`
-
-func (q *Queries) Delete(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, delete, id)
-	return err
-}
-
 const getAll = `-- name: GetAll :many
-SELECT id, product_id, start_at, end_at, city, state, location, product FROM get_all_events
-WHERE
-    p.is_deleted IS FALSE
+SELECT id, product_id, start_at, end_at, city, state, location, product FROM events_get_all 
+WHERE 
+    (product->>'isDeleted')::boolean IS FALSE
 `
 
-func (q *Queries) GetAll(ctx context.Context) ([]GetAllEvent, error) {
+func (q *Queries) GetAll(ctx context.Context) ([]EventsGetAll, error) {
 	rows, err := q.db.Query(ctx, getAll)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetAllEvent{}
+	items := []EventsGetAll{}
 	for rows.Next() {
-		var i GetAllEvent
+		var i EventsGetAll
 		if err := rows.Scan(
 			&i.ID,
 			&i.ProductID,
@@ -93,7 +84,48 @@ func (q *Queries) GetAll(ctx context.Context) ([]GetAllEvent, error) {
 	return items, nil
 }
 
-const update = `-- name: Update :exec
+const getOneById = `-- name: GetOneById :one
+SELECT id, product_id, start_at, end_at, city, state, location, product from events_with_relations
+WHERE
+    id = $1
+AND
+    (product->>'isDeleted')::boolean IS FALSE
+`
+
+func (q *Queries) GetOneById(ctx context.Context, id int32) (EventsWithRelation, error) {
+	row := q.db.QueryRow(ctx, getOneById, id)
+	var i EventsWithRelation
+	err := row.Scan(
+		&i.ID,
+		&i.ProductID,
+		&i.StartAt,
+		&i.EndAt,
+		&i.City,
+		&i.State,
+		&i.Location,
+		&i.Product,
+	)
+	return i, err
+}
+
+const softDelete = `-- name: SoftDelete :exec
+UPDATE products p 
+SET 
+    is_deleted = true
+FROM 
+    events e
+WHERE 
+    p.id = e.product_id
+AND 
+    e.id = $1
+`
+
+func (q *Queries) SoftDelete(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, softDelete, id)
+	return err
+}
+
+const update = `-- name: Update :one
 UPDATE events SET
     start_at = $2,
     end_at = $3,
@@ -101,6 +133,7 @@ UPDATE events SET
     state = $5,
     location = $6
 WHERE id = $1
+RETURNING product_id
 `
 
 type UpdateParams struct {
@@ -112,8 +145,8 @@ type UpdateParams struct {
 	Location *string    `json:"location"`
 }
 
-func (q *Queries) Update(ctx context.Context, arg UpdateParams) error {
-	_, err := q.db.Exec(ctx, update,
+func (q *Queries) Update(ctx context.Context, arg UpdateParams) (int32, error) {
+	row := q.db.QueryRow(ctx, update,
 		arg.ID,
 		arg.StartAt,
 		arg.EndAt,
@@ -121,5 +154,7 @@ func (q *Queries) Update(ctx context.Context, arg UpdateParams) error {
 		arg.State,
 		arg.Location,
 	)
-	return err
+	var product_id int32
+	err := row.Scan(&product_id)
+	return product_id, err
 }

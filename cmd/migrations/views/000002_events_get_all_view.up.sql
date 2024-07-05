@@ -1,4 +1,4 @@
-CREATE VIEW get_all_events AS
+CREATE VIEW events_get_all AS
 SELECT 
     e.*,
     json_build_object(
@@ -6,6 +6,7 @@ SELECT
         'name', p.name,
         'description', p.description,
         'uuid', p.uuid,
+        'price', p.price,
         'discountPrice', p.discount_price,
         'active', p.active,
         'isDeleted', p.is_deleted,

@@ -6,51 +6,32 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
-	"github.com/wesleyfebarretos/ticket-sale/infra/db"
+	"github.com/wesleyfebarretos/ticket-sale/infra/db_util"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
+	"github.com/wesleyfebarretos/ticket-sale/internal/shared/admin_product_shared"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/repository/admin_products_repository"
 )
 
+type CreateResponse struct {
+	Product admin_products_repository.Product
+	Stock   admin_product_stocks_repository.ProductStock
+}
+
 func Create(
 	c *gin.Context,
 	newProductRequest admin_products_repository.CreateParams,
 	newProductStockRequest admin_product_stocks_repository.CreateParams,
-) (admin_products_repository.Product, admin_product_stocks_repository.ProductStock) {
-	uuid, err := uuid.NewV7()
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+) CreateResponse {
+	return db_util.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
+		newProduct, newProductStock := admin_product_shared.Create(c, tx, newProductRequest, newProductStockRequest)
 
-	newProductRequest.Uuid = uuid
-
-	tx, err := db.Conn.Begin(c)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-	defer tx.Rollback(c)
-
-	adminProductsRepository := repository.AdminProducts.WithTx(tx)
-	adminProductStocksRepository := repository.AdminProductStocks.WithTx(tx)
-
-	newProduct, err := adminProductsRepository.Create(c, newProductRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	newProductStockRequest.ProductID = newProduct.ID
-
-	newProductStock, err := adminProductStocksRepository.Create(c, newProductStockRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := tx.Commit(c); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return newProduct, newProductStock
+		return CreateResponse{
+			Product: newProduct,
+			Stock:   newProductStock,
+		}
+	})
 }
 
 func Update(c *gin.Context, updateProductRequest admin_products_repository.UpdateParams) {

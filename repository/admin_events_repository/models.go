@@ -20,7 +20,7 @@ type Event struct {
 	Location  *string    `json:"location"`
 }
 
-type GetAllEvent struct {
+type EventsGetAll struct {
 	ID        int32                 `json:"id"`
 	ProductID int32                 `json:"productId"`
 	StartAt   *time.Time            `json:"startAt"`
@@ -29,4 +29,15 @@ type GetAllEvent struct {
 	State     *string               `json:"state"`
 	Location  *string               `json:"location"`
 	Product   override.EventProduct `json:"product"`
+}
+
+type EventsWithRelation struct {
+	ID        int32                              `json:"id"`
+	ProductID int32                              `json:"productId"`
+	StartAt   *time.Time                         `json:"startAt"`
+	EndAt     *time.Time                         `json:"endAt"`
+	City      *string                            `json:"city"`
+	State     *string                            `json:"state"`
+	Location  *string                            `json:"location"`
+	Product   override.EventProductWithRelations `json:"product"`
 }

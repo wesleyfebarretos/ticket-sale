@@ -51,7 +51,10 @@ func Create(c *gin.Context) {
 		CreatedBy: adminUser.Id,
 	}
 
-	newProduct, newProductStock := admin_product_service.Create(c, newProductRequest, newProductStockRequest)
+	res := admin_product_service.Create(c, newProductRequest, newProductStockRequest)
+
+	newProduct := res.Product
+	newProductStock := res.Stock
 
 	newProductResponse := CreateResponseDto{
 		ID:             newProduct.ID,

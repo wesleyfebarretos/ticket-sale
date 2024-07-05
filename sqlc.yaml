@@ -76,7 +76,11 @@ sql:
         package: "admin_events_repository"
         out: "repository/admin_events_repository"
         overrides:
-          - column: "get_all_events.product"
+          - column: "events_get_all.product"
             go_type:
               import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
               type: "EventProduct"
+          - column: "events_with_relations.product"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              type: "EventProductWithRelations"

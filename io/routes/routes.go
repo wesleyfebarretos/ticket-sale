@@ -23,6 +23,7 @@ func Bind() *gin.Engine {
 	HandleUser(v1)
 	HandleAdminUser(v1)
 	HandleAdminProduct(v1)
+	HandleEvent(v1)
 
 	return router
 }
