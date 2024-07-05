@@ -58,6 +58,282 @@
                 }
             }
         },
+        "/admin/events": {
+            "get": {
+                "description": "Get all events",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Event"
+                ],
+                "summary": "Get all events",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_event_controller.GetAllResponseDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Event"
+                ],
+                "summary": "Create a event",
+                "parameters": [
+                    {
+                        "description": "New Event",
+                        "name": "Event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_event_controller.CreateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/admin_event_controller.CreateResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/events/{id}": {
+            "get": {
+                "description": "Get One By Id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Event"
+                ],
+                "summary": "Get One By Id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_event_controller.GetOneByIdResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Event"
+                ],
+                "summary": "Update a event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Event",
+                        "name": "Event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_event_controller.UpdateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Soft Delete a event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Event"
+                ],
+                "summary": "Soft Delete a event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/products": {
             "get": {
                 "description": "Get all products",
@@ -1024,6 +1300,327 @@
                 "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"
+                }
+            }
+        },
+        "admin_event_controller.CategoryDto": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "EVENT"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "name": {
+                    "type": "string",
+                    "example": "event"
+                }
+            }
+        },
+        "admin_event_controller.CreateRequestDto": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "Orlando"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2024-01-10T00:00:00Z"
+                },
+                "location": {
+                    "type": "string",
+                    "example": "Disney"
+                },
+                "product": {
+                    "$ref": "#/definitions/admin_product_controller.CreateRequestDto"
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "FL"
+                }
+            }
+        },
+        "admin_event_controller.CreateResponseDto": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "Orlando"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2024-01-10T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "location": {
+                    "type": "string",
+                    "example": "Disney"
+                },
+                "product": {
+                    "$ref": "#/definitions/admin_product_controller.CreateResponseDto"
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "FL"
+                }
+            }
+        },
+        "admin_event_controller.GetAllProductDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "category": {
+                    "$ref": "#/definitions/admin_event_controller.CategoryDto"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_event_controller.GetAllResponseDto": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "Orlando"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2024-01-10T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "location": {
+                    "type": "string",
+                    "example": "Disney"
+                },
+                "product": {
+                    "$ref": "#/definitions/admin_event_controller.GetAllProductDto"
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "FL"
+                }
+            }
+        },
+        "admin_event_controller.GetOneByIdProductDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "category": {
+                    "$ref": "#/definitions/admin_event_controller.CategoryDto"
+                },
+                "categoryId": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
+                },
+                "discountPrice": {
+                    "type": "number",
+                    "example": 4.99
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers.jpg"
+                },
+                "imageMobile": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
+                },
+                "imageThumbnail": {
+                    "type": "string",
+                    "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Red Hot Chilly Peppers"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 5.99
+                },
+                "stock": {
+                    "$ref": "#/definitions/admin_event_controller.StockDto"
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "998f91f3-4dd7-419d-a543-0d26a0e945ec"
+                }
+            }
+        },
+        "admin_event_controller.GetOneByIdResponseDto": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "Orlando"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2024-01-10T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "location": {
+                    "type": "string",
+                    "example": "Disney"
+                },
+                "product": {
+                    "$ref": "#/definitions/admin_event_controller.GetOneByIdProductDto"
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "FL"
+                }
+            }
+        },
+        "admin_event_controller.StockDto": {
+            "type": "object",
+            "required": [
+                "qty"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "minQty": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "productId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 100
+                }
+            }
+        },
+        "admin_event_controller.UpdateRequestDto": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "Orlando"
+                },
+                "endAt": {
+                    "type": "string",
+                    "example": "2024-01-10T00:00:00Z"
+                },
+                "location": {
+                    "type": "string",
+                    "example": "Disney"
+                },
+                "product": {
+                    "$ref": "#/definitions/admin_product_controller.UpdateRequestDto"
+                },
+                "startAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "FL"
                 }
             }
         },
