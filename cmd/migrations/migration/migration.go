@@ -33,22 +33,28 @@ type MigrationType string
 const (
 	MigrationTypeTable     MigrationType = "tables"
 	MigrationTypeSeeders   MigrationType = "seeders"
+	MigrationTypeViews     MigrationType = "views"
 	tablesMigrationsTable  string        = "tables_migrations"
 	seedersMigrationsTable string        = "seeders_migrations"
+	viewsMigrationsTable   string        = "views_migrations"
 )
 
 func Up() {
 	UpTables()
+	UpViews()
 	UpSeeders(true)
 }
 
 func Down() {
 	pool, driver := openConnection(tablesMigrationsTable)
 	pool2, driver2 := openConnection(seedersMigrationsTable)
+	pool3, driver3 := openConnection(viewsMigrationsTable)
 	defer pool.Close()
 	defer pool2.Close()
+	defer pool3.Close()
 
 	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
+	downMigration(createMigrationInstance(driver3, MigrationTypeViews, true))
 	downMigration(createMigrationInstance(driver, MigrationTypeTable, true))
 }
 
@@ -64,6 +70,13 @@ func UpSeeders(activeLogger bool) {
 	defer pool.Close()
 
 	upMigration(createMigrationInstance(driver, MigrationTypeSeeders, activeLogger))
+}
+
+func UpViews() {
+	pool, driver := openConnection(viewsMigrationsTable)
+	defer pool.Close()
+
+	upMigration(createMigrationInstance(driver, MigrationTypeViews, true))
 }
 
 func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
