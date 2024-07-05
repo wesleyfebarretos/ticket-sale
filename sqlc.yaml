@@ -3,7 +3,7 @@ sql:
 
   - &schema
     engine: "postgresql"
-    schema: "cmd/migrations/tables"
+    schema: "cmd/migrations/*"
     queries: "repository/query/users_query.sql"
     gen:
       go: &default_configs
@@ -67,3 +67,16 @@ sql:
         <<: *default_configs
         package: "admin_product_stocks_repository"
         out: "repository/admin_product_stocks_repository"
+
+  - <<: *schema
+    queries: "repository/query/admin_events_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_events_repository"
+        out: "repository/admin_events_repository"
+        overrides:
+          - column: "get_all_events.product"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              type: "EventProduct"

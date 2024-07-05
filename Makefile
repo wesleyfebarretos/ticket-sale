@@ -16,6 +16,8 @@ cmt: #CREATE TABLE MIGRATION
 	@migrate create -ext=sql -dir=./cmd/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
 cms: #CREATE SEED MIGRATION
 	@migrate create -ext sql -dir ./cmd/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
+cmv: #CREATE VIEW MIGRATION
+	@migrate create -ext sql -dir ./cmd/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
 mup: #MIGRATIONS UP
 	@go run ./cmd/migrations/main.go up
 mdown: #MIGRATIONS DOWN 
