@@ -8,7 +8,7 @@ import (
 
 type CreateRequestDto struct {
 	Name           string                `json:"name" binding:"required,max=255" example:"Red Hot Chilly Peppers"`
-	Description    *string               `json:"description" binding:"max=2000" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
+	Description    *string               `json:"description" binding:"omitempty,max=2000" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
 	Price          float64               `json:"price" binding:"required" example:"5.99"`
 	DiscountPrice  *float64              `json:"discountPrice" example:"4.99"`
 	Active         bool                  `json:"active" example:"true"`

@@ -228,12 +228,7 @@ func TestAdminProductController(t *testing.T) {
 
 			json.Unmarshal(bStruct, &structMap)
 
-			if strings.Contains(k, ".") {
-				keys := strings.Split(k, ".")
-				delete(structMap[keys[0]].(map[string]any), keys[1])
-			} else {
-				delete(structMap, k)
-			}
+			test_utils.DeleteRequiredField(t, k, structMap)
 
 			res := TMakeRequest(t, http.MethodPost, "admin/products", structMap)
 
@@ -289,36 +284,36 @@ func TestAdminProductController(t *testing.T) {
 
 			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 		}
+	}))
 
-		t.Run("it should make sure that only an admin can access this routes", TRun(func(t *testing.T) {
-			user := test_utils.CreateUser(roles_enum.USER)
-			TSetCookieWithUser(t, user)
+	t.Run("it should make sure that only an admin can access this routes", TRun(func(t *testing.T) {
+		user := test_utils.CreateUser(roles_enum.USER)
+		TSetCookieWithUser(t, user)
 
-			methods := []string{
-				http.MethodGet,
-				http.MethodGet,
-				http.MethodGet,
-				http.MethodGet,
-				http.MethodPost,
-				http.MethodPut,
-				http.MethodDelete,
-			}
+		methods := []string{
+			http.MethodGet,
+			http.MethodGet,
+			http.MethodGet,
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodDelete,
+		}
 
-			routes := []string{
-				"admin/products",
-				"admin/products/details",
-				"admin/products/1",
-				"admin/products/uuid/1",
-				"admin/products",
-				"admin/products/1",
-				"admin/products/1",
-			}
+		routes := []string{
+			"admin/products",
+			"admin/products/details",
+			"admin/products/1",
+			"admin/products/uuid/1",
+			"admin/products",
+			"admin/products/1",
+			"admin/products/1",
+		}
 
-			for i, route := range routes {
-				res := TMakeRequest(t, methods[i], route, nil)
-				assert.Equal(t, http.StatusForbidden, res.StatusCode)
-			}
-		}))
+		for i, route := range routes {
+			res := TMakeRequest(t, methods[i], route, nil)
+			assert.Equal(t, http.StatusForbidden, res.StatusCode)
+		}
 	}))
 }
 

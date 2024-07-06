@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"reflect"
+	"strings"
 	"sync"
 	"testing"
 
@@ -160,4 +161,31 @@ func DebugResponse(body io.Reader) {
 	b, _ := io.ReadAll(body)
 	fmt.Println(string(b))
 	os.Exit(1)
+}
+
+func DeleteRequiredField(t *testing.T, field string, targetMap map[string]any) {
+	depthKeys := strings.Split(field, ".")
+	if len(depthKeys) > 1 {
+		mapEntry := targetMap
+		for i := 0; i < len(depthKeys); i++ {
+			if _, ok := mapEntry[depthKeys[i]]; !ok {
+				t.Fatalf("key [%s] not found", depthKeys[i])
+			}
+			if i == len(depthKeys)-1 {
+				delete(mapEntry, depthKeys[i])
+				break
+			}
+			_, ok := mapEntry[depthKeys[i]].(map[string]any)
+			if !ok {
+				t.Fatalf("the key [%s] is not a map", depthKeys[i])
+			}
+
+			mapEntry = mapEntry[depthKeys[i]].(map[string]any)
+		}
+	} else {
+		if _, ok := targetMap[depthKeys[0]]; !ok {
+			t.Fatalf("key [%s] not found", depthKeys[0])
+		}
+		delete(targetMap, depthKeys[0])
+	}
 }
