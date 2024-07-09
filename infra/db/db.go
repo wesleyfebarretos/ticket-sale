@@ -34,11 +34,11 @@ func openConnection(connector string) {
 
 func getStringConnection() string {
 	return fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable",
-		config.Envs.DBHost,
-		config.Envs.DBPort,
-		config.Envs.DBUser,
-		config.Envs.DBPassword,
-		config.Envs.DBName)
+		config.Envs.DB.Host,
+		config.Envs.DB.Port,
+		config.Envs.DB.User,
+		config.Envs.DB.Password,
+		config.Envs.DB.Name)
 }
 
 func Init() {

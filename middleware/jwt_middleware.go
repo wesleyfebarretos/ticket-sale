@@ -46,7 +46,7 @@ func InitJWT() {
 	jwtTimeout := BuildJwtTimeOut()
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:           config.Envs.PublicHost,
-		Key:             []byte(config.Envs.JWTSecret),
+		Key:             []byte(config.Envs.JWT.Secret),
 		Timeout:         jwtTimeout,
 		Authenticator:   loginHandler,
 		PayloadFunc:     payloadHandler,
@@ -86,7 +86,7 @@ func loginHandler(c *gin.Context) (interface{}, error) {
 }
 
 func BuildJwtTimeOut() time.Duration {
-	return time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
+	return time.Second * time.Duration(config.Envs.JWT.ExpirationInSeconds)
 }
 
 func readBody(c *gin.Context, body any) {

@@ -81,11 +81,11 @@ func UpViews() {
 
 func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
 	stringConn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-		config.Envs.DBUser,
-		config.Envs.DBPassword,
-		config.Envs.DBHost,
-		config.Envs.DBPort,
-		config.Envs.DBName,
+		config.Envs.DB.User,
+		config.Envs.DB.Password,
+		config.Envs.DB.Host,
+		config.Envs.DB.Port,
+		config.Envs.DB.Name,
 	)
 	poolConfig, err := pgxpool.ParseConfig(stringConn)
 	if err != nil {
@@ -111,7 +111,7 @@ func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
 func createMigrationInstance(driver database.Driver, migrationType MigrationType, activeLogger bool) *migrate.Migrate {
 	migration, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://cmd/migrations/%s", migrationType),
-		config.Envs.DBName,
+		config.Envs.DB.Name,
 		driver,
 	)
 	if err != nil {

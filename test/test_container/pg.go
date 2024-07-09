@@ -18,10 +18,10 @@ func SetupPG() *ContainerResult {
 
 	postgresContainer, err := postgres.RunContainer(ctx,
 		testcontainers.WithImage("postgres:13-alpine"),
-		postgres.WithDatabase(config.Envs.DBName),
+		postgres.WithDatabase(config.Envs.DB.Name),
 		testcontainers.WithLogConsumers(&TestLogConsumer{}),
-		postgres.WithUsername(config.Envs.DBUser),
-		postgres.WithPassword(config.Envs.DBPassword),
+		postgres.WithUsername(config.Envs.DB.User),
+		postgres.WithPassword(config.Envs.DB.Password),
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").
 				WithOccurrence(2).

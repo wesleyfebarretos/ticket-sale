@@ -50,7 +50,7 @@ func BeforeAll() *httptest.Server {
 
 	pgContainer := test_container.SetupPG()
 	runningContainers = append(runningContainers, pgContainer)
-	config.Envs.DBPort = fmt.Sprintf("%d", pgContainer.Port)
+	config.Envs.DB.Port = fmt.Sprintf("%d", pgContainer.Port)
 
 	db.Init()
 	migration.Up()
