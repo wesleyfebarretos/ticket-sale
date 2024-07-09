@@ -2,7 +2,6 @@ package logger
 
 import (
 	"io"
-	"os"
 	"runtime/debug"
 	"sync"
 	"time"
@@ -25,7 +24,7 @@ func Get() zerolog.Logger {
 		logLevel := config.Envs.Logger.LogLevel
 
 		var logWriter io.Writer = zerolog.ConsoleWriter{
-			Out:        os.Stdout,
+			Out:        config.Envs.Logger.Output,
 			TimeFormat: time.RFC3339,
 			FieldsExclude: []string{
 				"user_agent",

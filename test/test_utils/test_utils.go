@@ -43,10 +43,13 @@ func BeforeAll() *httptest.Server {
 		log.Fatal("error loading .env file")
 	}
 
+	config.Init()
+
 	// Close error chanel, panics was spam the terminal making it difficult to tracking tests
 	os.Stderr.Close()
 
-	config.Init()
+	// Moving default logger output to Stderr which is closed to not spam the tests
+	config.Envs.Logger.Output = os.Stderr
 
 	pgContainer := test_container.SetupPG()
 	runningContainers = append(runningContainers, pgContainer)

@@ -30,6 +30,7 @@ type LoggerConfig struct {
 	MaxBackups int
 	MaxAge     int
 	Compress   bool
+	Output     *os.File
 }
 
 type Config struct {
@@ -73,6 +74,7 @@ func Init() {
 				MaxBackups: getEnvAsInt("LOG_MAX_BACKUPS", 5),
 				MaxAge:     getEnvAsInt("LOG_MAX_AGE", 30),
 				Compress:   getEnvAsBool("LOG_COMPRESS", true),
+				Output:     os.Stdout,
 			},
 		}
 	})

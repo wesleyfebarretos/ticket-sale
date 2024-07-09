@@ -11,7 +11,6 @@ func Logger(c *gin.Context) {
 	start := time.Now()
 
 	l := logger.Get()
-	l.Info()
 
 	l.Info().
 		Str("method", c.Request.Method).
