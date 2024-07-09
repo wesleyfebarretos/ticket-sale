@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -24,17 +23,7 @@ import (
 // @host			localhost:8080
 // @BasePath		/v1
 func main() {
-	testMode := flag.Bool("test", false, "")
-	flag.Parse()
-
-	var err error
-	if *testMode {
-		err = godotenv.Load(".env.test")
-	} else {
-		err = godotenv.Load()
-	}
-
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 

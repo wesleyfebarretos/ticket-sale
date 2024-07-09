@@ -39,8 +39,7 @@ func BeforeAll() *httptest.Server {
 		log.Fatalf("error on find working dir: %s", err.Error())
 	}
 
-	err = godotenv.Load(fmt.Sprintf("%s/.env.test", wd))
-	if err != nil {
+	if err := godotenv.Load(fmt.Sprintf("%s/.env.test", wd)); err != nil {
 		log.Fatal("error loading .env file")
 	}
 
