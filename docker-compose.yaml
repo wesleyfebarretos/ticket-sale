@@ -10,16 +10,17 @@ services:
       POSTGRES_DB: ticket_sale
       PGDATA: /data/postgres
     volumes:
-       - ./postgres:/data/postgres
+       - pgdata:/data/postgres
     ports:
       - "5432:5432"
     networks:
-    - ticket-sale
+    - app
     restart: unless-stopped
 
 volumes:
-    postgres:
+    pgdata:
+      driver: local
 
 networks:
-  ticket-sale:
+  app:
     driver: bridge
