@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   postgres:
-    container_name: ticket-sale
+    container_name: ticket-sale-db
     image: postgres:13-alpine
     environment:
       POSTGRES_USER: root
@@ -17,9 +17,27 @@ services:
     - app
     restart: unless-stopped
 
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.14.2'
+    container_name: elasticsearch
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=elastic
+    ports:
+      - "9200:9200"
+    networks:
+    - app
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
 volumes:
-    pgdata:
-      driver: local
+  pgdata:
+    driver: local
+  esdata:
+    driver: local
 
 networks:
   app:
