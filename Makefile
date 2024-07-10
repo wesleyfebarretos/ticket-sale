@@ -5,7 +5,6 @@ db-stop:
 	@docker compose down
 
 db-restart:
-	@sudo rm -rf postgres
 	@docker compose down 
 	
 	@docker compose up -d
