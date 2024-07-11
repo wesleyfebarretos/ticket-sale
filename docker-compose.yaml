@@ -9,6 +9,8 @@ volumes:
     driver: local
   kbdata:
     driver: local
+  filebeatdata:
+    driver: local
 
 networks:
   app:
@@ -170,3 +172,25 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+
+  filebeat:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/beats/filebeat:${ELASTIC_STACK_VERSION}
+    container_name: filebeat
+    networks:
+      - app
+    user: root
+    volumes:
+      - certs:/usr/share/filebeat/certs
+      - filebeatdata:/usr/share/filebeat/data
+      - "./app_logs/:/usr/share/filebeat/ingest_data/"
+      - "./infra/elastic_stack/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+      - KIBANA_HOSTS=http://kibana:5601

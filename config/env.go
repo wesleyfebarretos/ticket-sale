@@ -69,7 +69,7 @@ func Init() {
 			},
 			Logger: LoggerConfig{
 				LogLevel:   getEnvAsInt("LOG_LEVEL", int(zerolog.InfoLevel)),
-				Filename:   getEnv("LOG_FILE_NAME", "ticket-sale.log"),
+				Filename:   getEnv("LOG_FILE_NAME", "app_logs/ticket-sale.log"),
 				MaxSize:    getEnvAsInt("LOG_MAX_SIZE", 5),
 				MaxBackups: getEnvAsInt("LOG_MAX_BACKUPS", 5),
 				MaxAge:     getEnvAsInt("LOG_MAX_AGE", 30),
