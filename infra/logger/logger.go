@@ -21,8 +21,6 @@ func Get() zerolog.Logger {
 		zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 		zerolog.TimeFieldFormat = time.RFC3339Nano
 
-		logLevel := config.Envs.Logger.LogLevel
-
 		var logWriter io.Writer = zerolog.ConsoleWriter{
 			Out:        config.Envs.Logger.Output,
 			TimeFormat: time.RFC3339,
@@ -56,7 +54,6 @@ func Get() zerolog.Logger {
 		}
 
 		log = zerolog.New(output).
-			Level(zerolog.Level(logLevel)).
 			With().
 			Timestamp().
 			Str("git_revision", gitRevision).
