@@ -198,7 +198,7 @@ services:
       - ELASTIC_USER=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=https://es01:9200
-      - TZ="Europe/Paris"
+      # - TZ="Europe/Paris"
 
   filebeat:
     depends_on:
@@ -219,7 +219,7 @@ services:
     environment:
       - ELASTIC_USER=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTIC_HOSTS=https://es01:9200
-      - KIBANA_HOSTS=http://kibana:5601
+      - ELASTIC_HOSTS=es01:9200
+      - KIBANA_HOSTS=kibana:5601
       - LOGSTASH_HOSTS=logstash:5044
 

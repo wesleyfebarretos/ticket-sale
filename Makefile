@@ -15,15 +15,19 @@ rebuild-services: kill-services start-services
 # Migrations
 create-table:
 	@migrate create -ext=sql -dir=./cmd/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
+
 create-seed:
 	@migrate create -ext sql -dir ./cmd/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
+
 create-view:
 	@migrate create -ext sql -dir ./cmd/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
+
 migrations-up:
 	@go run ./cmd/migrations/main.go up
+	
 migrations-down: 
-
 	@go run ./cmd/migrations/main.go down 
+
 # Tests
 # Run integration tests
 it: 
