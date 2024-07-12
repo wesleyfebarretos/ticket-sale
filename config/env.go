@@ -35,6 +35,7 @@ type LoggerConfig struct {
 
 type Config struct {
 	ApiToken   string
+	AppEnv     string
 	PublicHost string
 	CookieName string
 	Port       string
@@ -52,6 +53,7 @@ func Init() {
 	initOnce.Do(func() {
 		Envs = Config{
 			ApiToken:   getEnv("API_TOKEN", "ToYaaRUiza7cYAMzD+Pk2ha9N2Xn3rwMpuhd2JVEQ/Usdbte6kFaIOoIWm6qXgOXt0qYZo3uHTvecySPo4p5zQ=="),
+			AppEnv:     getEnv("APP_ENV", "development"),
 			PublicHost: fmt.Sprintf("%s:%s", getEnv("PUBLIC_HOST", "http://localhost"), getEnv("PORT", "8080")),
 			Port:       getEnv("PORT", "8080"),
 			CookieName: getEnv("COOKIE_NAME", "ticket_sale_jwt"),

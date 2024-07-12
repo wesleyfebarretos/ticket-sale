@@ -2,13 +2,16 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/wesleyfebarretos/ticket-sale/config"
 	"github.com/wesleyfebarretos/ticket-sale/middleware"
 )
 
 func Bind() *gin.Engine {
 	router := gin.New()
+	if config.Envs.AppEnv != "testing" {
+		router.Use(middleware.Logger)
+	}
 	router.Use(gin.CustomRecovery(middleware.ExceptionHandler))
-	router.Use(middleware.Logger)
 
 	// Init JWT instance
 	middleware.InitJWT()

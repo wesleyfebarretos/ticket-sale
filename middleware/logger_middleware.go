@@ -12,10 +12,13 @@ func Logger(c *gin.Context) {
 
 	l := logger.Get()
 
+	c.Next()
+
 	l.Info().
 		Str("method", c.Request.Method).
 		Str("url", c.Request.URL.String()).
 		Str("user_agent", c.Request.UserAgent()).
 		Dur("elapsed_ms", time.Since(start)).
+		Int("status_code", c.Writer.Status()).
 		Msg("incoming request")
 }

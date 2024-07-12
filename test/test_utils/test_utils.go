@@ -45,6 +45,9 @@ func BeforeAll() *httptest.Server {
 
 	config.Init()
 
+	// Set app enviroment to testing
+	config.Envs.AppEnv = "testing"
+
 	// Close error chanel, panics was spam the terminal making it difficult to tracking tests
 	os.Stderr.Close()
 
