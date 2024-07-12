@@ -1,36 +1,40 @@
-#Database
-db:
-	@docker compose up -d
-db-stop:
+# Application Services
+start-services:
+	@chmod +x ./setup.sh
+	@./setup.sh
+
+stop-services:
 	@docker compose down
 
-db-restart:
-	@docker compose down 
-	
-	@docker compose up -d
+kill-services:
+	@docker compose down
+	@docker volume rm -f $(shell docker volume ls --filter name=tick -q)
 
-#Migrations
+rebuild-services: kill-services start-services
 
-cmt: #CREATE TABLE MIGRATION
+# Migrations
+create-table:
 	@migrate create -ext=sql -dir=./cmd/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
-cms: #CREATE SEED MIGRATION
+create-seed:
 	@migrate create -ext sql -dir ./cmd/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
-cmv: #CREATE VIEW MIGRATION
+create-view:
 	@migrate create -ext sql -dir ./cmd/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
-mup: #MIGRATIONS UP
+migrations-up:
 	@go run ./cmd/migrations/main.go up
-mdown: #MIGRATIONS DOWN 
-	@go run ./cmd/migrations/main.go down 
+migrations-down: 
 
-#Tests
-it: #INTEGRATION TESTS
+	@go run ./cmd/migrations/main.go down 
+# Tests
+# Run integration tests
+it: 
 	@clear
 	@go test -v ./test/integration/
 
-#Swagger
-swg: #GEN SWAGGER CONFIG
+# Swagger
+gen-swg-conf:
 	@rm -rf swagger
 	@swag init -g ./cmd/main.go -o ./swagger
-swgf: #SWAGGER FORMAT
+
+swg-format:
 	@swag fmt
 

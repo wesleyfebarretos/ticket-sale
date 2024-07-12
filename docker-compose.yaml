@@ -11,6 +11,8 @@ volumes:
     driver: local
   filebeatdata:
     driver: local
+  lsdata:
+    driver: local
 
 networks:
   app:
@@ -173,6 +175,31 @@ services:
       timeout: 10s
       retries: 120
 
+  logstash:
+    depends_on:
+      es01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/logstash/logstash:${ELASTIC_STACK_VERSION}
+    container_name: logstash
+    networks:
+      - app
+    labels:
+      co.elastic.logs/module: logstash
+    user: root
+    volumes:
+      - certs:/usr/share/logstash/certs
+      - lsdata:/usr/share/logstash/data
+      - "./app_logs/:/usr/share/logstash/ingest_data/"
+      - "./infra/elastic_stack/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+      - TZ="Europe/Paris"
+
   filebeat:
     depends_on:
       es01:
@@ -194,3 +221,5 @@ services:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=https://es01:9200
       - KIBANA_HOSTS=http://kibana:5601
+      - LOGSTASH_HOSTS=logstash:5044
+
