@@ -145,13 +145,13 @@ func TestAdminProductController(t *testing.T) {
 
 		res := TMakeRequest(t, http.MethodGet, "admin/products/details", nil)
 
-		getAllWithRleationsResponse := []admin_product_controller.GetAllWithRelationsResponseDto{}
+		getAllWithRelationsResponse := []admin_product_controller.GetAllWithRelationsResponseDto{}
 
-		test_utils.Decode(t, res.Body, &getAllWithRleationsResponse)
+		test_utils.Decode(t, res.Body, &getAllWithRelationsResponse)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
-		assert.Equal(t, 1, len(getAllWithRleationsResponse))
-		assert.IsType(t, admin_product_controller.GetAllWithRelationsResponseDto{}, getAllWithRleationsResponse[0])
+		assert.Equal(t, 1, len(getAllWithRelationsResponse))
+		assert.IsType(t, admin_product_controller.GetAllWithRelationsResponseDto{}, getAllWithRelationsResponse[0])
 	}))
 
 	t.Run("it should get product by id", TRun(func(t *testing.T) {
