@@ -13,31 +13,29 @@ import (
 
 const create = `-- name: Create :one
 INSERT INTO products 
-(name, description, uuid, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
+(name, description, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
 VALUES 
-($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
 RETURNING id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at
 `
 
 type CreateParams struct {
-	Name           string    `json:"name"`
-	Description    *string   `json:"description"`
-	Uuid           uuid.UUID `json:"uuid"`
-	Price          float64   `json:"price"`
-	DiscountPrice  *float64  `json:"discountPrice"`
-	Active         bool      `json:"active"`
-	Image          *string   `json:"image"`
-	ImageMobile    *string   `json:"imageMobile"`
-	ImageThumbnail *string   `json:"imageThumbnail"`
-	CategoryID     int32     `json:"categoryId"`
-	CreatedBy      int32     `json:"createdBy"`
+	Name           string   `json:"name"`
+	Description    *string  `json:"description"`
+	Price          float64  `json:"price"`
+	DiscountPrice  *float64 `json:"discountPrice"`
+	Active         bool     `json:"active"`
+	Image          *string  `json:"image"`
+	ImageMobile    *string  `json:"imageMobile"`
+	ImageThumbnail *string  `json:"imageThumbnail"`
+	CategoryID     int32    `json:"categoryId"`
+	CreatedBy      int32    `json:"createdBy"`
 }
 
 func (q *Queries) Create(ctx context.Context, arg CreateParams) (Product, error) {
 	row := q.db.QueryRow(ctx, create,
 		arg.Name,
 		arg.Description,
-		arg.Uuid,
 		arg.Price,
 		arg.DiscountPrice,
 		arg.Active,

@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    uuid UUID UNIQUE NOT NULL,
+    uuid UUID UNIQUE NOT NULL DEFAULT uuid_generate_v4(),
     price DOUBLE PRECISION NOT NULL,
     discount_price DOUBLE PRECISION,
     active bool NOT NULL DEFAULT false,

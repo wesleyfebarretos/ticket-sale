@@ -12,6 +12,11 @@ kill-services:
 
 rebuild-services: kill-services start-services
 
+restart-db:
+	@docker compose down postgres
+	@docker volume rm ticket-sale_pgdata
+	@docker compose up postgres -d
+
 # Migrations
 create-table:
 	@migrate create -ext=sql -dir=./cmd/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
@@ -21,6 +26,9 @@ create-seed:
 
 create-view:
 	@migrate create -ext sql -dir ./cmd/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
+
+create-schema:
+	@migrate create -ext sql -dir ./cmd/migrations/schemas -seq $(filter-out $@,$(MAKECMDGOALS))
 
 migrations-up:
 	@go run ./cmd/migrations/main.go up

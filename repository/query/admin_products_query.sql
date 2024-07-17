@@ -1,8 +1,8 @@
 -- name: Create :one
 INSERT INTO products 
-(name, description, uuid, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
+(name, description, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
 VALUES 
-($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
 RETURNING *;
 
 -- name: Update :exec

@@ -2,7 +2,6 @@ package admin_product_shared
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
 	"github.com/wesleyfebarretos/ticket-sale/repository"
@@ -16,13 +15,6 @@ func Create(
 	newProductRequest admin_products_repository.CreateParams,
 	newProductStockRequest admin_product_stocks_repository.CreateParams,
 ) (admin_products_repository.Product, admin_product_stocks_repository.ProductStock) {
-	uuid, err := uuid.NewV7()
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	newProductRequest.Uuid = uuid
-
 	adminProductsRepository := repository.AdminProducts.WithTx(tx)
 	adminProductStocksRepository := repository.AdminProductStocks.WithTx(tx)
 

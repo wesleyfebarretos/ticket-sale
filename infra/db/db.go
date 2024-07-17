@@ -51,9 +51,9 @@ func Init() {
 func TruncateAll() {
 	ctx := context.Background()
 	rows, err := Conn.Query(ctx, `
-        SELECT table_name
+        SELECT table_name, table_schema
         FROM information_schema.tables
-        WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+        WHERE table_schema IN('public', 'fin') AND table_type = 'BASE TABLE'
     `)
 	if err != nil {
 		log.Fatalf("Failed to fetch table names: %v\n", err)
@@ -62,10 +62,20 @@ func TruncateAll() {
 	// Truncate each table
 	for rows.Next() {
 		var tableName string
-		if err := rows.Scan(&tableName); err != nil {
+		var tableSchema string
+		if err := rows.Scan(&tableName, &tableSchema); err != nil {
 			log.Fatalf("Failed to scan table name: %v\n", err)
 		}
-		_, err := Conn.Exec(ctx, fmt.Sprintf("TRUNCATE TABLE %s RESTART IDENTITY CASCADE", tableName))
+
+		var table string
+
+		if tableSchema != "public" {
+			table = fmt.Sprintf("%s.%s", tableSchema, tableName)
+		} else {
+			table = tableName
+		}
+
+		_, err := Conn.Exec(ctx, fmt.Sprintf("TRUNCATE TABLE %s RESTART IDENTITY CASCADE", table))
 		if err != nil {
 			log.Fatalf("Failed to truncate table %s: %v\n", tableName, err)
 		}

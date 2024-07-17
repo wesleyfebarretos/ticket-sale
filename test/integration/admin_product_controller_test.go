@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/enum/roles_enum"
@@ -318,10 +317,6 @@ func TestAdminProductController(t *testing.T) {
 }
 
 func newProduct(t *testing.T, userID int32) admin_products_repository.Product {
-	uuid, err := uuid.NewV7()
-	if err != nil {
-		t.Errorf("error on creating UUID: %v", err)
-	}
 	newProduct, err := repository.AdminProducts.Create(context.Background(), admin_products_repository.CreateParams{
 		Name:           "Red Hot Chilly Peppers",
 		Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
@@ -331,7 +326,6 @@ func newProduct(t *testing.T, userID int32) admin_products_repository.Product {
 		Image:          TPointer("https://example.com/images/red-hot-chilly-peppers.jpg"),
 		ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
 		ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
-		Uuid:           uuid,
 		CategoryID:     product_categories_enum.EVENT,
 		CreatedBy:      userID,
 	})

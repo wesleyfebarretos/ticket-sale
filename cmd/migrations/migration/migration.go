@@ -34,12 +34,15 @@ const (
 	MigrationTypeTable     MigrationType = "tables"
 	MigrationTypeSeeders   MigrationType = "seeders"
 	MigrationTypeViews     MigrationType = "views"
+	MigrationTypeSchema    MigrationType = "schemas"
 	tablesMigrationsTable  string        = "tables_migrations"
 	seedersMigrationsTable string        = "seeders_migrations"
 	viewsMigrationsTable   string        = "views_migrations"
+	schemasMigrationsTable string        = "schemas_migrations"
 )
 
 func Up() {
+	UpSchemas()
 	UpTables()
 	UpViews()
 	UpSeeders(true)
@@ -49,13 +52,16 @@ func Down() {
 	pool, driver := openConnection(tablesMigrationsTable)
 	pool2, driver2 := openConnection(seedersMigrationsTable)
 	pool3, driver3 := openConnection(viewsMigrationsTable)
+	pool4, driver4 := openConnection(schemasMigrationsTable)
 	defer pool.Close()
 	defer pool2.Close()
 	defer pool3.Close()
+	defer pool4.Close()
 
 	downMigration(createMigrationInstance(driver2, MigrationTypeSeeders, true))
 	downMigration(createMigrationInstance(driver3, MigrationTypeViews, true))
 	downMigration(createMigrationInstance(driver, MigrationTypeTable, true))
+	downMigration(createMigrationInstance(driver4, MigrationTypeSchema, true))
 }
 
 func UpTables() {
@@ -77,6 +83,13 @@ func UpViews() {
 	defer pool.Close()
 
 	upMigration(createMigrationInstance(driver, MigrationTypeViews, true))
+}
+
+func UpSchemas() {
+	pool, driver := openConnection(schemasMigrationsTable)
+	defer pool.Close()
+
+	upMigration(createMigrationInstance(driver, MigrationTypeSchema, true))
 }
 
 func openConnection(migrationsTable string) (*pgxpool.Pool, database.Driver) {
