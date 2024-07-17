@@ -111,22 +111,22 @@ services:
     ports:
       - ${ES_PORT}:9200
     environment:
-      - node.name=es01
-      - cluster.name=${ES_CLUSTER_NAME}
-      - discovery.type=single-node
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.key=certs/es01/es01.key
-      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
-      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.key=certs/es01/es01.key
-      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
-      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-      - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.license.self_generated.type=${LICENSE}
+      node.name: es01
+      cluster.name: ${ES_CLUSTER_NAME}
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      bootstrap.memory_lock: true
+      xpack.security.enabled: true
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.key: certs/es01/es01.key
+      xpack.security.http.ssl.certificate: certs/es01/es01.crt
+      xpack.security.http.ssl.certificate_authorities: certs/ca/ca.crt
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.key: certs/es01/es01.key
+      xpack.security.transport.ssl.certificate: certs/es01/es01.crt
+      xpack.security.transport.ssl.certificate_authorities: certs/ca/ca.crt
+      xpack.security.transport.ssl.verification_mode: certificate
+      xpack.license.self_generated.type: ${LICENSE}
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -158,14 +158,14 @@ services:
     ports:
       - ${KIBANA_PORT}:5601
     environment:
-      - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=https://es01:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-      - XPACK_SECURITY_ENCRYPTIONKEY=${ELASTIC_ENCRYPTION_KEY}
-      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ELASTIC_ENCRYPTION_KEY}
-      - XPACK_REPORTING_ENCRYPTIONKEY=${ELASTIC_ENCRYPTION_KEY}
+      SERVERNAME: kibana
+      ELASTICSEARCH_HOSTS: https://es01:9200
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASSWORD}
+      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: config/certs/ca/ca.crt
+      XPACK_SECURITY_ENCRYPTIONKEY: ${ELASTIC_ENCRYPTION_KEY}
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: ${ELASTIC_ENCRYPTION_KEY}
+      XPACK_REPORTING_ENCRYPTIONKEY: ${ELASTIC_ENCRYPTION_KEY}
     mem_limit: ${KB_MEM_LIMIT}
     healthcheck:
       test:
@@ -196,10 +196,21 @@ services:
       - "./app_logs/:/usr/share/logstash/ingest_data/"
       - "./infra/elastic_stack/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
     environment:
-      - xpack.monitoring.enabled=false
-      - ELASTIC_USER=elastic
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTIC_HOSTS=https://es01:9200
+      xpack.monitoring.enabled: false
+      ELASTIC_USER: elastic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_HOSTS: https://es01:9200
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    command: >
+      bash -c '
+        /opt/logstash/bin/logstash-plugin install logstash-integration-jdbc
+        mkdir /opt/logstash/vendor/jdbc
+        curl -o /opt/logstash/vendor/jdbc/postgresql-42.2.18.jar https://jdbc.postgresql.org/download/postgresql-42.2.18.jar
+        /usr/local/bin/docker-entrypoint
+      '
 
   filebeat:
     depends_on:
@@ -218,11 +229,11 @@ services:
       - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      - ELASTIC_USER=elastic
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTIC_HOSTS=es01:9200
-      - KIBANA_HOSTS=kibana:5601
-      - LOGSTASH_HOSTS=logstash:5044
+      ELASTIC_USER: elastic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_HOSTS: es01:9200
+      KIBANA_HOSTS: kibana:5601
+      LOGSTASH_HOSTS: logstash:5044
 
   metricbeat:
     depends_on:
@@ -244,9 +255,9 @@ services:
       - "/proc:/hostfs/proc:ro"
       - "/:/hostfs:ro"
     environment:
-      - ELASTIC_USER=elastic
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTIC_HOSTS=https://es01:9200
-      - KIBANA_HOSTS=http://kibana:5601
-      - LOGSTASH_HOSTS=http://logstash:9600
+      ELASTIC_USER: elastic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_HOSTS: https://es01:9200
+      KIBANA_HOSTS: http://kibana:5601
+      LOGSTASH_HOSTS: http://logstash:9600
 
