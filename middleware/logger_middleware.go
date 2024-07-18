@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/infra/logger"
+	"github.com/wesleyfebarretos/ticket-sale/logger"
 )
 
 func Logger(c *gin.Context) {
