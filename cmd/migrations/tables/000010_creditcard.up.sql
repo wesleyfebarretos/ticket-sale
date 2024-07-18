@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS fin.creditcard (
     creditcard_type_id INT NOT NULL REFERENCES fin.creditcard_type(id),
     creditcard_flag_id INT NOT NULL REFERENCES fin.creditcard_flag(id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX ON fin.creditcard(uuid);

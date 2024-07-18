@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS fin.cart;
+DROP TYPE IF EXISTS cart_status CASCADE;

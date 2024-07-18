@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS fin.gateway_payment_type (
     created_by INT NOT NULL REFERENCES users(id),
     updated_by INT REFERENCES users(id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

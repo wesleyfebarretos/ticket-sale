@@ -8,7 +8,7 @@ BEGIN;
         role roles NOT NULL,
         password VARCHAR(500) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX on users(role);
 COMMIT;
