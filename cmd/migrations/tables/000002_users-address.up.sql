@@ -10,7 +10,7 @@ BEGIN;
         country VARCHAR(100) NOT NULL,
         address_type VARCHAR(50),
         favorite BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON users_addresses(user_id);

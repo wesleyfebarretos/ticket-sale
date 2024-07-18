@@ -3,6 +3,7 @@ package admin_event_controller
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/internal/exception"
@@ -35,11 +36,12 @@ func Create(c *gin.Context) {
 	controller.ReadBody(c, &body)
 
 	newEventReq := admin_events_repository.CreateParams{
-		StartAt:  body.StartAt,
-		EndAt:    body.EndAt,
-		City:     body.City,
-		State:    body.State,
-		Location: body.Location,
+		StartAt:   body.StartAt,
+		EndAt:     body.EndAt,
+		City:      body.City,
+		State:     body.State,
+		Location:  body.Location,
+		CreatedBy: adminUserClaims.Id,
 	}
 
 	newProductReq := admin_products_repository.CreateParams{
@@ -124,12 +126,13 @@ func Update(c *gin.Context) {
 	controller.ReadBody(c, &body)
 
 	updateEventReq := admin_events_repository.UpdateParams{
-		ID:       id,
-		StartAt:  body.StartAt,
-		EndAt:    body.EndAt,
-		City:     body.City,
-		State:    body.State,
-		Location: body.Location,
+		ID:        id,
+		StartAt:   body.StartAt,
+		EndAt:     body.EndAt,
+		City:      body.City,
+		State:     body.State,
+		Location:  body.Location,
+		UpdatedAt: time.Now().UTC(),
 	}
 
 	updateProductReq := admin_products_repository.UpdateParams{

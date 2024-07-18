@@ -57,11 +57,11 @@ WHERE
 `
 
 type UpdateParams struct {
-	Qty       int32      `json:"qty"`
-	MinQty    *int32     `json:"minQty"`
-	UpdatedBy *int32     `json:"updatedBy"`
-	UpdatedAt *time.Time `json:"updatedAt"`
-	ID        int32      `json:"id"`
+	Qty       int32     `json:"qty"`
+	MinQty    *int32    `json:"minQty"`
+	UpdatedBy *int32    `json:"updatedBy"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
 }
 
 func (q *Queries) Update(ctx context.Context, arg UpdateParams) error {

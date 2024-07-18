@@ -12,10 +12,10 @@ import (
 
 const create = `-- name: Create :one
 INSERT INTO events
-    (product_id, start_at, end_at, city, state, location)
+    (product_id, start_at, end_at, city, state, location, created_by)
 VALUES
-    ($1, $2, $3, $4, $5, $6)
-RETURNING id, product_id, start_at, end_at, city, state, location
+    ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, product_id, start_at, end_at, city, state, location, created_by, updated_by, created_at, updated_at
 `
 
 type CreateParams struct {
@@ -25,6 +25,7 @@ type CreateParams struct {
 	City      *string    `json:"city"`
 	State     *string    `json:"state"`
 	Location  *string    `json:"location"`
+	CreatedBy int32      `json:"createdBy"`
 }
 
 func (q *Queries) Create(ctx context.Context, arg CreateParams) (Event, error) {
@@ -35,6 +36,7 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (Event, error) {
 		arg.City,
 		arg.State,
 		arg.Location,
+		arg.CreatedBy,
 	)
 	var i Event
 	err := row.Scan(
@@ -45,12 +47,16 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (Event, error) {
 		&i.City,
 		&i.State,
 		&i.Location,
+		&i.CreatedBy,
+		&i.UpdatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const getAll = `-- name: GetAll :many
-SELECT id, product_id, start_at, end_at, city, state, location, product FROM events_get_all 
+SELECT id, product_id, start_at, end_at, city, state, location, created_by, updated_by, created_at, updated_at, product FROM events_get_all 
 WHERE 
     (product->>'isDeleted')::boolean IS FALSE
 `
@@ -72,6 +78,10 @@ func (q *Queries) GetAll(ctx context.Context) ([]EventsGetAll, error) {
 			&i.City,
 			&i.State,
 			&i.Location,
+			&i.CreatedBy,
+			&i.UpdatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.Product,
 		); err != nil {
 			return nil, err
@@ -85,7 +95,7 @@ func (q *Queries) GetAll(ctx context.Context) ([]EventsGetAll, error) {
 }
 
 const getOneById = `-- name: GetOneById :one
-SELECT id, product_id, start_at, end_at, city, state, location, product from events_with_relations
+SELECT id, product_id, start_at, end_at, city, state, location, created_by, updated_by, created_at, updated_at, product from events_with_relations
 WHERE
     id = $1
 AND
@@ -103,6 +113,10 @@ func (q *Queries) GetOneById(ctx context.Context, id int32) (EventsWithRelation,
 		&i.City,
 		&i.State,
 		&i.Location,
+		&i.CreatedBy,
+		&i.UpdatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.Product,
 	)
 	return i, err
@@ -131,18 +145,20 @@ UPDATE events SET
     end_at = $3,
     city = $4,
     state = $5,
-    location = $6
+    location = $6,
+    updated_at = $7
 WHERE id = $1
 RETURNING product_id
 `
 
 type UpdateParams struct {
-	ID       int32      `json:"id"`
-	StartAt  *time.Time `json:"startAt"`
-	EndAt    *time.Time `json:"endAt"`
-	City     *string    `json:"city"`
-	State    *string    `json:"state"`
-	Location *string    `json:"location"`
+	ID        int32      `json:"id"`
+	StartAt   *time.Time `json:"startAt"`
+	EndAt     *time.Time `json:"endAt"`
+	City      *string    `json:"city"`
+	State     *string    `json:"state"`
+	Location  *string    `json:"location"`
+	UpdatedAt time.Time  `json:"updatedAt"`
 }
 
 func (q *Queries) Update(ctx context.Context, arg UpdateParams) (int32, error) {
@@ -153,6 +169,7 @@ func (q *Queries) Update(ctx context.Context, arg UpdateParams) (int32, error) {
 		arg.City,
 		arg.State,
 		arg.Location,
+		arg.UpdatedAt,
 	)
 	var product_id int32
 	err := row.Scan(&product_id)

@@ -20,5 +20,5 @@ type UsersAddress struct {
 	AddressType   *string    `json:"addressType"`
 	Favorite      *bool      `json:"favorite"`
 	CreatedAt     *time.Time `json:"createdAt"`
-	UpdatedAt     *time.Time `json:"updatedAt"`
+	UpdatedAt     time.Time  `json:"updatedAt"`
 }

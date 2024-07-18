@@ -26,13 +26,13 @@ type CheckIfEmailExistsParams struct {
 }
 
 type CheckIfEmailExistsRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) CheckIfEmailExists(ctx context.Context, arg CheckIfEmailExistsParams) (CheckIfEmailExistsRow, error) {
@@ -74,13 +74,13 @@ type CreateParams struct {
 }
 
 type CreateRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) Create(ctx context.Context, arg CreateParams) (CreateRow, error) {
@@ -131,13 +131,13 @@ ORDER BY
 `
 
 type GetAllRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetAll(ctx context.Context, role Roles) ([]GetAllRow, error) {
@@ -192,13 +192,13 @@ type GetOneByEmailParams struct {
 }
 
 type GetOneByEmailRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetOneByEmail(ctx context.Context, arg GetOneByEmailParams) (GetOneByEmailRow, error) {
@@ -241,13 +241,13 @@ type GetOneByEmailAndRolesParams struct {
 }
 
 type GetOneByEmailAndRolesRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetOneByEmailAndRoles(ctx context.Context, arg GetOneByEmailAndRolesParams) (GetOneByEmailAndRolesRow, error) {
@@ -289,13 +289,13 @@ type GetOneByIdParams struct {
 }
 
 type GetOneByIdRow struct {
-	ID        int32      `json:"id"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Role      Roles      `json:"role"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt *time.Time `json:"updatedAt"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Email     string    `json:"email"`
+	Role      Roles     `json:"role"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (q *Queries) GetOneById(ctx context.Context, arg GetOneByIdParams) (GetOneByIdRow, error) {

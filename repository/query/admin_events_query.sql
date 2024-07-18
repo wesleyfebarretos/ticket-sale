@@ -1,8 +1,8 @@
 -- name: Create :one
 INSERT INTO events
-    (product_id, start_at, end_at, city, state, location)
+    (product_id, start_at, end_at, city, state, location, created_by)
 VALUES
-    ($1, $2, $3, $4, $5, $6)
+    ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *;
 
 -- name: Update :one
@@ -11,7 +11,8 @@ UPDATE events SET
     end_at = $3,
     city = $4,
     state = $5,
-    location = $6
+    location = $6,
+    updated_at = $7
 WHERE id = $1
 RETURNING product_id;
 

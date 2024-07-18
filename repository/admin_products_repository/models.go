@@ -12,22 +12,22 @@ import (
 )
 
 type Product struct {
-	ID             int32      `json:"id"`
-	Name           string     `json:"name"`
-	Description    *string    `json:"description"`
-	Uuid           uuid.UUID  `json:"uuid"`
-	Price          float64    `json:"price"`
-	DiscountPrice  *float64   `json:"discountPrice"`
-	Active         bool       `json:"active"`
-	IsDeleted      bool       `json:"isDeleted"`
-	Image          *string    `json:"image"`
-	ImageMobile    *string    `json:"imageMobile"`
-	ImageThumbnail *string    `json:"imageThumbnail"`
-	CategoryID     int32      `json:"categoryId"`
-	CreatedBy      int32      `json:"createdBy"`
-	UpdatedBy      *int32     `json:"updatedBy"`
-	CreatedAt      time.Time  `json:"createdAt"`
-	UpdatedAt      *time.Time `json:"updatedAt"`
+	ID             int32     `json:"id"`
+	Name           string    `json:"name"`
+	Description    *string   `json:"description"`
+	Uuid           uuid.UUID `json:"uuid"`
+	Price          float64   `json:"price"`
+	DiscountPrice  *float64  `json:"discountPrice"`
+	Active         bool      `json:"active"`
+	IsDeleted      bool      `json:"isDeleted"`
+	Image          *string   `json:"image"`
+	ImageMobile    *string   `json:"imageMobile"`
+	ImageThumbnail *string   `json:"imageThumbnail"`
+	CategoryID     int32     `json:"categoryId"`
+	CreatedBy      int32     `json:"createdBy"`
+	UpdatedBy      *int32    `json:"updatedBy"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
 }
 
 type ProductsWithRelation struct {
@@ -46,7 +46,7 @@ type ProductsWithRelation struct {
 	CreatedBy      int32                    `json:"createdBy"`
 	UpdatedBy      *int32                   `json:"updatedBy"`
 	CreatedAt      time.Time                `json:"createdAt"`
-	UpdatedAt      *time.Time               `json:"updatedAt"`
+	UpdatedAt      time.Time                `json:"updatedAt"`
 	Stock          *override.ProductStock   `json:"stock"`
 	Category       override.ProductCategory `json:"category"`
 }

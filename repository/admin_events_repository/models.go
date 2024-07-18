@@ -18,6 +18,10 @@ type Event struct {
 	City      *string    `json:"city"`
 	State     *string    `json:"state"`
 	Location  *string    `json:"location"`
+	CreatedBy int32      `json:"createdBy"`
+	UpdatedBy *int32     `json:"updatedBy"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
 }
 
 type EventsGetAll struct {
@@ -28,6 +32,10 @@ type EventsGetAll struct {
 	City      *string               `json:"city"`
 	State     *string               `json:"state"`
 	Location  *string               `json:"location"`
+	CreatedBy int32                 `json:"createdBy"`
+	UpdatedBy *int32                `json:"updatedBy"`
+	CreatedAt time.Time             `json:"createdAt"`
+	UpdatedAt time.Time             `json:"updatedAt"`
 	Product   override.EventProduct `json:"product"`
 }
 
@@ -39,5 +47,9 @@ type EventsWithRelation struct {
 	City      *string                            `json:"city"`
 	State     *string                            `json:"state"`
 	Location  *string                            `json:"location"`
+	CreatedBy int32                              `json:"createdBy"`
+	UpdatedBy *int32                             `json:"updatedBy"`
+	CreatedAt time.Time                          `json:"createdAt"`
+	UpdatedAt time.Time                          `json:"updatedAt"`
 	Product   override.EventProductWithRelations `json:"product"`
 }

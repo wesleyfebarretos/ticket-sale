@@ -386,6 +386,7 @@ func newEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 		City:      TPointer("Orlando"),
 		State:     TPointer("FL"),
 		Location:  TPointer("Disney"),
+		CreatedBy: userID,
 	})
 	if err != nil {
 		t.Fatalf("error on creating event: %v", err)
