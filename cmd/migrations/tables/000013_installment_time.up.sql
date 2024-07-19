@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS fin.payment_period (
+CREATE TABLE IF NOT EXISTS fin.installment_time (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     times INT NOT NULL,

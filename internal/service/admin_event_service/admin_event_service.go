@@ -27,7 +27,8 @@ func Create(
 	newStockReq admin_product_stocks_repository.CreateParams,
 ) CreateResponse {
 	return db_util.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
-		newProduct, newStock := admin_product_shared.Create(c, tx, newProductReq, newStockReq)
+		//  TODO: Implement installments return
+		newProduct, newStock, _ := admin_product_shared.Create(c, tx, newProductReq, newStockReq, []admin_products_repository.CreateInstallmentsParams{})
 
 		adminEventsRepository := repository.AdminEvents.WithTx(tx)
 

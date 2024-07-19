@@ -5,6 +5,14 @@ VALUES
 ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
 RETURNING *;
 
+-- name: CreateInstallments :batchone
+INSERT INTO fin.product_payment_type_installment_time
+    (product_id, payment_type_id, installment_time_id, fee, tariff, created_by)
+VALUES
+    ($1, $2, $3, $4, $5, $6)
+RETURNING
+    *;
+
 -- name: Update :exec
 UPDATE products SET
     name = $1,
@@ -38,8 +46,8 @@ AND
 ORDER BY 
     created_at DESC;
 
--- name: GetAllWithRelations :many
-SELECT * FROM products_with_relation
+-- name: GetAllProductsDetails :many
+SELECT * FROM products_details
 WHERE 
     is_deleted IS FALSE 
 AND
@@ -48,13 +56,13 @@ ORDER BY
     created_at DESC;
 
 -- name: GetOneById :one
-SELECT * FROM products_with_relation
+SELECT * FROM products_details
 WHERE 
     id = $1
 LIMIT 1;
 
 -- name: GetOneByUuid :one
-SELECT * FROM products_with_relation
+SELECT * FROM products_details
 WHERE 
     uuid = $1
 LIMIT 1;

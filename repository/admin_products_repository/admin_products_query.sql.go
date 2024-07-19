@@ -71,8 +71,7 @@ const createWithStock = `-- name: CreateWithStock :one
 BEGIN
 `
 
-type CreateWithStockRow struct {
-}
+type CreateWithStockRow struct{}
 
 func (q *Queries) CreateWithStock(ctx context.Context) (CreateWithStockRow, error) {
 	row := q.db.QueryRow(ctx, createWithStock)
@@ -128,8 +127,8 @@ func (q *Queries) GetAll(ctx context.Context) ([]Product, error) {
 	return items, nil
 }
 
-const getAllWithRelations = `-- name: GetAllWithRelations :many
-SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
+const getAllProductsDetails = `-- name: GetAllProductsDetails :many
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category, installments FROM products_details
 WHERE 
     is_deleted IS FALSE 
 AND
@@ -138,15 +137,15 @@ ORDER BY
     created_at DESC
 `
 
-func (q *Queries) GetAllWithRelations(ctx context.Context) ([]ProductsWithRelation, error) {
-	rows, err := q.db.Query(ctx, getAllWithRelations)
+func (q *Queries) GetAllProductsDetails(ctx context.Context) ([]ProductsDetail, error) {
+	rows, err := q.db.Query(ctx, getAllProductsDetails)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []ProductsWithRelation{}
+	items := []ProductsDetail{}
 	for rows.Next() {
-		var i ProductsWithRelation
+		var i ProductsDetail
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
@@ -166,6 +165,7 @@ func (q *Queries) GetAllWithRelations(ctx context.Context) ([]ProductsWithRelati
 			&i.UpdatedAt,
 			&i.Stock,
 			&i.Category,
+			&i.Installments,
 		); err != nil {
 			return nil, err
 		}
@@ -178,15 +178,15 @@ func (q *Queries) GetAllWithRelations(ctx context.Context) ([]ProductsWithRelati
 }
 
 const getOneById = `-- name: GetOneById :one
-SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category, installments FROM products_details
 WHERE 
     id = $1
 LIMIT 1
 `
 
-func (q *Queries) GetOneById(ctx context.Context, id int32) (ProductsWithRelation, error) {
+func (q *Queries) GetOneById(ctx context.Context, id int32) (ProductsDetail, error) {
 	row := q.db.QueryRow(ctx, getOneById, id)
-	var i ProductsWithRelation
+	var i ProductsDetail
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -206,20 +206,21 @@ func (q *Queries) GetOneById(ctx context.Context, id int32) (ProductsWithRelatio
 		&i.UpdatedAt,
 		&i.Stock,
 		&i.Category,
+		&i.Installments,
 	)
 	return i, err
 }
 
 const getOneByUuid = `-- name: GetOneByUuid :one
-SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category FROM products_with_relation
+SELECT id, name, description, uuid, price, discount_price, active, is_deleted, image, image_mobile, image_thumbnail, category_id, created_by, updated_by, created_at, updated_at, stock, category, installments FROM products_details
 WHERE 
     uuid = $1
 LIMIT 1
 `
 
-func (q *Queries) GetOneByUuid(ctx context.Context, argUuid uuid.UUID) (ProductsWithRelation, error) {
+func (q *Queries) GetOneByUuid(ctx context.Context, argUuid uuid.UUID) (ProductsDetail, error) {
 	row := q.db.QueryRow(ctx, getOneByUuid, argUuid)
-	var i ProductsWithRelation
+	var i ProductsDetail
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -239,6 +240,7 @@ func (q *Queries) GetOneByUuid(ctx context.Context, argUuid uuid.UUID) (Products
 		&i.UpdatedAt,
 		&i.Stock,
 		&i.Category,
+		&i.Installments,
 	)
 	return i, err
 }

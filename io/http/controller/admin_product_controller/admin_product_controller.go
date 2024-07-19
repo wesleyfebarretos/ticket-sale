@@ -2,6 +2,7 @@ package admin_product_controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -51,10 +52,44 @@ func Create(c *gin.Context) {
 		CreatedBy: adminUser.Id,
 	}
 
-	res := admin_product_service.Create(c, newProductRequest, newProductStockRequest)
+	newProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+
+	for _, installment := range body.Installments {
+		newInstallment := admin_products_repository.CreateInstallmentsParams{
+			PaymentTypeID:     installment.PaymentTypeID,
+			InstallmentTimeID: installment.ID,
+			Fee:               0,
+			Tariff:            0,
+			CreatedBy:         adminUser.Id,
+		}
+
+		if installment.Fee != nil {
+			newInstallment.Fee = *installment.Fee
+		}
+
+		if installment.Tariff != nil {
+			newInstallment.Tariff = *installment.Tariff
+		}
+
+		newProductInstallments = append(newProductInstallments, newInstallment)
+	}
+
+	res := admin_product_service.Create(c, newProductRequest, newProductStockRequest, newProductInstallments)
 
 	newProduct := res.Product
 	newProductStock := res.Stock
+
+	newInstallments := []CreateInstallmentsResponseDto{}
+
+	for _, i := range res.Installments {
+		newInstallments = append(newInstallments, CreateInstallmentsResponseDto{
+			ID:            i.ID,
+			PaymentTypeID: i.PaymentTypeID,
+			Fee:           i.Fee,
+			Tariff:        i.Tariff,
+			InstallmentID: i.InstallmentTimeID,
+		})
+	}
 
 	newProductResponse := CreateResponseDto{
 		ID:             newProduct.ID,
@@ -79,6 +114,7 @@ func Create(c *gin.Context) {
 			Qty:       newProductStock.Qty,
 			MinQty:    newProductStock.MinQty,
 		},
+		Installments: newInstallments,
 	}
 
 	c.JSON(http.StatusCreated, newProductResponse)
@@ -212,6 +248,7 @@ func GetAllWithRelations(c *gin.Context) {
 	for _, product := range products {
 		stock := &StockResponseDto{}
 		category := &CategoryResponseDto{}
+		installments := InstallmentsResponseDto{}
 
 		bStock, err := json.Marshal(product.Stock)
 		if err != nil {
@@ -222,12 +259,22 @@ func GetAllWithRelations(c *gin.Context) {
 		if err != nil {
 			panic(exception.InternalServerException(err.Error()))
 		}
+		fmt.Println(string(bCategory))
+
+		bInstallments, err := json.Marshal(product.Installments)
+		if err != nil {
+			panic(exception.InternalServerException(err.Error()))
+		}
 
 		if err := json.Unmarshal(bStock, &stock); err != nil {
 			panic(exception.InternalServerException(err.Error()))
 		}
 
 		if err := json.Unmarshal(bCategory, &category); err != nil {
+			panic(exception.InternalServerException(err.Error()))
+		}
+
+		if err := json.Unmarshal(bInstallments, &installments); err != nil {
 			panic(exception.InternalServerException(err.Error()))
 		}
 
@@ -250,6 +297,7 @@ func GetAllWithRelations(c *gin.Context) {
 			UpdatedAt:      product.UpdatedAt,
 			Stock:          stock,
 			Category:       category,
+			Installments:   installments,
 		})
 	}
 	c.JSON(http.StatusOK, productsResponse)

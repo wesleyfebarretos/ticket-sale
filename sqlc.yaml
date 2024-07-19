@@ -50,15 +50,23 @@ sql:
         package: "admin_products_repository"
         out: "repository/admin_products_repository"
         overrides:
-          - column: "products_with_relation.stock"
+          - column: "products_details.stock"
             go_type: 
               import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
               type: "ProductStock"
               pointer: true
-          - column: "products_with_relation.category"
+          - column: "products_details.category"
             go_type: 
               import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
               type: "ProductCategory"
+          - column: "products_details.installments"
+            go_type: 
+              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              type: "ProductInstallments"
+          - column: "fin.product_payment_type_installment_time.tariff"
+            go_type: "float64"
+          - column: "fin.product_payment_type_installment_time.fee"
+            go_type: "float64"
 
   - <<: *schema
     queries: "repository/query/admin_product_stocks_query.sql"

@@ -1,4 +1,4 @@
-INSERT INTO fin.payment_period
+INSERT INTO fin.installment_time
 (id, created_by, name, times)
 VALUES
 (1, 1, '1x', 1),
@@ -14,4 +14,4 @@ VALUES
 (11, 1, '11x', 11),
 (12, 1, '12x', 12);
 
-ALTER SEQUENCE fin.payment_period_id_seq RESTART WITH 13;
+ALTER SEQUENCE fin.installment_time_id_seq RESTART WITH 13;
