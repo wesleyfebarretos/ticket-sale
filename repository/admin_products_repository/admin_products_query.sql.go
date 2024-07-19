@@ -71,13 +71,26 @@ const createWithStock = `-- name: CreateWithStock :one
 BEGIN
 `
 
-type CreateWithStockRow struct{}
+type CreateWithStockRow struct {
+}
 
 func (q *Queries) CreateWithStock(ctx context.Context) (CreateWithStockRow, error) {
 	row := q.db.QueryRow(ctx, createWithStock)
 	var i CreateWithStockRow
 	err := row.Scan()
 	return i, err
+}
+
+const deleteAllProductInstallmentTimes = `-- name: DeleteAllProductInstallmentTimes :exec
+DELETE FROM
+    fin.product_payment_type_installment_time
+WHERE
+    product_id = $1
+`
+
+func (q *Queries) DeleteAllProductInstallmentTimes(ctx context.Context, productID int32) error {
+	_, err := q.db.Exec(ctx, deleteAllProductInstallmentTimes, productID)
+	return err
 }
 
 const getAll = `-- name: GetAll :many
@@ -116,6 +129,53 @@ func (q *Queries) GetAll(ctx context.Context) ([]Product, error) {
 			&i.UpdatedBy,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllProductInstallmentTimes = `-- name: GetAllProductInstallmentTimes :many
+SELECT 
+    id,
+    fee,
+    tariff,
+    payment_type_id,
+    installment_time_id
+FROM 
+    fin.product_payment_type_installment_time
+WHERE
+    product_id = $1
+`
+
+type GetAllProductInstallmentTimesRow struct {
+	ID                int32   `json:"id"`
+	Fee               float64 `json:"fee"`
+	Tariff            float64 `json:"tariff"`
+	PaymentTypeID     int32   `json:"paymentTypeId"`
+	InstallmentTimeID int32   `json:"installmentTimeId"`
+}
+
+func (q *Queries) GetAllProductInstallmentTimes(ctx context.Context, productID int32) ([]GetAllProductInstallmentTimesRow, error) {
+	rows, err := q.db.Query(ctx, getAllProductInstallmentTimes, productID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAllProductInstallmentTimesRow{}
+	for rows.Next() {
+		var i GetAllProductInstallmentTimesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Fee,
+			&i.Tariff,
+			&i.PaymentTypeID,
+			&i.InstallmentTimeID,
 		); err != nil {
 			return nil, err
 		}

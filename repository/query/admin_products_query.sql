@@ -80,3 +80,21 @@ BEGIN;
         ($12,$13,$14,$15)
     RETURNING *;
 COMMIT;
+
+-- name: GetAllProductInstallmentTimes :many
+SELECT 
+    id,
+    fee,
+    tariff,
+    payment_type_id,
+    installment_time_id
+FROM 
+    fin.product_payment_type_installment_time
+WHERE
+    product_id = $1;
+
+-- name: DeleteAllProductInstallmentTimes :exec
+DELETE FROM
+    fin.product_payment_type_installment_time
+WHERE
+    product_id = $1;

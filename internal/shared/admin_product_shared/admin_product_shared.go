@@ -41,8 +41,6 @@ func Create(
 		newProductInstallmentsRequest[i].ProductID = newProduct.ID
 	}
 
-	fmt.Printf("%+v", newProductInstallmentsRequest)
-
 	installmentsBatchQuery := adminProductsRepository.CreateInstallments(c, newProductInstallmentsRequest)
 
 	newProductInstallments := []admin_products_repository.FinProductPaymentTypeInstallmentTime{}

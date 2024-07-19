@@ -43,21 +43,58 @@ func Create(
 	})
 }
 
-func Update(c *gin.Context, updateProductRequest admin_products_repository.UpdateParams) {
-	_, err := repository.AdminProducts.GetOneById(c, updateProductRequest.ID)
+func Update(
+	c *gin.Context,
+	updateProductRequest admin_products_repository.UpdateParams,
+	updateProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
+) {
+	db_util.WithTransaction(c, func(tx pgx.Tx) struct{} {
+		adminProductRepository := repository.AdminProducts.WithTx(tx)
 
-	if err == pgx.ErrNoRows {
-		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", updateProductRequest.ID)))
-	}
+		_, err := adminProductRepository.GetOneById(c, updateProductRequest.ID)
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+		if err == pgx.ErrNoRows {
+			panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", updateProductRequest.ID)))
+		}
 
-	err = repository.AdminProducts.Update(c, updateProductRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+		if err != nil {
+			panic(exception.InternalServerException(err.Error()))
+		}
+
+		err = adminProductRepository.Update(c, updateProductRequest)
+		if err != nil {
+			panic(exception.InternalServerException(err.Error()))
+		}
+
+		persistedInstallments, err := adminProductRepository.GetAllProductInstallmentTimes(
+			c,
+			updateProductRequest.ID,
+		)
+
+		if err != nil && err != pgx.ErrNoRows {
+			panic(exception.InternalServerException(err.Error()))
+		}
+
+		if someInstallmentChanged(updateProductInstallmentsRequest, persistedInstallments) {
+			adminProductRepository.DeleteAllProductInstallmentTimes(c, updateProductRequest.ID)
+
+			installmentsBatchQuery := adminProductRepository.CreateInstallments(c, updateProductInstallmentsRequest)
+
+			installmentsBatchQuery.QueryRow(
+				func(
+					index int,
+					_ admin_products_repository.FinProductPaymentTypeInstallmentTime,
+					err error,
+				) {
+					if err != nil {
+						panic(exception.InternalServerException(fmt.Sprintf("query of index %d failed: %v", index, err)))
+					}
+				},
+			)
+		}
+
+		return struct{}{}
+	})
 }
 
 func SoftDelete(c *gin.Context, params admin_products_repository.SoftDeleteParams) {
@@ -119,4 +156,30 @@ func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_products_repository.Prod
 	}
 
 	return product
+}
+
+func someInstallmentChanged(
+	newInstallments []admin_products_repository.CreateInstallmentsParams,
+	oldInstallments []admin_products_repository.GetAllProductInstallmentTimesRow,
+) bool {
+	if len(newInstallments) != len(oldInstallments) {
+		return true
+	}
+
+	for _, newInstallment := range newInstallments {
+		changed := true
+		for _, oldInstallment := range oldInstallments {
+			if newInstallment.PaymentTypeID == oldInstallment.PaymentTypeID &&
+				newInstallment.Fee == oldInstallment.Fee &&
+				newInstallment.Tariff == oldInstallment.Tariff {
+				changed = false
+				break
+			}
+		}
+		if changed {
+			return true
+		}
+	}
+
+	return false
 }

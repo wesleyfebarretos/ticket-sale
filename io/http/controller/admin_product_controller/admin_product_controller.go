@@ -144,7 +144,7 @@ func Update(c *gin.Context) {
 
 	adminUser := controller.GetClaims(c)
 
-	admin_product_service.Update(c, admin_products_repository.UpdateParams{
+	updateProduct := admin_products_repository.UpdateParams{
 		Name:           body.Name,
 		Description:    body.Description,
 		Price:          body.Price,
@@ -156,7 +156,31 @@ func Update(c *gin.Context) {
 		CategoryID:     body.CategoryID,
 		UpdatedBy:      &adminUser.Id,
 		ID:             id,
-	})
+	}
+
+	updateInstallments := []admin_products_repository.CreateInstallmentsParams{}
+
+	for _, installment := range body.Installments {
+		updatedInstallment := admin_products_repository.CreateInstallmentsParams{
+			PaymentTypeID:     installment.PaymentTypeID,
+			InstallmentTimeID: installment.ID,
+			Fee:               0,
+			Tariff:            0,
+			CreatedBy:         adminUser.Id,
+			ProductID:         id,
+		}
+		if installment.Fee != nil {
+			updatedInstallment.Fee = *installment.Fee
+		}
+
+		if installment.Tariff != nil {
+			updatedInstallment.Tariff = *installment.Tariff
+		}
+
+		updateInstallments = append(updateInstallments, updatedInstallment)
+	}
+
+	admin_product_service.Update(c, updateProduct, updateInstallments)
 
 	c.JSON(http.StatusOK, true)
 }

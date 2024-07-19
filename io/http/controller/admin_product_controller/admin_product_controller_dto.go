@@ -69,15 +69,23 @@ type CreateStockResponseDto struct {
 }
 
 type UpdateRequestDto struct {
-	Name           string   `json:"name" binding:"required,max=255" example:"Update Red Hot Chilly Peppers"`
-	Description    *string  `json:"description" binding:"max=2000" example:"Update Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
-	Price          float64  `json:"price" binding:"required" example:"6.11"`
-	DiscountPrice  *float64 `json:"discountPrice" example:"5.11"`
-	Active         bool     `json:"active" example:"false"`
-	Image          *string  `json:"image" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers.png"`
-	ImageMobile    *string  `json:"imageMobile" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers-mobile.png"`
-	ImageThumbnail *string  `json:"imageThumbnail" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.png"`
-	CategoryID     int32    `json:"categoryId" binding:"required,min=1" example:"1"`
+	Name           string                         `json:"name" binding:"required,max=255" example:"Update Red Hot Chilly Peppers"`
+	Description    *string                        `json:"description" binding:"max=2000" example:"Update Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
+	Price          float64                        `json:"price" binding:"required" example:"6.11"`
+	DiscountPrice  *float64                       `json:"discountPrice" example:"5.11"`
+	Active         bool                           `json:"active" example:"false"`
+	Image          *string                        `json:"image" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers.png"`
+	ImageMobile    *string                        `json:"imageMobile" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers-mobile.png"`
+	ImageThumbnail *string                        `json:"imageThumbnail" binding:"required,max=2000" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.png"`
+	CategoryID     int32                          `json:"categoryId" binding:"required,min=1" example:"1"`
+	Installments   []UpdateInstallmentsRequestDto `json:"installments" binding:"required,min=1,dive"`
+}
+
+type UpdateInstallmentsRequestDto struct {
+	ID            int32    `json:"id" example:"1" binding:"required"`
+	PaymentTypeID int32    `json:"paymentTypeId" binding:"required"`
+	Fee           *float64 `json:"fee" example::"1.5"`
+	Tariff        *float64 `json:"tariff" example:"2.3"`
 }
 
 type GetAllResponseDto struct {
