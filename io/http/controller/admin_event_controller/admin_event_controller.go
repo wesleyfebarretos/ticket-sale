@@ -63,7 +63,31 @@ func Create(c *gin.Context) {
 		CreatedBy: adminUserClaims.Id,
 	}
 
-	res := admin_event_service.Create(c, newEventReq, newProductReq, newStockReq)
+	newProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+
+	for _, installment := range body.Product.Installments {
+		newProductInstallments = append(newProductInstallments, admin_products_repository.CreateInstallmentsParams{
+			PaymentTypeID:     installment.PaymentTypeID,
+			InstallmentTimeID: installment.ID,
+			Fee:               *installment.Fee,
+			Tariff:            *installment.Tariff,
+			CreatedBy:         adminUserClaims.Id,
+		})
+	}
+
+	res := admin_event_service.Create(c, newEventReq, newProductReq, newStockReq, newProductInstallments)
+
+	installmentsResponse := []admin_product_controller.CreateInstallmentsResponseDto{}
+
+	for _, newInstallment := range res.ProductInstallments {
+		installmentsResponse = append(installmentsResponse, admin_product_controller.CreateInstallmentsResponseDto{
+			ID:            newInstallment.ID,
+			PaymentTypeID: newInstallment.PaymentTypeID,
+			InstallmentID: newInstallment.InstallmentTimeID,
+			Fee:           newInstallment.Fee,
+			Tariff:        newInstallment.Tariff,
+		})
+	}
 
 	newEventRes := CreateResponseDto{
 		ID:        res.Event.ID,
@@ -96,6 +120,7 @@ func Create(c *gin.Context) {
 				Qty:       res.ProductStock.Qty,
 				MinQty:    res.ProductStock.MinQty,
 			},
+			Installments: installmentsResponse,
 		},
 	}
 
@@ -148,7 +173,19 @@ func Update(c *gin.Context) {
 		UpdatedBy:      &adminUserClaims.Id,
 	}
 
-	admin_event_service.Update(c, updateEventReq, updateProductReq)
+	updateProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+
+	for _, installment := range body.Product.Installments {
+		updateProductInstallments = append(updateProductInstallments, admin_products_repository.CreateInstallmentsParams{
+			PaymentTypeID:     installment.PaymentTypeID,
+			InstallmentTimeID: installment.ID,
+			Fee:               *installment.Fee,
+			Tariff:            *installment.Tariff,
+			CreatedBy:         adminUserClaims.Id,
+		})
+	}
+
+	admin_event_service.Update(c, updateEventReq, updateProductReq, updateProductInstallments)
 
 	c.JSON(http.StatusOK, true)
 }

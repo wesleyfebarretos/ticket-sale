@@ -15,9 +15,10 @@ import (
 )
 
 type CreateResponse struct {
-	Event        admin_events_repository.Event
-	Product      admin_products_repository.Product
-	ProductStock admin_product_stocks_repository.ProductStock
+	Event               admin_events_repository.Event
+	Product             admin_products_repository.Product
+	ProductStock        admin_product_stocks_repository.ProductStock
+	ProductInstallments []admin_products_repository.FinProductPaymentTypeInstallmentTime
 }
 
 func Create(
@@ -25,10 +26,11 @@ func Create(
 	newEventReq admin_events_repository.CreateParams,
 	newProductReq admin_products_repository.CreateParams,
 	newStockReq admin_product_stocks_repository.CreateParams,
+	newProductInstallments []admin_products_repository.CreateInstallmentsParams,
 ) CreateResponse {
 	return db_util.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
 		//  TODO: Implement installments return
-		newProduct, newStock, _ := admin_product_shared.Create(c, tx, newProductReq, newStockReq, []admin_products_repository.CreateInstallmentsParams{})
+		newProduct, newStock, newInstallments := admin_product_shared.Create(c, tx, newProductReq, newStockReq, newProductInstallments)
 
 		adminEventsRepository := repository.AdminEvents.WithTx(tx)
 
@@ -40,9 +42,10 @@ func Create(
 		}
 
 		return CreateResponse{
-			Event:        newEvent,
-			Product:      newProduct,
-			ProductStock: newStock,
+			Event:               newEvent,
+			Product:             newProduct,
+			ProductStock:        newStock,
+			ProductInstallments: newInstallments,
 		}
 	})
 }
@@ -50,6 +53,7 @@ func Create(
 func Update(c *gin.Context,
 	updateEventReq admin_events_repository.UpdateParams,
 	updateProductReq admin_products_repository.UpdateParams,
+	updateProductInstallmentsReq []admin_products_repository.CreateInstallmentsParams,
 ) {
 	db_util.WithTransaction(c, func(tx pgx.Tx) struct{} {
 		eventRepository := repository.AdminEvents.WithTx(tx)
@@ -60,11 +64,11 @@ func Update(c *gin.Context,
 
 		updateProductReq.ID = productId
 
-		adminProductRepository := repository.AdminProducts.WithTx(tx)
-		err = adminProductRepository.Update(c, updateProductReq)
-		if err != nil {
-			panic(exception.InternalServerException(err.Error()))
+		for i := range updateProductInstallmentsReq {
+			updateProductInstallmentsReq[i].ProductID = productId
 		}
+
+		admin_product_shared.Update(c, tx, updateProductReq, updateProductInstallmentsReq)
 
 		return struct{}{}
 	})

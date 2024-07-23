@@ -71,8 +71,7 @@ const createWithStock = `-- name: CreateWithStock :one
 BEGIN
 `
 
-type CreateWithStockRow struct {
-}
+type CreateWithStockRow struct{}
 
 func (q *Queries) CreateWithStock(ctx context.Context) (CreateWithStockRow, error) {
 	row := q.db.QueryRow(ctx, createWithStock)
