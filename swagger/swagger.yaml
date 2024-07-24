@@ -179,6 +179,8 @@ definitions:
       imageThumbnail:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         type: string
+      installments:
+        $ref: '#/definitions/admin_product_controller.InstallmentsResponseDto'
       isDeleted:
         example: false
         type: boolean
@@ -270,6 +272,40 @@ definitions:
         example: event
         type: string
     type: object
+  admin_product_controller.CreateInstallmentsRequestDto:
+    properties:
+      fee:
+        type: number
+      id:
+        example: 1
+        type: integer
+      paymentTypeId:
+        type: integer
+      tariff:
+        example: 2.3
+        type: number
+    required:
+    - id
+    - paymentTypeId
+    type: object
+  admin_product_controller.CreateInstallmentsResponseDto:
+    properties:
+      fee:
+        example: 1.5
+        type: number
+      id:
+        example: 1
+        type: integer
+      installmentId:
+        example: 1
+        type: integer
+      paymentTypeId:
+        example: 1
+        type: integer
+      tariff:
+        example: 2.3
+        type: number
+    type: object
   admin_product_controller.CreateRequestDto:
     properties:
       active:
@@ -299,6 +335,11 @@ definitions:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         maxLength: 2000
         type: string
+      installments:
+        items:
+          $ref: '#/definitions/admin_product_controller.CreateInstallmentsRequestDto'
+        minItems: 1
+        type: array
       name:
         example: Red Hot Chilly Peppers
         maxLength: 255
@@ -313,6 +354,7 @@ definitions:
     - image
     - imageMobile
     - imageThumbnail
+    - installments
     - name
     - price
     type: object
@@ -349,6 +391,10 @@ definitions:
       imageThumbnail:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         type: string
+      installments:
+        items:
+          $ref: '#/definitions/admin_product_controller.CreateInstallmentsResponseDto'
+        type: array
       isDeleted:
         example: false
         type: boolean
@@ -487,6 +533,8 @@ definitions:
       imageThumbnail:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         type: string
+      installments:
+        $ref: '#/definitions/admin_product_controller.InstallmentsResponseDto'
       isDeleted:
         example: false
         type: boolean
@@ -620,6 +668,36 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
+  admin_product_controller.InstallmentsResponseDto:
+    properties:
+      creditcard:
+        items:
+          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+        type: array
+      paymentSlip:
+        items:
+          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+        type: array
+      pix:
+        items:
+          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+        type: array
+    type: object
+  admin_product_controller.PaymentTypeInstallment:
+    properties:
+      fee:
+        example: 3.22
+        type: number
+      installmentTimeId:
+        example: 1
+        type: integer
+      installmentTimeName:
+        example: 1x
+        type: string
+      tariff:
+        example: 7
+        type: number
+    type: object
   admin_product_controller.StockResponseDto:
     properties:
       id:
@@ -637,6 +715,22 @@ definitions:
         type: integer
     required:
     - qty
+    type: object
+  admin_product_controller.UpdateInstallmentsRequestDto:
+    properties:
+      fee:
+        type: number
+      id:
+        example: 1
+        type: integer
+      paymentTypeId:
+        type: integer
+      tariff:
+        example: 2.3
+        type: number
+    required:
+    - id
+    - paymentTypeId
     type: object
   admin_product_controller.UpdateRequestDto:
     properties:
@@ -667,6 +761,11 @@ definitions:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.png
         maxLength: 2000
         type: string
+      installments:
+        items:
+          $ref: '#/definitions/admin_product_controller.UpdateInstallmentsRequestDto'
+        minItems: 1
+        type: array
       name:
         example: Update Red Hot Chilly Peppers
         maxLength: 255
@@ -679,6 +778,7 @@ definitions:
     - image
     - imageMobile
     - imageThumbnail
+    - installments
     - name
     - price
     type: object

@@ -34,6 +34,15 @@ func TestAdminEventController(t *testing.T) {
 			t.Errorf("error on parse time %v", err)
 		}
 
+		installments := []admin_product_controller.CreateInstallmentsRequestDto{
+			{
+				ID:            1,
+				PaymentTypeID: 1,
+				Fee:           TPointer(3.22),
+				Tariff:        TPointer(4.22),
+			},
+		}
+
 		newEvent := admin_event_controller.CreateRequestDto{
 			StartAt:  &startAt,
 			EndAt:    &endAt,
@@ -54,6 +63,7 @@ func TestAdminEventController(t *testing.T) {
 					Qty:    100,
 					MinQty: TPointer(int32(50)),
 				},
+				Installments: installments,
 			},
 		}
 
@@ -94,6 +104,7 @@ func TestAdminEventController(t *testing.T) {
 					Qty:       newEvent.Product.Stock.Qty,
 					MinQty:    newEvent.Product.Stock.MinQty,
 				},
+				Installments: newEventResponse.Product.Installments,
 			},
 		}
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
@@ -125,6 +136,14 @@ func TestAdminEventController(t *testing.T) {
 				ImageMobile:    TPointer("updated"),
 				ImageThumbnail: TPointer("updated"),
 				CategoryID:     product_categories_enum.PHYSICAL,
+				Installments: []admin_product_controller.UpdateInstallmentsRequestDto{
+					{
+						ID:            1,
+						PaymentTypeID: 1,
+						Fee:           TPointer(7.1),
+						Tariff:        TPointer(7.1),
+					},
+				},
 			},
 		}
 
@@ -137,22 +156,14 @@ func TestAdminEventController(t *testing.T) {
 			t.Fatalf("error on try to get updated event %v", err)
 		}
 
-		updatedEvent := admin_event_controller.UpdateRequestDto{}
-
-		bEvent, err := json.Marshal(event)
-		if err != nil {
-			t.Fatalf("could not marshal event json %v", err)
-		}
-
-		if err := json.Unmarshal(bEvent, &updatedEvent); err != nil {
-			t.Fatalf("could not unmarshal event json %v", err)
-		}
-
 		test_utils.Decode(t, res.Body, &updatedEventResponse)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, true, updatedEventResponse)
-		assert.Equal(t, updateEvent, updatedEvent)
+		assert.Equal(t, len(event.Product.Installments.Creditcard), len(updateEvent.Product.Installments))
+		assert.Equal(t, event.Product.Installments.Creditcard[0].Fee, *updateEvent.Product.Installments[0].Fee)
+		assert.Equal(t, event.Product.Installments.Creditcard[0].Tariff, *updateEvent.Product.Installments[0].Tariff)
+		assert.Equal(t, event.Product.Installments.Creditcard[0].InstallmentTimeID, updateEvent.Product.Installments[0].ID)
 	}))
 
 	t.Run("it should delete an event", TRun(func(t *testing.T) {
@@ -241,6 +252,14 @@ func TestAdminEventController(t *testing.T) {
 					Qty:    1,
 					MinQty: nil,
 				},
+				Installments: []admin_product_controller.CreateInstallmentsRequestDto{
+					{
+						ID:            1,
+						PaymentTypeID: 1,
+						Fee:           TPointer(7.1),
+						Tariff:        TPointer(7.1),
+					},
+				},
 			},
 		}
 
@@ -257,6 +276,7 @@ func TestAdminEventController(t *testing.T) {
 			"product.imageThumbnail",
 			"product.categoryId",
 			"product.stock.qty",
+			"product.installments",
 		}
 
 		for _, k := range requiredFields {
@@ -294,6 +314,14 @@ func TestAdminEventController(t *testing.T) {
 				ImageMobile:    TPointer("test"),
 				ImageThumbnail: TPointer("test"),
 				CategoryID:     product_categories_enum.EVENT,
+				Installments: []admin_product_controller.UpdateInstallmentsRequestDto{
+					{
+						ID:            1,
+						PaymentTypeID: 1,
+						Fee:           TPointer(7.1),
+						Tariff:        TPointer(7.1),
+					},
+				},
 			},
 		}
 
@@ -309,6 +337,7 @@ func TestAdminEventController(t *testing.T) {
 			"product.imageMobile",
 			"product.imageThumbnail",
 			"product.categoryId",
+			"product.installments",
 		}
 
 		for _, k := range requiredFields {

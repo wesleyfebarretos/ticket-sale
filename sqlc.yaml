@@ -88,7 +88,7 @@ sql:
             go_type:
               import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
               type: "EventProduct"
-          - column: "events_with_relations.product"
+          - column: "events_details.product"
             go_type:
               import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
-              type: "EventProductWithRelations"
+              type: "EventDetails"

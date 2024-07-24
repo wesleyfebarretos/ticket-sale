@@ -101,7 +101,7 @@ func GetAll(c *gin.Context) []admin_events_repository.EventsGetAll {
 	return events
 }
 
-func GetOneById(c *gin.Context, id int32) admin_events_repository.EventsWithRelation {
+func GetOneById(c *gin.Context, id int32) admin_events_repository.EventsDetail {
 	event, err := repository.AdminEvents.GetOneById(c, id)
 	if err == pgx.ErrNoRows {
 		panic(exception.NotFoundException(fmt.Sprintf("event of id %d not found", id)))

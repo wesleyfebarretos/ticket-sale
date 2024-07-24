@@ -95,16 +95,16 @@ func (q *Queries) GetAll(ctx context.Context) ([]EventsGetAll, error) {
 }
 
 const getOneById = `-- name: GetOneById :one
-SELECT id, product_id, start_at, end_at, city, state, location, created_by, updated_by, created_at, updated_at, product from events_with_relations
+SELECT id, product_id, start_at, end_at, city, state, location, created_by, updated_by, created_at, updated_at, product from events_details
 WHERE
     id = $1
 AND
     (product->>'isDeleted')::boolean IS FALSE
 `
 
-func (q *Queries) GetOneById(ctx context.Context, id int32) (EventsWithRelation, error) {
+func (q *Queries) GetOneById(ctx context.Context, id int32) (EventsDetail, error) {
 	row := q.db.QueryRow(ctx, getOneById, id)
-	var i EventsWithRelation
+	var i EventsDetail
 	err := row.Scan(
 		&i.ID,
 		&i.ProductID,

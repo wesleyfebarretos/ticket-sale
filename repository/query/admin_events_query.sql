@@ -33,7 +33,7 @@ WHERE
     (product->>'isDeleted')::boolean IS FALSE;
 
 -- name: GetOneById :one
-SELECT * from events_with_relations
+SELECT * from events_details
 WHERE
     id = $1
 AND

@@ -22,6 +22,15 @@ func TestAdminProductController(t *testing.T) {
 		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
+		installments := []admin_product_controller.CreateInstallmentsRequestDto{
+			{
+				ID:            1,
+				PaymentTypeID: 1,
+				Fee:           TPointer(3.22),
+				Tariff:        TPointer(4.22),
+			},
+		}
+
 		newProduct := admin_product_controller.CreateRequestDto{
 			Name:           "Red Hot Chilly Peppers",
 			Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
@@ -36,6 +45,7 @@ func TestAdminProductController(t *testing.T) {
 				Qty:    100,
 				MinQty: TPointer(int32(50)),
 			},
+			Installments: installments,
 		}
 
 		res := TMakeRequest(t, http.MethodPost, "admin/products", newProduct)
@@ -67,6 +77,7 @@ func TestAdminProductController(t *testing.T) {
 				Qty:       newProduct.Stock.Qty,
 				MinQty:    newProduct.Stock.MinQty,
 			},
+			Installments: newProductResponse.Installments,
 		}
 
 		assert.Equal(t, http.StatusCreated, res.StatusCode)
@@ -81,6 +92,15 @@ func TestAdminProductController(t *testing.T) {
 
 		newProduct := newProduct(t, adminUser.ID)
 
+		updateInstallments := []admin_product_controller.UpdateInstallmentsRequestDto{
+			{
+				ID:            1,
+				PaymentTypeID: 1,
+				Fee:           TPointer(7.1),
+				Tariff:        TPointer(7.2),
+			},
+		}
+
 		updateProduct := admin_product_controller.UpdateRequestDto{
 			Name:           "update",
 			Description:    TPointer("update"),
@@ -91,6 +111,7 @@ func TestAdminProductController(t *testing.T) {
 			ImageMobile:    TPointer("update"),
 			ImageThumbnail: TPointer("update"),
 			CategoryID:     product_categories_enum.DIGITAL,
+			Installments:   updateInstallments,
 		}
 
 		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/products/%d", newProduct.ID), updateProduct)
@@ -251,6 +272,14 @@ func TestAdminProductController(t *testing.T) {
 			ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
 			ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
 			CategoryID:     product_categories_enum.EVENT,
+			Installments: []admin_product_controller.UpdateInstallmentsRequestDto{
+				{
+					ID:            1,
+					PaymentTypeID: 1,
+					Fee:           TPointer(7.1),
+					Tariff:        TPointer(7.1),
+				},
+			},
 		}
 
 		bStruct, err := json.Marshal(updateProductRequest)
@@ -265,6 +294,7 @@ func TestAdminProductController(t *testing.T) {
 			"imageMobile",
 			"imageThumbnail",
 			"categoryId",
+			"installments",
 		}
 
 		for _, k := range requiredFields {

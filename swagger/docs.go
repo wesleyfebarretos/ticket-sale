@@ -1520,6 +1520,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
                 },
+                "installments": {
+                    "$ref": "#/definitions/admin_product_controller.InstallmentsResponseDto"
+                },
                 "isDeleted": {
                     "type": "boolean",
                     "example": false
@@ -1647,6 +1650,54 @@ const docTemplate = `{
                 }
             }
         },
+        "admin_product_controller.CreateInstallmentsRequestDto": {
+            "type": "object",
+            "required": [
+                "id",
+                "paymentTypeId"
+            ],
+            "properties": {
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "paymentTypeId": {
+                    "type": "integer"
+                },
+                "tariff": {
+                    "type": "number",
+                    "example": 2.3
+                }
+            }
+        },
+        "admin_product_controller.CreateInstallmentsResponseDto": {
+            "type": "object",
+            "properties": {
+                "fee": {
+                    "type": "number",
+                    "example": 1.5
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "installmentId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "paymentTypeId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "tariff": {
+                    "type": "number",
+                    "example": 2.3
+                }
+            }
+        },
         "admin_product_controller.CreateRequestDto": {
             "type": "object",
             "required": [
@@ -1654,6 +1705,7 @@ const docTemplate = `{
                 "image",
                 "imageMobile",
                 "imageThumbnail",
+                "installments",
                 "name",
                 "price"
             ],
@@ -1690,6 +1742,13 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 2000,
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "installments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.CreateInstallmentsRequestDto"
+                    }
                 },
                 "name": {
                     "type": "string",
@@ -1747,6 +1806,12 @@ const docTemplate = `{
                 "imageThumbnail": {
                     "type": "string",
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
+                },
+                "installments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.CreateInstallmentsResponseDto"
+                    }
                 },
                 "isDeleted": {
                     "type": "boolean",
@@ -1934,6 +1999,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
                 },
+                "installments": {
+                    "$ref": "#/definitions/admin_product_controller.InstallmentsResponseDto"
+                },
                 "isDeleted": {
                     "type": "boolean",
                     "example": false
@@ -2113,6 +2181,50 @@ const docTemplate = `{
                 }
             }
         },
+        "admin_product_controller.InstallmentsResponseDto": {
+            "type": "object",
+            "properties": {
+                "creditcard": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                    }
+                },
+                "paymentSlip": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                    }
+                },
+                "pix": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                    }
+                }
+            }
+        },
+        "admin_product_controller.PaymentTypeInstallment": {
+            "type": "object",
+            "properties": {
+                "fee": {
+                    "type": "number",
+                    "example": 3.22
+                },
+                "installmentTimeId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "installmentTimeName": {
+                    "type": "string",
+                    "example": "1x"
+                },
+                "tariff": {
+                    "type": "number",
+                    "example": 7
+                }
+            }
+        },
         "admin_product_controller.StockResponseDto": {
             "type": "object",
             "required": [
@@ -2138,6 +2250,29 @@ const docTemplate = `{
                 }
             }
         },
+        "admin_product_controller.UpdateInstallmentsRequestDto": {
+            "type": "object",
+            "required": [
+                "id",
+                "paymentTypeId"
+            ],
+            "properties": {
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "paymentTypeId": {
+                    "type": "integer"
+                },
+                "tariff": {
+                    "type": "number",
+                    "example": 2.3
+                }
+            }
+        },
         "admin_product_controller.UpdateRequestDto": {
             "type": "object",
             "required": [
@@ -2145,6 +2280,7 @@ const docTemplate = `{
                 "image",
                 "imageMobile",
                 "imageThumbnail",
+                "installments",
                 "name",
                 "price"
             ],
@@ -2181,6 +2317,13 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 2000,
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.png"
+                },
+                "installments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/admin_product_controller.UpdateInstallmentsRequestDto"
+                    }
                 },
                 "name": {
                     "type": "string",

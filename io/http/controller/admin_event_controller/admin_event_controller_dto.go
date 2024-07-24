@@ -81,20 +81,21 @@ type GetOneByIdResponseDto struct {
 	Product   GetOneByIdProductDto `json:"product"`
 }
 type GetOneByIdProductDto struct {
-	ID             int32       `json:"id" example:"1"`
-	Name           string      `json:"name" example:"Red Hot Chilly Peppers"`
-	Description    *string     `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
-	Price          float64     `json:"price" example:"5.99"`
-	DiscountPrice  *float64    `json:"discountPrice" example:"4.99"`
-	Active         bool        `json:"active" example:"true"`
-	Image          *string     `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
-	ImageMobile    *string     `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
-	ImageThumbnail *string     `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
-	CategoryID     int32       `json:"categoryId" example:"3"`
-	Uuid           uuid.UUID   `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
-	IsDeleted      bool        `json:"isDeleted" example:"false"`
-	Category       CategoryDto `json:"category"`
-	Stock          StockDto    `json:"stock"`
+	ID             int32                                            `json:"id" example:"1"`
+	Name           string                                           `json:"name" example:"Red Hot Chilly Peppers"`
+	Description    *string                                          `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
+	Price          float64                                          `json:"price" example:"5.99"`
+	DiscountPrice  *float64                                         `json:"discountPrice" example:"4.99"`
+	Active         bool                                             `json:"active" example:"true"`
+	Image          *string                                          `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
+	ImageMobile    *string                                          `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
+	ImageThumbnail *string                                          `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
+	CategoryID     int32                                            `json:"categoryId" example:"3"`
+	Uuid           uuid.UUID                                        `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
+	IsDeleted      bool                                             `json:"isDeleted" example:"false"`
+	Category       CategoryDto                                      `json:"category"`
+	Stock          StockDto                                         `json:"stock"`
+	Installments   admin_product_controller.InstallmentsResponseDto `json:"installments"`
 }
 
 type StockDto struct {

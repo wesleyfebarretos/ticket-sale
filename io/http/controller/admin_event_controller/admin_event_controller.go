@@ -202,7 +202,7 @@ func Update(c *gin.Context) {
 //	@Failure		400	{object}	exception.HttpException
 //	@Failure		403	{object}	middleware.RolePermissionError
 //	@Failure		401	{object}	middleware.AuthenticationError
-//	@Router			/admin/events/{id} [delete]
+//	@Router			/admin/events/{id} [delete]k
 func SoftDelete(c *gin.Context) {
 	id := controller.GetId(c)
 

@@ -24,6 +24,21 @@ type Event struct {
 	UpdatedAt time.Time  `json:"updatedAt"`
 }
 
+type EventsDetail struct {
+	ID        int32                 `json:"id"`
+	ProductID int32                 `json:"productId"`
+	StartAt   *time.Time            `json:"startAt"`
+	EndAt     *time.Time            `json:"endAt"`
+	City      *string               `json:"city"`
+	State     *string               `json:"state"`
+	Location  *string               `json:"location"`
+	CreatedBy int32                 `json:"createdBy"`
+	UpdatedBy *int32                `json:"updatedBy"`
+	CreatedAt time.Time             `json:"createdAt"`
+	UpdatedAt time.Time             `json:"updatedAt"`
+	Product   override.EventDetails `json:"product"`
+}
+
 type EventsGetAll struct {
 	ID        int32                 `json:"id"`
 	ProductID int32                 `json:"productId"`
@@ -37,19 +52,4 @@ type EventsGetAll struct {
 	CreatedAt time.Time             `json:"createdAt"`
 	UpdatedAt time.Time             `json:"updatedAt"`
 	Product   override.EventProduct `json:"product"`
-}
-
-type EventsWithRelation struct {
-	ID        int32                              `json:"id"`
-	ProductID int32                              `json:"productId"`
-	StartAt   *time.Time                         `json:"startAt"`
-	EndAt     *time.Time                         `json:"endAt"`
-	City      *string                            `json:"city"`
-	State     *string                            `json:"state"`
-	Location  *string                            `json:"location"`
-	CreatedBy int32                              `json:"createdBy"`
-	UpdatedBy *int32                             `json:"updatedBy"`
-	CreatedAt time.Time                          `json:"createdAt"`
-	UpdatedAt time.Time                          `json:"updatedAt"`
-	Product   override.EventProductWithRelations `json:"product"`
 }
