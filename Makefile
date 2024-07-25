@@ -19,34 +19,33 @@ restart-db:
 
 # Migrations
 create-table:
-	@migrate create -ext=sql -dir=./cmd/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext=sql -dir=./api/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
 
 create-seed:
-	@migrate create -ext sql -dir ./cmd/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./api/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
 
 create-view:
-	@migrate create -ext sql -dir ./cmd/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./api/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
 
 create-schema:
-	@migrate create -ext sql -dir ./cmd/migrations/schemas -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./api/migrations/schemas -seq $(filter-out $@,$(MAKECMDGOALS))
 
 migrations-up:
-	@go run ./cmd/migrations/main.go up
+	@go run ./api/migrations/main.go up
 	
 migrations-down: 
-	@go run ./cmd/migrations/main.go down 
+	@go run ./api/migrations/main.go down 
 
 # Tests
 # Run integration tests
 it: 
 	@clear
-	@go test -v ./test/integration/
+	@go test -v ./api/tests/integration/
 
-# Swagger
-gen-swg-conf:
+generate-swagger-docs:
 	@rm -rf swagger
-	@swag init -g ./cmd/main.go -o ./swagger
+	@swag init -g ./cmd/api/main.go -o ./swagger
 
-swg-format:
+format-swagger-configs:
 	@swag fmt
 

@@ -3,12 +3,12 @@ sql:
 
   - &schema
     engine: "postgresql"
-    schema: "cmd/migrations/*"
-    queries: "repository/query/users_query.sql"
+    schema: "api/migrations/*"
+    queries: "api/repository/query/users_query.sql"
     gen:
       go: &default_configs
         package: "users_repository"
-        out: "repository/users_repository"
+        out: "api/repository/sqlc/users_repository"
         sql_package: "pgx/v4"
         emit_json_tags: true
         emit_empty_slices: true
@@ -19,49 +19,49 @@ sql:
         omit_unused_structs: true
 
   - <<: *schema
-    queries: "repository/query/users_addresses_query.sql"
+    queries: "api/repository/query/users_addresses_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "users_addresses_repository"
-        out: "repository/users_addresses_repository"
+        out: "api/repository/sqlc/users_addresses_repository"
 
   - <<: *schema
-    queries: "repository/query/admin_users_query.sql"
+    queries: "api/repository/query/admin_users_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "admin_users_repository"
-        out: "repository/admin_users_repository"
+        out: "api/repository/sqlc/admin_users_repository"
 
   - <<: *schema
-    queries: "repository/query/users_phones_query.sql"
+    queries: "api/repository/query/users_phones_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "users_phones_repository"
-        out: "repository/users_phones_repository"
+        out: "api/repository/sqlc/users_phones_repository"
 
   - <<: *schema
-    queries: "repository/query/admin_products_query.sql"
+    queries: "api/repository/query/admin_products_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "admin_products_repository"
-        out: "repository/admin_products_repository"
+        out: "api/repository/sqlc/admin_products_repository"
         overrides:
           - column: "products_details.stock"
             go_type: 
-              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              import: "github.com/wesleyfebarretos/ticket-sale/api/repository/override"
               type: "ProductStock"
               pointer: true
           - column: "products_details.category"
             go_type: 
-              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              import: "github.com/wesleyfebarretos/ticket-sale/api/repository/override"
               type: "ProductCategory"
           - column: "products_details.installments"
             go_type: 
-              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              import: "github.com/wesleyfebarretos/ticket-sale/api/repository/override"
               type: "ProductInstallments"
           - column: "fin.product_payment_type_installment_time.tariff"
             go_type: "float64"
@@ -69,26 +69,26 @@ sql:
             go_type: "float64"
 
   - <<: *schema
-    queries: "repository/query/admin_product_stocks_query.sql"
+    queries: "api/repository/query/admin_product_stocks_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "admin_product_stocks_repository"
-        out: "repository/admin_product_stocks_repository"
+        out: "api/repository/sqlc/admin_product_stocks_repository"
 
   - <<: *schema
-    queries: "repository/query/admin_events_query.sql"
+    queries: "api/repository/query/admin_events_query.sql"
     gen:
       go: 
         <<: *default_configs
         package: "admin_events_repository"
-        out: "repository/admin_events_repository"
+        out: "api/repository/sqlc/admin_events_repository"
         overrides:
           - column: "events_get_all.product"
             go_type:
-              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              import: "github.com/wesleyfebarretos/ticket-sale/api/repository/override"
               type: "EventProduct"
           - column: "events_details.product"
             go_type:
-              import: "github.com/wesleyfebarretos/ticket-sale/repository/override"
+              import: "github.com/wesleyfebarretos/ticket-sale/api/repository/override"
               type: "EventDetails"

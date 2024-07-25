@@ -7,8 +7,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/pgx"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
-	"github.com/wesleyfebarretos/ticket-sale/cmd/migrations/migration"
-	"github.com/wesleyfebarretos/ticket-sale/config"
+	"github.com/wesleyfebarretos/ticket-sale/api/config"
+	"github.com/wesleyfebarretos/ticket-sale/api/migrations"
 )
 
 func main() {
@@ -25,8 +25,8 @@ func main() {
 
 	action := os.Args[1]
 	if action == "up" {
-		migration.Up()
+		migrations.Up()
 	} else {
-		migration.Down()
+		migrations.Down()
 	}
 }

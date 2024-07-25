@@ -1,4 +1,5 @@
 tmp/
+cmd/api/tmp/
 .env
 *.log
 TODO
