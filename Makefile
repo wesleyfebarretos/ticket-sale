@@ -43,8 +43,8 @@ it:
 	@go test -v ./api/tests/integration/
 
 generate-swagger-docs:
-	@rm -rf swagger
-	@swag init -g ./cmd/api/main.go -o ./swagger
+	@rm -rf ./api/docs
+	@swag init -g ./cmd/api/main.go -o ./api/docs/
 
 format-swagger-configs:
 	@swag fmt

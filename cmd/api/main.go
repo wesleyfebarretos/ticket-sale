@@ -7,10 +7,10 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/wesleyfebarretos/ticket-sale/api/config"
+	_ "github.com/wesleyfebarretos/ticket-sale/api/docs"
 	"github.com/wesleyfebarretos/ticket-sale/api/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/api/repository"
 	"github.com/wesleyfebarretos/ticket-sale/api/routes"
-	_ "github.com/wesleyfebarretos/ticket-sale/swagger"
 )
 
 // @title			Ticket Sale
