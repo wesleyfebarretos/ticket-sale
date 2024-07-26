@@ -22,5 +22,7 @@ JOIN
     fin.creditcard_flag cf ON cf.id = c.creditcard_flag_id 
 JOIN 
     fin.creditcard_type ct ON ct.id = c.creditcard_type_id
+WHERE
+    c.is_deleted IS FALSE
 ORDER BY c.id ASC;
 

@@ -35,7 +35,6 @@ type CreateRequestDto struct {
 	Expiration       time.Time `json:"expiration" binding:"required"`
 	Priority         int32     `json:"priority"`
 	NotifyExpiration bool      `json:"notifyExpiration"`
-	UserID           int32     `json:"userId" binding:"required,min=1"`
 	CreditcardTypeID int32     `json:"creditcardTypeId" binding:"required,min=1"`
 	CreditcardFlagID int32     `json:"creditcardFlagId" binding:"required,min=1"`
 }
@@ -62,7 +61,6 @@ type UpdateRequestDto struct {
 	Expiration       time.Time `json:"expiration" binding:"required"`
 	Priority         int32     `json:"priority"`
 	NotifyExpiration bool      `json:"notifyExpiration"`
-	UserID           int32     `json:"userId" binding:"required,min=1"`
 	CreditcardTypeID int32     `json:"creditcardTypeId" binding:"required,min=1"`
 	CreditcardFlagID int32     `json:"creditcardFlagId" binding:"required,min=1"`
 }

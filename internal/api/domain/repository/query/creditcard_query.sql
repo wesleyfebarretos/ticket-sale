@@ -37,6 +37,4 @@ SELECT
 FROM 
     user_creditcards
 WHERE 
-    user_id = $1
-AND 
-    is_deleted IS FALSE;
+    user_id = $1;

@@ -9,9 +9,9 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
 )
 

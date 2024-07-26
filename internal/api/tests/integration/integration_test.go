@@ -15,11 +15,11 @@ import (
 	"time"
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
-	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/migrations"
 	_ "github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_init"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
+	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
 )
 
 var (
@@ -85,25 +85,6 @@ func TSetCookieWithUser(t *testing.T, user any) {
 	cookie := &http.Cookie{
 		Name:  config.Envs.CookieName,
 		Value: token,
-	}
-
-	serverUrl, err := url.Parse(Server.URL)
-	if err != nil {
-		t.Errorf("could not parse server url: %v", err)
-	}
-
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		t.Errorf("could not create cookie: %v", err)
-	}
-	ClientRequest.Jar = jar
-	ClientRequest.Jar.SetCookies(serverUrl, []*http.Cookie{cookie})
-}
-
-func TSetCookie(t *testing.T, role string) {
-	cookie := &http.Cookie{
-		Name:  config.Envs.CookieName,
-		Value: test_utils.GenerateJwtToken(role),
 	}
 
 	serverUrl, err := url.Parse(Server.URL)

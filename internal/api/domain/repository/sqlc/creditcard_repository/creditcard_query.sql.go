@@ -69,8 +69,6 @@ FROM
     user_creditcards
 WHERE 
     user_id = $1
-AND 
-    is_deleted IS FALSE
 `
 
 func (q *Queries) GetAllUserCreditcards(ctx context.Context, userID int32) ([]UserCreditcard, error) {

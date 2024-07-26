@@ -10,6 +10,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 )
 
+// TODO: Implement swagger documentation config and examples in structs
 func GetAllUserCreditcards(c *gin.Context) {
 	user := controller.GetClaims(c)
 
@@ -109,10 +110,6 @@ func Update(c *gin.Context) {
 
 func SoftDelete(c *gin.Context) {
 	uuid := controller.GetUuid(c)
-
-	body := UpdateRequestDto{}
-
-	controller.ReadBody(c, &body)
 
 	creditcard_service.SoftDelete(c, creditcard_repository.SoftDeleteParams{
 		Uuid:      uuid,

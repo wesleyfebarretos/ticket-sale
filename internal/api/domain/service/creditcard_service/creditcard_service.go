@@ -1,6 +1,7 @@
 package creditcard_service
 
 import (
+	"regexp"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,10 @@ func Create(
 	c *gin.Context,
 	newCreditcard creditcard_repository.CreateParams,
 ) creditcard_repository.FinCreditcard {
+	regex := regexp.MustCompile("[^0-9]")
+
+	newCreditcard.Number = regex.ReplaceAllString(newCreditcard.Number, "")
+
 	creditcard, err := repository.Creditcard.Create(c, newCreditcard)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
@@ -34,6 +39,9 @@ func Update(
 	c *gin.Context,
 	updatedCreditcard creditcard_repository.UpdateParams,
 ) bool {
+	regex := regexp.MustCompile("[^0-9]")
+
+	updatedCreditcard.Number = regex.ReplaceAllString(updatedCreditcard.Number, "")
 	err := repository.Creditcard.Update(c, updatedCreditcard)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))

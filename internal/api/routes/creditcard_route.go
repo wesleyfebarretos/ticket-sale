@@ -8,13 +8,13 @@ import (
 )
 
 func HandleCreditcard(router *gin.RouterGroup) {
-	creditcardRoute := router.Group("admin/events")
+	creditcardRoute := router.Group("creditcard")
 
 	creditcardRoute.Use(middleware.JWT.MiddlewareFunc())
 	creditcardRoute.Use(middleware.Authorization(roles_enum.USER))
 
 	creditcardRoute.POST("", creditcard_controller.Create)
-	creditcardRoute.GET("", creditcard_controller.GetAllUserCreditcards)
+	creditcardRoute.GET("user", creditcard_controller.GetAllUserCreditcards)
 	creditcardRoute.PUT(":uuid", creditcard_controller.Update)
 	creditcardRoute.DELETE(":uuid", creditcard_controller.SoftDelete)
 }
