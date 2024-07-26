@@ -92,3 +92,20 @@ sql:
             go_type:
               import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
               type: "EventDetails"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/creditcard_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "creditcard_repository"
+        out: "internal/api/domain/repository/sqlc/creditcard_repository"
+        overrides:
+          - column: "user_creditcards.creditcardFlag"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: "CreditcardFlag"
+          - column: "user_creditcards.creditcardType"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: "CreditcardType"

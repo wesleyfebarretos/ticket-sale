@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS fin.creditcard (
     user_id INT NOT NULL REFERENCES users(id),
     creditcard_type_id INT NOT NULL REFERENCES fin.creditcard_type(id),
     creditcard_flag_id INT NOT NULL REFERENCES fin.creditcard_flag(id),
+    is_deleted BOOL NOT NULL DEFAULT false,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -19,16 +19,16 @@ restart-db:
 
 # Migrations
 create-table:
-	@migrate create -ext=sql -dir=./internal/api/migrations/tables -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext=sql -dir=./internal/api/migrations/tables -seq $(shell echo $(filter-out $@,$(MAKECMDGOALS))_table)
 
 create-seed:
-	@migrate create -ext sql -dir ./internal/api/migrations/seeders -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./internal/api/migrations/seeders -seq $(shell echo $(filter-out $@,$(MAKECMDGOALS))_seeder)
 
 create-view:
-	@migrate create -ext sql -dir ./internal/api/migrations/views -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./internal/api/migrations/views -seq $(shell echo $(filter-out $@,$(MAKECMDGOALS))_view)
 
 create-schema:
-	@migrate create -ext sql -dir ./internal/api/migrations/schemas -seq $(filter-out $@,$(MAKECMDGOALS))
+	@migrate create -ext sql -dir ./internal/api/migrations/schemas -seq $(shell echo $(filter-out $@,$(MAKECMDGOALS))_schema)
 
 migrations-up:
 	@go run ./cmd/migrations/main.go up
