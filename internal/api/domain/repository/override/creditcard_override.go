@@ -1,13 +1,13 @@
 package override
 
 type CreditcardFlag struct {
-	id          int32
-	name        string
-	description string
-	regex       string
+	Id          int32
+	Name        string
+	Description *string
+	Regex       string
 }
 
 type CreditcardType struct {
-	id   int32
-	name string
+	Id   int32
+	Name string
 }
