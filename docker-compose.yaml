@@ -193,8 +193,8 @@ services:
     volumes:
       - certs:/usr/share/logstash/certs
       - lsdata:/usr/share/logstash/data
-      - "./app_logs/:/usr/share/logstash/ingest_data/"
-      - "./api/infra/elastic_stack/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+      - "./internal/api/log_files/:/usr/share/logstash/ingest_data/"
+      - "./internal/infra/elastic_stack/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
     environment:
       xpack.monitoring.enabled: false
       ELASTIC_USER: elastic
@@ -224,8 +224,8 @@ services:
     volumes:
       - certs:/usr/share/filebeat/certs
       - filebeatdata:/usr/share/filebeat/data
-      - "./app_logs/:/usr/share/filebeat/ingest_data/"
-      - "./api/infra/elastic_stack/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "./internal/api/log_files/:/usr/share/filebeat/ingest_data/"
+      - "./internal/infra/elastic_stack/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
       - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
@@ -249,7 +249,7 @@ services:
     volumes:
       - certs:/usr/share/metricbeat/certs
       - metricbeatdata:/usr/share/metricbeat/data
-      - "./api/infra/elastic_stack/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - "./internal/infra/elastic_stack/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
       - "/proc:/hostfs/proc:ro"
