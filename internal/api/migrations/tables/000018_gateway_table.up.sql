@@ -18,7 +18,7 @@ BEGIN;
         gateway_process_id INT NOT NULL REFERENCES fin.gateway_process(id),
         webhook_url TEXT NULL,
         url VARCHAR(255) NULL,
-        auth_type_id gateway_auth_type NOT NULL,
+        auth_type gateway_auth_type NOT NULL,
         use_3ds BOOL NOT NULL DEFAULT false,
         adq_code_3ds TEXT NULL,
         default_adq_code TEXT NULL,

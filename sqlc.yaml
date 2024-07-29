@@ -109,3 +109,21 @@ sql:
             go_type:
               import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
               type: "CreditcardType"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/admin_gateway_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_gateway_repository"
+        out: "internal/api/domain/repository/sqlc/admin_gateway_repository"
+        overrides:
+          - column: "gateway_details.gatewayProcess"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: GatewayProcess
+          - column: "gateway_details.gatewayPaymentTypes"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: GatewayPaymentTypes
+              slice: true
