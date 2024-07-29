@@ -1075,6 +1075,227 @@
                 }
             }
         },
+        "/creditcard": {
+            "post": {
+                "description": "Create a Creditcard",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Creditcard"
+                ],
+                "summary": "Create a Creditcard",
+                "parameters": [
+                    {
+                        "description": "New Creditcard",
+                        "name": "Creditcard",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/creditcard_controller.CreateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/creditcard_controller.CreateResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/creditcard/user": {
+            "get": {
+                "description": "Get all user creditcards",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Creditcard"
+                ],
+                "summary": "Get all user creditcards",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/creditcard_controller.GetAllUserCreditcardsResponseDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/creditcard/{uuid}": {
+            "put": {
+                "description": "Update a creditcard",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Creditcard"
+                ],
+                "summary": "Update a creditcard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Creditcard UUID",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Creditcard",
+                        "name": "Creditcard",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/creditcard_controller.UpdateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Soft Delete a creditcard",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Creditcard"
+                ],
+                "summary": "Soft Delete a creditcard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Creditcard UUID",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "Get All Users",
@@ -2582,6 +2803,234 @@
                 "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0"
+                }
+            }
+        },
+        "creditcard_controller.CreateRequestDto": {
+            "type": "object",
+            "required": [
+                "creditcardFlagId",
+                "creditcardTypeId",
+                "expiration",
+                "name",
+                "number"
+            ],
+            "properties": {
+                "creditcardFlagId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "creditcardTypeId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "expiration": {
+                    "type": "string",
+                    "example": "2025-01-01T00:00:00Z"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Testing"
+                },
+                "notifyExpiration": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "5574723384289379"
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "creditcard_controller.CreateResponseDto": {
+            "type": "object",
+            "required": [
+                "creditcardFlagId",
+                "creditcardTypeId",
+                "expiration",
+                "name",
+                "number"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "creditcardFlagId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "creditcardTypeId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "expiration": {
+                    "type": "string",
+                    "example": "2025-01-01T00:00:00Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Testing"
+                },
+                "notifyExpiration": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "5574723384289379"
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "userId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "767c1587-1ade-4e6a-a9fe-f0e07c83bda9"
+                }
+            }
+        },
+        "creditcard_controller.CreditcardFlag": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "VISA"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "name": {
+                    "type": "string",
+                    "example": "visa"
+                },
+                "regex": {
+                    "type": "string",
+                    "example": "'^4d{5}'"
+                }
+            }
+        },
+        "creditcard_controller.CreditcardType": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Credit"
+                }
+            }
+        },
+        "creditcard_controller.GetAllUserCreditcardsResponseDto": {
+            "type": "object",
+            "required": [
+                "expiration",
+                "name",
+                "number"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-01-01T00:00:00Z"
+                },
+                "creditcardFlag": {
+                    "$ref": "#/definitions/creditcard_controller.CreditcardFlag"
+                },
+                "creditcardType": {
+                    "$ref": "#/definitions/creditcard_controller.CreditcardType"
+                },
+                "expiration": {
+                    "type": "string",
+                    "example": "2025-01-01T00:00:00Z"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Testing"
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "5574723384289379"
+                },
+                "userId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "767c1587-1ade-4e6a-a9fe-f0e07c83bda9"
+                }
+            }
+        },
+        "creditcard_controller.UpdateRequestDto": {
+            "type": "object",
+            "required": [
+                "creditcardFlagId",
+                "creditcardTypeId",
+                "expiration",
+                "name",
+                "number"
+            ],
+            "properties": {
+                "creditcardFlagId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 2
+                },
+                "creditcardTypeId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 2
+                },
+                "expiration": {
+                    "type": "string",
+                    "example": "2025-01-01T00:00:00Z"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Testing Update"
+                },
+                "notifyExpiration": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "6643213384289379"
+                },
+                "priority": {
+                    "type": "integer",
+                    "example": 2
                 }
             }
         },
