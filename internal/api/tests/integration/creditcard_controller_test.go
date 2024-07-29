@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,15 +10,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/creditcard_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/creditcard_controller"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
 )
 
 func TestCreditcardController(t *testing.T) {
 	t.Run("it should create a creditcard", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 
 		TSetCookieWithUser(t, user)
 
@@ -61,11 +59,11 @@ func TestCreditcardController(t *testing.T) {
 	}))
 
 	t.Run("it should update a creditcard", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 
 		TSetCookieWithUser(t, user)
 
-		newCreditcard := createCreditCard(t, user.ID)
+		newCreditcard := test_data.NewCreditCard(t, user.ID)
 
 		expiration := time.Now().AddDate(3, 0, 0).UTC()
 
@@ -90,11 +88,11 @@ func TestCreditcardController(t *testing.T) {
 	}))
 
 	t.Run("it should delete a creditcard", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 
 		TSetCookieWithUser(t, user)
 
-		newCreditcard := createCreditCard(t, user.ID)
+		newCreditcard := test_data.NewCreditCard(t, user.ID)
 
 		req := TMakeRequest(t, http.MethodDelete, fmt.Sprintf("creditcard/%s", newCreditcard.Uuid), nil)
 
@@ -107,14 +105,14 @@ func TestCreditcardController(t *testing.T) {
 	}))
 
 	t.Run("it should get all user creditcards", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 
 		TSetCookieWithUser(t, user)
 
 		newCcQty := 5
 
 		for i := 1; i <= newCcQty; i++ {
-			createCreditCard(t, user.ID)
+			test_data.NewCreditCard(t, user.ID)
 		}
 
 		req := TMakeRequest(t, http.MethodGet, "creditcard/user", nil)
@@ -149,10 +147,10 @@ func TestCreditcardController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on create", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
-		newCreditcard := createCreditCard(t, user.ID)
+		newCreditcard := test_data.NewCreditCard(t, user.ID)
 
 		bStruct, err := json.Marshal(newCreditcard)
 		if err != nil {
@@ -181,10 +179,10 @@ func TestCreditcardController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on update", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
-		newCreditcard := createCreditCard(t, user.ID)
+		newCreditcard := test_data.NewCreditCard(t, user.ID)
 
 		bStruct, err := json.Marshal(newCreditcard)
 		if err != nil {
@@ -211,22 +209,4 @@ func TestCreditcardController(t *testing.T) {
 			assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 		}
 	}))
-}
-
-func createCreditCard(t *testing.T, userID int32) creditcard_repository.FinCreditcard {
-	creditcard, err := repository.Creditcard.Create(context.Background(), creditcard_repository.CreateParams{
-		Name:             "Testing",
-		Number:           "5574723384289379",
-		Expiration:       time.Now().AddDate(3, 0, 0).UTC(),
-		Priority:         1,
-		NotifyExpiration: true,
-		CreditcardTypeID: 1,
-		CreditcardFlagID: 1,
-		UserID:           userID,
-	})
-	if err != nil {
-		t.Errorf("error on create creditcard: %v", err)
-	}
-
-	return creditcard
 }

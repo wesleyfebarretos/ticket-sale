@@ -12,12 +12,13 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_user_controller"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
 )
 
 func TestAdminUsersController(t *testing.T) {
 	t.Run("it should create an admin user", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		newAdminUser := admin_user_controller.CreateRequestDto{
@@ -50,7 +51,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should update an user", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		updateAdminUser := admin_user_controller.UpdateRequestDto{
@@ -87,7 +88,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should delete an user", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 		ctx := context.Background()
 
@@ -118,7 +119,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get one by id", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/users/%d", adminUser.ID), nil)
@@ -142,7 +143,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get one by email", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		res := TMakeRequest(t, http.MethodPost, "admin/users/get-by-email", admin_user_controller.GetOneByEmailRequestDto{
@@ -168,7 +169,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should get all", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		ctx := context.Background()
@@ -194,7 +195,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should fail with an unauthorized error", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 
 		TSetCookieWithUser(t, user)
 
@@ -204,7 +205,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an first name required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -221,7 +222,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an last name required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -238,7 +239,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an email required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -255,7 +256,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an password required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -272,7 +273,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an first name min length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -289,7 +290,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an password min length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -306,7 +307,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an first name max length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -329,7 +330,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to create and fail with an last name max length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -352,7 +353,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an first name required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -369,7 +370,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an last name required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -386,7 +387,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an email required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -403,7 +404,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an role required error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -419,7 +420,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an first name min length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -436,7 +437,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an last name min length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -453,7 +454,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an invid role error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -470,7 +471,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an first name max length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -493,7 +494,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should try to update and fail with an last name max length error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 
 		TSetCookieWithUser(t, adminUser)
 
@@ -516,7 +517,7 @@ func TestAdminUsersController(t *testing.T) {
 	}))
 
 	t.Run("it should fail with a not found admin user error", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/users/%d", 100), nil)

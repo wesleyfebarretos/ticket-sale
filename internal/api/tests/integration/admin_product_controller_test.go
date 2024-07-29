@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,14 +11,13 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
 )
 
 func TestAdminProductController(t *testing.T) {
 	t.Run("it should create a product", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		installments := []admin_product_controller.CreateInstallmentsRequestDto{
@@ -87,10 +85,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should update an product", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct := newProduct(t, adminUser.ID)
+		newProduct := test_data.NewProduct(t, adminUser.ID)
 
 		updateInstallments := []admin_product_controller.UpdateInstallmentsRequestDto{
 			{
@@ -125,10 +123,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should delete a product", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct := newProduct(t, adminUser.ID)
+		newProduct := test_data.NewProduct(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodDelete, fmt.Sprintf("admin/products/%d", newProduct.ID), nil)
 
@@ -141,10 +139,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should get all products", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct(t, adminUser.ID)
+		test_data.NewProduct(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, "admin/products", nil)
 
@@ -158,10 +156,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should get all products with relations", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct(t, adminUser.ID)
+		test_data.NewProduct(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, "admin/products/details", nil)
 
@@ -175,10 +173,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should get product by id", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct := newProduct(t, adminUser.ID)
+		newProduct := test_data.NewProduct(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/products/%d", newProduct.ID), nil)
 
@@ -192,10 +190,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should get product by uuid", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct := newProduct(t, adminUser.ID)
+		newProduct := test_data.NewProduct(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/products/uuid/%s", newProduct.Uuid), nil)
 
@@ -209,7 +207,7 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on create", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		newProductRequest := admin_product_controller.CreateRequestDto{
@@ -257,10 +255,10 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on update", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newProduct := newProduct(t, adminUser.ID)
+		newProduct := test_data.NewProduct(t, adminUser.ID)
 
 		updateProductRequest := admin_product_controller.UpdateRequestDto{
 			Name:           "Red Hot Chilly Peppers",
@@ -316,7 +314,7 @@ func TestAdminProductController(t *testing.T) {
 	}))
 
 	t.Run("it should make sure that only an admin can access this routes", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
 		methods := []string{
@@ -344,23 +342,4 @@ func TestAdminProductController(t *testing.T) {
 			assert.Equal(t, http.StatusForbidden, res.StatusCode)
 		}
 	}))
-}
-
-func newProduct(t *testing.T, userID int32) admin_products_repository.Product {
-	newProduct, err := repository.AdminProducts.Create(context.Background(), admin_products_repository.CreateParams{
-		Name:           "Red Hot Chilly Peppers",
-		Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
-		Price:          5.99,
-		DiscountPrice:  TPointer(4.99),
-		Active:         true,
-		Image:          TPointer("https://example.com/images/red-hot-chilly-peppers.jpg"),
-		ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
-		ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
-		CategoryID:     product_categories_enum.EVENT,
-		CreatedBy:      userID,
-	})
-	if err != nil {
-		t.Fatalf("error on creating product: %v", err)
-	}
-	return newProduct
 }

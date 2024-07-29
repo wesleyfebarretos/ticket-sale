@@ -13,16 +13,15 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_event_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
 )
 
 func TestAdminEventController(t *testing.T) {
 	t.Run("it should create an event", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		startAt, err := time.Parse(time.RFC3339, "2024-01-01T00:00:00Z")
@@ -115,10 +114,10 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should update an event", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newEvent := newEvent(t, adminUser.ID)
+		newEvent := test_data.NewEvent(t, adminUser.ID)
 
 		updateEvent := admin_event_controller.UpdateRequestDto{
 			StartAt:  nil,
@@ -167,10 +166,10 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should delete an event", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newEvent := newEvent(t, adminUser.ID)
+		newEvent := test_data.NewEvent(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodDelete, fmt.Sprintf("admin/events/%d", newEvent.ID), nil)
 
@@ -186,10 +185,10 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should get all events", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newEvent(t, adminUser.ID)
+		test_data.NewEvent(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, "admin/events", nil)
 
@@ -203,10 +202,10 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should get event by id", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newEvent := newEvent(t, adminUser.ID)
+		newEvent := test_data.NewEvent(t, adminUser.ID)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/events/%d", newEvent.ID), nil)
 
@@ -220,7 +219,7 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should not found an event by id", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("admin/events/%d", 1), nil)
@@ -229,7 +228,7 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on create", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
 		newEventRequest := admin_event_controller.CreateRequestDto{
@@ -293,10 +292,10 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on update", TRun(func(t *testing.T) {
-		adminUser := test_utils.CreateUser(roles_enum.ADMIN)
+		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
-		newEvent := newEvent(t, adminUser.ID)
+		newEvent := test_data.NewEvent(t, adminUser.ID)
 
 		updateEventRequest := admin_event_controller.UpdateRequestDto{
 			StartAt:  nil,
@@ -354,7 +353,7 @@ func TestAdminEventController(t *testing.T) {
 	}))
 
 	t.Run("it should make sure that only an admin can access this routes", TRun(func(t *testing.T) {
-		user := test_utils.CreateUser(roles_enum.USER)
+		user := test_data.NewUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
 
 		methods := []string{
@@ -378,74 +377,4 @@ func TestAdminEventController(t *testing.T) {
 			assert.Equal(t, http.StatusForbidden, res.StatusCode)
 		}
 	}))
-}
-
-func newEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseDto {
-	ctx := context.Background()
-	newProduct, err := repository.AdminProducts.Create(ctx, admin_products_repository.CreateParams{
-		Name:           "Red Hot Chilly Peppers",
-		Description:    TPointer("Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."),
-		Price:          5.99,
-		DiscountPrice:  TPointer(4.99),
-		Active:         true,
-		Image:          TPointer("https://example.com/images/red-hot-chilly-peppers.jpg"),
-		ImageMobile:    TPointer("https://example.com/images/red-hot-chilly-peppers-mobile.jpg"),
-		ImageThumbnail: TPointer("https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"),
-		CategoryID:     product_categories_enum.EVENT,
-		CreatedBy:      userID,
-	})
-	if err != nil {
-		t.Fatalf("error on creating product: %v", err)
-	}
-
-	startAt, err := time.Parse(time.RFC3339, "2024-01-01T00:00:00Z")
-	if err != nil {
-		t.Errorf("error on parse time %v", err)
-	}
-
-	endAt, err := time.Parse(time.RFC3339, "2024-01-10T00:00:00Z")
-	if err != nil {
-		t.Errorf("error on parse time %v", err)
-	}
-
-	newEvent, err := repository.AdminEvents.Create(ctx, admin_events_repository.CreateParams{
-		ProductID: newProduct.ID,
-		StartAt:   &startAt,
-		EndAt:     &endAt,
-		City:      TPointer("Orlando"),
-		State:     TPointer("FL"),
-		Location:  TPointer("Disney"),
-		CreatedBy: userID,
-	})
-	if err != nil {
-		t.Fatalf("error on creating event: %v", err)
-	}
-
-	return admin_event_controller.CreateResponseDto{
-		ID:        newEvent.ID,
-		ProductID: newEvent.ProductID,
-		City:      newEvent.City,
-		State:     newEvent.State,
-		Location:  newEvent.Location,
-		EndAt:     newEvent.EndAt,
-		StartAt:   newEvent.StartAt,
-		Product: admin_product_controller.CreateResponseDto{
-			ID:             newProduct.ID,
-			Name:           newProduct.Name,
-			Description:    newProduct.Description,
-			Price:          newProduct.Price,
-			DiscountPrice:  newProduct.DiscountPrice,
-			Active:         newProduct.Active,
-			Image:          newProduct.Image,
-			ImageMobile:    newProduct.ImageMobile,
-			ImageThumbnail: newProduct.ImageThumbnail,
-			CategoryID:     newProduct.CategoryID,
-			CreatedBy:      newProduct.CreatedBy,
-			Uuid:           newProduct.Uuid,
-			IsDeleted:      newProduct.IsDeleted,
-			UpdatedBy:      newProduct.UpdatedBy,
-			CreatedAt:      newProduct.CreatedAt,
-			UpdatedAt:      newProduct.UpdatedAt,
-		},
-	}
 }

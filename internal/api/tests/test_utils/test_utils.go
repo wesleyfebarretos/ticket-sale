@@ -1,7 +1,6 @@
 package test_utils
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -15,23 +14,15 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/phone_types_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_addresses_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_phones_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/migrations"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/routes"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_container"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
 )
 
-var (
-	runningContainers = []*test_container.ContainerResult{}
-	UserTestPassword  = "123"
-)
+var runningContainers = []*test_container.ContainerResult{}
 
 func BeforeAll() *httptest.Server {
 	wd, err := os.Getwd()
@@ -106,63 +97,6 @@ func Decode[T any](t *testing.T, input io.Reader, into *T) {
 	if err := json.NewDecoder(input).Decode(into); err != nil {
 		t.Fatalf("could not parse response body: %v", err)
 	}
-}
-
-func CreateUser(role string) users_repository.GetOneWithPasswordByEmailRow {
-	password, err := utils.HashPassword(UserTestPassword)
-	if err != nil {
-		log.Fatalf("could not hash password: %v", err)
-	}
-
-	newUser := users_repository.CreateParams{
-		FirstName: "John",
-		LastName:  "Doe",
-		Email:     "johndoetest@gmail.com",
-		Password:  password,
-		Role:      users_repository.Roles(role),
-	}
-
-	user, _ := repository.Users.Create(context.Background(), newUser)
-
-	nUser, _ := repository.Users.GetOneWithPasswordByEmail(context.Background(), user.Email)
-
-	return nUser
-}
-
-func CreateUserAddress(userId int32) users_addresses_repository.UsersAddress {
-	favorite := true
-	complement := "Moon"
-	postalCode := "Jupiter"
-	addressType := "House"
-
-	newAddress := users_addresses_repository.CreateParams{
-		Favorite:      &favorite,
-		Complement:    &complement,
-		PostalCode:    &postalCode,
-		AddressType:   &addressType,
-		StreetAddress: "Via Láctea",
-		City:          "Dark Side",
-		State:         "VL",
-		Country:       "James Webb",
-		UserID:        userId,
-	}
-
-	address, _ := repository.UsersAdresses.Create(context.Background(), newAddress)
-
-	return address
-}
-
-func CreateUserPhone(userID int32) users_phones_repository.UsersPhone {
-	newPhone := users_phones_repository.CreateParams{
-		UserID: userID,
-		Ddd:    "021",
-		Number: "999999999",
-		Type:   phone_types_enum.PHONE,
-	}
-
-	userPhone, _ := repository.UsersPhones.Create(context.Background(), newPhone)
-
-	return userPhone
 }
 
 func DebugResponse(body io.Reader) {
