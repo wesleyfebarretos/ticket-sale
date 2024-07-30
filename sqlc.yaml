@@ -115,8 +115,8 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "admin_gateway_repository"
-        out: "internal/api/domain/repository/sqlc/admin_gateway_repository"
+        package: "admin_gateway_connection"
+        out: "internal/api/domain/repository/sqlc/admin_gateway_connection"
         overrides:
           - column: "gateway_details.gatewayProcess"
             go_type:

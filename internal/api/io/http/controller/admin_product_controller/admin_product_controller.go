@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_product_service"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_product_service"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 )
 
 // CreateProduct godoc

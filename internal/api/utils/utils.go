@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
@@ -21,7 +22,7 @@ func ComparePassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func WithTransaction[R any](c *gin.Context, fn func(pgx.Tx) R) R {
+func WithTransaction[R any](c context.Context, fn func(pgx.Tx) R) R {
 	tx, err := db.Conn.Begin(c)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))

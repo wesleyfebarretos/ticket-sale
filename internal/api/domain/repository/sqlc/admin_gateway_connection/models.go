@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package admin_gateway_repository
+package admin_gateway_connection
 
 import (
 	"database/sql/driver"
@@ -97,6 +97,16 @@ type FinGateway struct {
 	UpdatedBy        *int32          `json:"updatedBy"`
 	CreatedAt        time.Time       `json:"createdAt"`
 	UpdatedAt        time.Time       `json:"updatedAt"`
+}
+
+type FinGatewayPaymentTypeAssociation struct {
+	ID                   int32     `json:"id"`
+	GatewayID            int32     `json:"gatewayId"`
+	GatewayPaymentTypeID int32     `json:"gatewayPaymentTypeId"`
+	CreatedBy            int32     `json:"createdBy"`
+	UpdatedBy            *int32    `json:"updatedBy"`
+	CreatedAt            time.Time `json:"createdAt"`
+	UpdatedAt            time.Time `json:"updatedAt"`
 }
 
 type GatewayDetail struct {
