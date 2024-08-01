@@ -6,15 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type types struct {
-	CreateParams       createParams
-	CreateResponse     createResponse
-	UpdateParams       updateParams
-	GetAllResponse     getAllResponse
-	GetOneByIdResponse getOneByIdResponse
-}
-
-type createParams struct {
+type CreateParams struct {
 	Name             string  `json:"name"`
 	Description      *string `json:"description"`
 	ClientID         *string `json:"clientId"`
@@ -37,7 +29,7 @@ type createParams struct {
 	UpdatedBy        *int32  `json:"updatedBy"`
 }
 
-type createResponse struct {
+type CreateResponse struct {
 	ID               int32     `json:"id"`
 	Uuid             uuid.UUID `json:"uuid"`
 	Name             string    `json:"name"`
@@ -65,7 +57,7 @@ type createResponse struct {
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
 
-type updateParams struct {
+type UpdateParams struct {
 	ID               int32   `json:"id"`
 	Name             string  `json:"name"`
 	Description      *string `json:"description"`
@@ -88,7 +80,7 @@ type updateParams struct {
 	UpdatedBy        *int32  `json:"updatedBy"`
 }
 
-type getAllResponse struct {
+type GetAllResponse struct {
 	ID                  int32                 `json:"id"`
 	Uuid                uuid.UUID             `json:"uuid"`
 	Name                string                `json:"name"`
@@ -117,7 +109,7 @@ type getAllResponse struct {
 	GatewayPaymentTypes []gatewayPaymentTypes `json:"gatewayPaymentTypes"`
 }
 
-type getOneByIdResponse struct {
+type GetOneByIdResponse struct {
 	ID                  int32                 `json:"id"`
 	Uuid                uuid.UUID             `json:"uuid"`
 	Name                string                `json:"name"`
@@ -144,6 +136,11 @@ type getOneByIdResponse struct {
 	UpdatedAt           time.Time             `json:"updatedAt"`
 	GatewayProcess      gatewayProcess        `json:"gatewayProcess"`
 	GatewayPaymentTypes []gatewayPaymentTypes `json:"gatewayPaymentTypes"`
+}
+
+type SoftDeleteParams struct {
+	ID        int32
+	UpdatedBy *int32
 }
 
 type gatewayProcess struct {
@@ -155,5 +152,3 @@ type gatewayPaymentTypes struct {
 	Name string `json:"name"`
 	ID   int32  `json:"id"`
 }
-
-var Types types

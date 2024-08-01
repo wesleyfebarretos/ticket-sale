@@ -27,6 +27,7 @@ func Bind() *gin.Engine {
 	HandleAdminProduct(v1)
 	HandleEvent(v1)
 	HandleCreditcard(v1)
+	HandleAdminGateway(v1)
 
 	return router
 }

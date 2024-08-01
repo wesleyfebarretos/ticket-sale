@@ -190,12 +190,18 @@ func (q *Queries) GetOneById(ctx context.Context, id int32) (GatewayDetail, erro
 const softDelete = `-- name: SoftDelete :exec
 UPDATE fin.gateway SET 
     active = false,
-    is_deleted = true
+    is_deleted = true,
+    updated_by = $2
 WHERE id = $1
 `
 
-func (q *Queries) SoftDelete(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, softDelete, id)
+type SoftDeleteParams struct {
+	ID        int32  `json:"id"`
+	UpdatedBy *int32 `json:"updatedBy"`
+}
+
+func (q *Queries) SoftDelete(ctx context.Context, arg SoftDeleteParams) error {
+	_, err := q.db.Exec(ctx, softDelete, arg.ID, arg.UpdatedBy)
 	return err
 }
 

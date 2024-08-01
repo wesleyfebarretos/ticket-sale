@@ -4,113 +4,54 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_gateway_repository"
 )
 
-type CreateResponse struct {
-	Product      admin_products_repository.Product
-	Stock        admin_product_stocks_repository.ProductStock
-	Installments []admin_products_repository.FinProductPaymentTypeInstallmentTime
+func Create(c *gin.Context, body admin_gateway_repository.CreateParams) admin_gateway_repository.CreateResponse {
+	repository := admin_gateway_repository.New()
+
+	gateway := repository.Create(c, body)
+
+	return gateway
 }
 
-func Create(
-	c *gin.Context,
-	newProductRequest admin_products_repository.CreateParams,
-	newProductStockRequest admin_product_stocks_repository.CreateParams,
-	newProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
-) CreateResponse {
-	return utils.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
-		newProduct, newProductStock, newProductInstallments := admin_product_shared.Create(
-			c,
-			tx,
-			newProductRequest,
-			newProductStockRequest,
-			newProductInstallmentsRequest,
-		)
+func Update(c *gin.Context, body admin_gateway_repository.UpdateParams) bool {
+	repository := admin_gateway_repository.New()
 
-		return CreateResponse{
-			Product:      newProduct,
-			Stock:        newProductStock,
-			Installments: newProductInstallments,
-		}
-	})
+	res := repository.Update(c, body)
+
+	return res
 }
 
-func Update(
-	c *gin.Context,
-	updateProductRequest admin_products_repository.UpdateParams,
-	updateProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
-) {
-	utils.WithTransaction(c, func(tx pgx.Tx) struct{} {
-		admin_product_shared.Update(c, tx, updateProductRequest, updateProductInstallmentsRequest)
-		return struct{}{}
-	})
+func GetAll(c *gin.Context) []admin_gateway_repository.GetAllResponse {
+	repository := admin_gateway_repository.New()
+
+	gateways := repository.GetAll(c)
+
+	return gateways
 }
 
-func SoftDelete(c *gin.Context, params admin_products_repository.SoftDeleteParams) {
-	_, err := repository.AdminProducts.GetOneById(c, params.ID)
+func GetOneById(c *gin.Context, id int32) *admin_gateway_repository.GetOneByIdResponse {
+	repository := admin_gateway_repository.New()
 
-	if err == pgx.ErrNoRows {
-		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", params.ID)))
+	gateway := repository.GetOneById(c, id)
+
+	if gateway == nil {
+		panic(exception.NotFoundException(fmt.Sprintf("gateway of id %d not found", id)))
 	}
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	err = repository.AdminProducts.SoftDelete(c, params)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	return gateway
 }
 
-func GetAll(c *gin.Context) []admin_products_repository.Product {
-	products, err := repository.AdminProducts.GetAll(c)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
+func SoftDelete(c *gin.Context, softDeleteParams admin_gateway_repository.SoftDeleteParams) bool {
+	repository := admin_gateway_repository.New()
+
+	gateway := repository.SoftDelete(c, softDeleteParams)
+
+	if !gateway {
+		panic(exception.NotFoundException(fmt.Sprintf("gateway of id %d not found", softDeleteParams.ID)))
 	}
 
-	return products
-}
-
-func GetAllWithRelations(c *gin.Context) []admin_products_repository.ProductsDetail {
-	products, err := repository.AdminProducts.GetAllProductsDetails(c)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return products
-}
-
-func GetOneById(c *gin.Context, id int32) admin_products_repository.ProductsDetail {
-	product, err := repository.AdminProducts.GetOneById(c, id)
-	if err == pgx.ErrNoRows {
-		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", id)))
-	}
-
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return product
-}
-
-func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_products_repository.ProductsDetail {
-	product, err := repository.AdminProducts.GetOneByUuid(c, uuid)
-	if err == pgx.ErrNoRows {
-		panic(exception.NotFoundException(fmt.Sprintf("product of uuid %s not found", uuid)))
-	}
-
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return product
+	return gateway
 }

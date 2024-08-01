@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_gateway_connection"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
@@ -22,7 +21,6 @@ var (
 	UsersAdresses      = &users_addresses_repository.Queries{}
 	UsersPhones        = &users_phones_repository.Queries{}
 	Creditcard         = &creditcard_repository.Queries{}
-	AdminGateway       = &admin_gateway_connection.Queries{}
 )
 
 func Bind() {
@@ -34,6 +32,4 @@ func Bind() {
 	UsersAdresses = users_addresses_repository.New(db.Conn)
 	UsersPhones = users_phones_repository.New(db.Conn)
 	Creditcard = creditcard_repository.New(db.Conn)
-	//  TODO: Maybe i'll make my own repository
-	AdminGateway = admin_gateway_connection.New(db.Conn)
 }

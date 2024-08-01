@@ -48,7 +48,8 @@ WHERE id = $1;
 -- name: SoftDelete :exec
 UPDATE fin.gateway SET 
     active = false,
-    is_deleted = true
+    is_deleted = true,
+    updated_by = $2
 WHERE id = $1;
 
 
