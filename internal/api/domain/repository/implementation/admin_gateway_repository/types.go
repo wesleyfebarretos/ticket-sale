@@ -109,7 +109,7 @@ type GetAllResponse struct {
 	GatewayPaymentTypes []gatewayPaymentTypes `json:"gatewayPaymentTypes"`
 }
 
-type GetOneByIdResonse struct {
+type GetOneByIdResponse struct {
 	ID                  int32                 `json:"id"`
 	Uuid                uuid.UUID             `json:"uuid"`
 	Name                string                `json:"name"`
@@ -120,7 +120,7 @@ type GetOneByIdResonse struct {
 	Active              bool                  `json:"active"`
 	TestEnvironment     bool                  `json:"testEnvironment"`
 	NotifUser           *string               `json:"notifUser"`
-	NotifPassword       *string               `json:"notifPassword"`
+	NotifPassword       *string               `json:"notifPassword"p`
 	SoftDescriptor      *string               `json:"softDescriptor"`
 	GatewayProcessID    int32                 `json:"gatewayProcessId"`
 	WebhookUrl          *string               `json:"webhookUrl"`
