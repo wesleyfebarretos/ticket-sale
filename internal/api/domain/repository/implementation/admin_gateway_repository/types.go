@@ -109,7 +109,7 @@ type GetAllResponse struct {
 	GatewayPaymentTypes []gatewayPaymentTypes `json:"gatewayPaymentTypes"`
 }
 
-type GetOneByIdResponse struct {
+type GetOneByIdResonse struct {
 	ID                  int32                 `json:"id"`
 	Uuid                uuid.UUID             `json:"uuid"`
 	Name                string                `json:"name"`
@@ -139,8 +139,8 @@ type GetOneByIdResponse struct {
 }
 
 type SoftDeleteParams struct {
-	ID        int32
-	UpdatedBy *int32
+	ID        int32  `json:"id"`
+	UpdatedBy *int32 `json:"updatedBy"`
 }
 
 type gatewayProcess struct {

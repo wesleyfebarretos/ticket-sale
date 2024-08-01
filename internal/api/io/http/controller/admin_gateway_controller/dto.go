@@ -139,8 +139,8 @@ type GetOneByIdResDTO struct {
 }
 
 type SoftDeleteDTO struct {
-	ID        int32
-	UpdatedBy int32
+	ID        int32 `json:"id"`
+	UpdatedBy int32 `json:"updatedBy"`
 }
 
 type GatewayProcessDTO struct {
