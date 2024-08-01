@@ -120,7 +120,7 @@ type GetOneByIdResponse struct {
 	Active              bool                  `json:"active"`
 	TestEnvironment     bool                  `json:"testEnvironment"`
 	NotifUser           *string               `json:"notifUser"`
-	NotifPassword       *string               `json:"notifPassword"p`
+	NotifPassword       *string               `json:"notifPassword"`
 	SoftDescriptor      *string               `json:"softDescriptor"`
 	GatewayProcessID    int32                 `json:"gatewayProcessId"`
 	WebhookUrl          *string               `json:"webhookUrl"`
