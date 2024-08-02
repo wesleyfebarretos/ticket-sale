@@ -11,28 +11,27 @@ import (
 func Create(c *gin.Context) {
 	adminUser := controller.GetClaims(c)
 
-	body := CreateReqDTO{
-		CreatedBy: adminUser.Id,
-		UpdatedBy: &adminUser.Id,
-	}
+	body := CreateReqDTO{}
 
 	controller.ReadBody(c, &body)
 
-	gateway := admin_gateway_service.Create(c, createDtoToDomain(body))
+	gateway := admin_gateway_service.Create(c, body.ToDomain(), adminUser.Id)
 
-	c.JSON(http.StatusCreated, createDomainToDto(gateway))
+	res := CreateResDTO{}
+
+	c.JSON(http.StatusCreated, res.FromDomain(gateway))
 }
 
 func Update(c *gin.Context) {
 	adminUser := controller.GetClaims(c)
 
-	body := UpdateReqDTO{
-		UpdatedBy: &adminUser.Id,
-	}
+	body := UpdateReqDTO{}
+
+	body.UpdatedBy = &adminUser.Id
 
 	controller.ReadBody(c, &body)
 
-	res := admin_gateway_service.Update(c, updateDtoToDomain(body))
+	res := admin_gateway_service.Update(c, body.ToDomain())
 
 	c.JSON(http.StatusOK, res)
 }
@@ -47,7 +46,7 @@ func SoftDelete(c *gin.Context) {
 		UpdatedBy: adminUser.Id,
 	}
 
-	res := admin_gateway_service.SoftDelete(c, SoftDeleteDtoToDomain(params))
+	res := admin_gateway_service.SoftDelete(c, params.ToDomain())
 
 	c.JSON(http.StatusOK, res)
 }
@@ -56,7 +55,9 @@ func GetAll(c *gin.Context) {
 
 	gateways := admin_gateway_service.GetAll(c)
 
-	c.JSON(http.StatusOK, getAllDomainToDto(gateways))
+	res := GetAllResDTO{}
+
+	c.JSON(http.StatusOK, res.FromDomain(gateways))
 }
 
 func GetOneById(c *gin.Context) {
@@ -64,5 +65,7 @@ func GetOneById(c *gin.Context) {
 
 	gateway := admin_gateway_service.GetOneById(c, id)
 
-	c.JSON(http.StatusOK, getOneByIdDomainToDto(gateway))
+	res := GetOneByIdResDTO{}
+
+	c.JSON(http.StatusOK, res.FromDomain(gateway))
 }

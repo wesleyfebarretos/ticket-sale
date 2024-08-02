@@ -4,14 +4,17 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_gateway_connection"
 )
 
-func createToDomain(p admin_gateway_connection.FinGateway) CreateResponse {
+func (s *CreateResponse) FromEntity(p admin_gateway_connection.FinGateway) CreateResponse {
 	return CreateResponse{
+		ID:               p.ID,
+		Uuid:             p.Uuid,
 		Name:             p.Name,
 		Description:      p.Description,
 		ClientID:         p.ClientID,
 		ClientSecret:     p.ClientSecret,
 		Order:            p.Order,
 		Active:           p.Active,
+		IsDeleted:        p.IsDeleted,
 		TestEnvironment:  p.TestEnvironment,
 		NotifUser:        p.NotifUser,
 		NotifPassword:    p.NotifPassword,
@@ -26,60 +29,62 @@ func createToDomain(p admin_gateway_connection.FinGateway) CreateResponse {
 		UseAntifraud:     p.UseAntifraud,
 		CreatedBy:        p.CreatedBy,
 		UpdatedBy:        p.UpdatedBy,
+		CreatedAt:        p.CreatedAt,
+		UpdatedAt:        p.UpdatedAt,
 	}
 }
 
-func createToEntity(p CreateParams) admin_gateway_connection.CreateParams {
+func (s *CreateParams) ToEntity() admin_gateway_connection.CreateParams {
 	return admin_gateway_connection.CreateParams{
-		Name:             p.Name,
-		Description:      p.Description,
-		ClientID:         p.ClientID,
-		ClientSecret:     p.ClientSecret,
-		Order:            p.Order,
-		Active:           p.Active,
-		TestEnvironment:  p.TestEnvironment,
-		NotifUser:        p.NotifUser,
-		NotifPassword:    p.NotifPassword,
-		SoftDescriptor:   p.SoftDescriptor,
-		GatewayProcessID: p.GatewayProcessID,
-		WebhookUrl:       p.WebhookUrl,
-		Url:              p.Url,
-		AuthType:         admin_gateway_connection.GatewayAuthType(p.AuthType),
-		Use3ds:           p.Use3ds,
-		AdqCode3ds:       p.AdqCode3ds,
-		DefaultAdqCode:   p.DefaultAdqCode,
-		UseAntifraud:     p.UseAntifraud,
-		CreatedBy:        p.CreatedBy,
-		UpdatedBy:        p.UpdatedBy,
+		Name:             s.Name,
+		Description:      s.Description,
+		ClientID:         s.ClientID,
+		ClientSecret:     s.ClientSecret,
+		Order:            s.Order,
+		Active:           s.Active,
+		TestEnvironment:  s.TestEnvironment,
+		NotifUser:        s.NotifUser,
+		NotifPassword:    s.NotifPassword,
+		SoftDescriptor:   s.SoftDescriptor,
+		GatewayProcessID: s.GatewayProcessID,
+		WebhookUrl:       s.WebhookUrl,
+		Url:              s.Url,
+		AuthType:         admin_gateway_connection.GatewayAuthType(s.AuthType),
+		Use3ds:           s.Use3ds,
+		AdqCode3ds:       s.AdqCode3ds,
+		DefaultAdqCode:   s.DefaultAdqCode,
+		UseAntifraud:     s.UseAntifraud,
+		CreatedBy:        s.CreatedBy,
+		UpdatedBy:        s.UpdatedBy,
 	}
 }
 
-func updateToEntity(p UpdateParams) admin_gateway_connection.UpdateParams {
+func (s *UpdateParams) ToEntity() admin_gateway_connection.UpdateParams {
 	return admin_gateway_connection.UpdateParams{
-		ID:               p.ID,
-		Name:             p.Name,
-		Description:      p.Description,
-		ClientID:         p.ClientID,
-		ClientSecret:     p.ClientSecret,
-		Order:            p.Order,
-		Active:           p.Active,
-		TestEnvironment:  p.TestEnvironment,
-		NotifUser:        p.NotifUser,
-		NotifPassword:    p.NotifPassword,
-		SoftDescriptor:   p.SoftDescriptor,
-		GatewayProcessID: p.GatewayProcessID,
-		WebhookUrl:       p.WebhookUrl,
-		Url:              p.Url,
-		AuthType:         admin_gateway_connection.GatewayAuthType(p.AuthType),
-		Use3ds:           p.Use3ds,
-		AdqCode3ds:       p.AdqCode3ds,
-		DefaultAdqCode:   p.DefaultAdqCode,
-		UseAntifraud:     p.UseAntifraud,
-		UpdatedBy:        p.UpdatedBy,
+		ID:               s.ID,
+		Name:             s.Name,
+		Description:      s.Description,
+		ClientID:         s.ClientID,
+		ClientSecret:     s.ClientSecret,
+		Order:            s.Order,
+		Active:           s.Active,
+		TestEnvironment:  s.TestEnvironment,
+		NotifUser:        s.NotifUser,
+		NotifPassword:    s.NotifPassword,
+		SoftDescriptor:   s.SoftDescriptor,
+		GatewayProcessID: s.GatewayProcessID,
+		WebhookUrl:       s.WebhookUrl,
+		Url:              s.Url,
+		AuthType:         admin_gateway_connection.GatewayAuthType(s.AuthType),
+		Use3ds:           s.Use3ds,
+		AdqCode3ds:       s.AdqCode3ds,
+		DefaultAdqCode:   s.DefaultAdqCode,
+		UseAntifraud:     s.UseAntifraud,
+		UpdatedBy:        s.UpdatedBy,
 	}
 }
 
-func getAlltoDomain(p []admin_gateway_connection.GatewayDetail) []GetAllResponse {
+func (_ *GetAllResponse) FromEntity(p []admin_gateway_connection.GatewayDetail) []GetAllResponse {
 	r := []GetAllResponse{}
 
 	for _, v := range p {
@@ -129,14 +134,14 @@ func getAlltoDomain(p []admin_gateway_connection.GatewayDetail) []GetAllResponse
 	return r
 }
 
-func SoftDeleteToEntity(p SoftDeleteParams) admin_gateway_connection.SoftDeleteParams {
+func (s *SoftDeleteParams) ToEntity() admin_gateway_connection.SoftDeleteParams {
 	return admin_gateway_connection.SoftDeleteParams{
-		ID:        p.ID,
-		UpdatedBy: p.UpdatedBy,
+		ID:        s.ID,
+		UpdatedBy: s.UpdatedBy,
 	}
 }
 
-func getOneByIdToDomain(p admin_gateway_connection.GatewayDetail) *GetOneByIdResponse {
+func (_ *GetOneByIdResponse) FromEntity(p admin_gateway_connection.GatewayDetail) *GetOneByIdResponse {
 	paymentTypes := []gatewayPaymentTypes{}
 
 	for _, pt := range p.GatewayPaymentTypes {
@@ -176,5 +181,26 @@ func getOneByIdToDomain(p admin_gateway_connection.GatewayDetail) *GetOneByIdRes
 			ID:   p.GatewayProcessID,
 		},
 		GatewayPaymentTypes: paymentTypes,
+	}
+}
+
+func (s *CreatePaymentTypesParams) ToEntity() admin_gateway_connection.CreatePaymentTypesParams {
+	return admin_gateway_connection.CreatePaymentTypesParams{
+		GatewayID:            s.GatewayID,
+		GatewayPaymentTypeID: s.GatewayPaymentTypeID,
+		CreatedBy:            s.CreatedBy,
+		UpdatedBy:            s.UpdatedBy,
+	}
+}
+
+func (s *CreatePaymentTypesResponse) FromEntity(p admin_gateway_connection.FinGatewayPaymentTypeAssociation) CreatePaymentTypesResponse {
+	return CreatePaymentTypesResponse{
+		ID:                   p.ID,
+		GatewayID:            p.GatewayID,
+		GatewayPaymentTypeID: p.GatewayPaymentTypeID,
+		CreatedBy:            p.CreatedBy,
+		UpdatedBy:            p.UpdatedBy,
+		CreatedAt:            p.CreatedAt,
+		UpdatedAt:            p.UpdatedAt,
 	}
 }

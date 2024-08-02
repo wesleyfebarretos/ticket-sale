@@ -16,7 +16,7 @@ var (
 	ErrBatchAlreadyClosed = errors.New("batch already closed")
 )
 
-const createPaymentTypes = `-- name: CreatePaymentTypes :batchmany
+const createPaymentTypes = `-- name: CreatePaymentTypes :batchone
 INSERT INTO fin.gateway_payment_type_association
     (gateway_id, gateway_payment_type_id, created_by, updated_by)
 VALUES
@@ -52,41 +52,28 @@ func (q *Queries) CreatePaymentTypes(ctx context.Context, arg []CreatePaymentTyp
 	return &CreatePaymentTypesBatchResults{br, len(arg), false}
 }
 
-func (b *CreatePaymentTypesBatchResults) Query(f func(int, []FinGatewayPaymentTypeAssociation, error)) {
+func (b *CreatePaymentTypesBatchResults) QueryRow(f func(int, FinGatewayPaymentTypeAssociation, error)) {
 	defer b.br.Close()
 	for t := 0; t < b.tot; t++ {
-		items := []FinGatewayPaymentTypeAssociation{}
+		var i FinGatewayPaymentTypeAssociation
 		if b.closed {
 			if f != nil {
-				f(t, items, ErrBatchAlreadyClosed)
+				f(t, i, ErrBatchAlreadyClosed)
 			}
 			continue
 		}
-		err := func() error {
-			rows, err := b.br.Query()
-			if err != nil {
-				return err
-			}
-			defer rows.Close()
-			for rows.Next() {
-				var i FinGatewayPaymentTypeAssociation
-				if err := rows.Scan(
-					&i.ID,
-					&i.GatewayID,
-					&i.GatewayPaymentTypeID,
-					&i.CreatedBy,
-					&i.UpdatedBy,
-					&i.CreatedAt,
-					&i.UpdatedAt,
-				); err != nil {
-					return err
-				}
-				items = append(items, i)
-			}
-			return rows.Err()
-		}()
+		row := b.br.QueryRow()
+		err := row.Scan(
+			&i.ID,
+			&i.GatewayID,
+			&i.GatewayPaymentTypeID,
+			&i.CreatedBy,
+			&i.UpdatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		)
 		if f != nil {
-			f(t, items, err)
+			f(t, i, err)
 		}
 	}
 }

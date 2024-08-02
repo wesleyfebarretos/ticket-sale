@@ -1,88 +1,114 @@
 package admin_gateway_controller
 
-import "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_gateway_repository"
+import (
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_gateway_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_gateway_service"
+)
 
-func createDtoToDomain(body CreateReqDTO) admin_gateway_repository.CreateParams {
-	return admin_gateway_repository.CreateParams{
-		Name:             body.Name,
-		Description:      body.Description,
-		ClientID:         body.ClientID,
-		ClientSecret:     body.ClientSecret,
-		Order:            body.Order,
-		Active:           body.Active,
-		TestEnvironment:  body.TestEnvironment,
-		NotifUser:        body.NotifUser,
-		NotifPassword:    body.NotifPassword,
-		SoftDescriptor:   body.SoftDescriptor,
-		GatewayProcessID: body.GatewayProcessID,
-		WebhookUrl:       body.WebhookUrl,
-		Url:              body.Url,
-		AuthType:         body.AuthType,
-		Use3ds:           body.Use3ds,
-		AdqCode3ds:       body.AdqCode3ds,
-		DefaultAdqCode:   body.DefaultAdqCode,
-		UseAntifraud:     body.UseAntifraud,
-		CreatedBy:        body.CreatedBy,
-		UpdatedBy:        body.UpdatedBy,
+func (s *CreateReqDTO) ToDomain() admin_gateway_service.CreateReq {
+	paymentTypes := []admin_gateway_repository.CreatePaymentTypesParams{}
+
+	for _, v := range s.PaymentTypes {
+		paymentTypes = append(paymentTypes, admin_gateway_repository.CreatePaymentTypesParams{
+			GatewayPaymentTypeID: v,
+		})
+	}
+	return admin_gateway_service.CreateReq{
+		Gateway: admin_gateway_repository.CreateParams{
+			Name:             s.Name,
+			Description:      s.Description,
+			ClientID:         s.ClientID,
+			ClientSecret:     s.ClientSecret,
+			Order:            s.Order,
+			Active:           s.Active,
+			TestEnvironment:  s.TestEnvironment,
+			NotifUser:        s.NotifUser,
+			NotifPassword:    s.NotifPassword,
+			SoftDescriptor:   s.SoftDescriptor,
+			GatewayProcessID: s.GatewayProcessID,
+			WebhookUrl:       s.WebhookUrl,
+			Url:              s.Url,
+			AuthType:         s.AuthType,
+			Use3ds:           s.Use3ds,
+			AdqCode3ds:       s.AdqCode3ds,
+			DefaultAdqCode:   s.DefaultAdqCode,
+			UseAntifraud:     s.UseAntifraud,
+			CreatedBy:        s.CreatedBy,
+			UpdatedBy:        s.UpdatedBy,
+		},
+		PaymentTypes: paymentTypes,
 	}
 }
 
-func createDomainToDto(body admin_gateway_repository.CreateResponse) CreateResDTO {
+func (_ *CreateResDTO) FromDomain(p admin_gateway_service.CreateRes) CreateResDTO {
+	paymentTypes := []CreatePaymentTypeResDTO{}
+	for _, v := range p.PaymentTypes {
+		paymentTypes = append(paymentTypes, CreatePaymentTypeResDTO{
+			ID:                   v.ID,
+			GatewayID:            v.GatewayID,
+			GatewayPaymentTypeID: v.GatewayPaymentTypeID,
+			CreatedBy:            v.CreatedBy,
+			UpdatedBy:            v.UpdatedBy,
+			CreatedAt:            v.CreatedAt,
+			UpdatedAt:            v.UpdatedAt,
+		})
+	}
 	return CreateResDTO{
-		ID:               body.ID,
-		Uuid:             body.Uuid,
-		Name:             body.Name,
-		Description:      body.Description,
-		ClientID:         body.ClientID,
-		ClientSecret:     body.ClientSecret,
-		Order:            body.Order,
-		Active:           body.Active,
-		IsDeleted:        body.IsDeleted,
-		TestEnvironment:  body.TestEnvironment,
-		NotifUser:        body.NotifUser,
-		NotifPassword:    body.NotifPassword,
-		SoftDescriptor:   body.SoftDescriptor,
-		GatewayProcessID: body.GatewayProcessID,
-		WebhookUrl:       body.WebhookUrl,
-		Url:              body.Url,
-		AuthType:         body.AuthType,
-		Use3ds:           body.Use3ds,
-		AdqCode3ds:       body.AdqCode3ds,
-		DefaultAdqCode:   body.DefaultAdqCode,
-		UseAntifraud:     body.UseAntifraud,
-		CreatedBy:        body.CreatedBy,
-		UpdatedBy:        body.UpdatedBy,
-		CreatedAt:        body.CreatedAt,
-		UpdatedAt:        body.UpdatedAt,
+		ID:               p.Gateway.ID,
+		Uuid:             p.Gateway.Uuid,
+		Name:             p.Gateway.Name,
+		Description:      p.Gateway.Description,
+		ClientID:         p.Gateway.ClientID,
+		ClientSecret:     p.Gateway.ClientSecret,
+		Order:            p.Gateway.Order,
+		Active:           p.Gateway.Active,
+		IsDeleted:        p.Gateway.IsDeleted,
+		TestEnvironment:  p.Gateway.TestEnvironment,
+		NotifUser:        p.Gateway.NotifUser,
+		NotifPassword:    p.Gateway.NotifPassword,
+		SoftDescriptor:   p.Gateway.SoftDescriptor,
+		GatewayProcessID: p.Gateway.GatewayProcessID,
+		WebhookUrl:       p.Gateway.WebhookUrl,
+		Url:              p.Gateway.Url,
+		AuthType:         p.Gateway.AuthType,
+		Use3ds:           p.Gateway.Use3ds,
+		AdqCode3ds:       p.Gateway.AdqCode3ds,
+		DefaultAdqCode:   p.Gateway.DefaultAdqCode,
+		UseAntifraud:     p.Gateway.UseAntifraud,
+		CreatedBy:        p.Gateway.CreatedBy,
+		UpdatedBy:        p.Gateway.UpdatedBy,
+		CreatedAt:        p.Gateway.CreatedAt,
+		UpdatedAt:        p.Gateway.UpdatedAt,
+		PaymentTypes:     paymentTypes,
 	}
 }
 
-func updateDtoToDomain(body UpdateReqDTO) admin_gateway_repository.UpdateParams {
+func (s *UpdateReqDTO) ToDomain() admin_gateway_repository.UpdateParams {
 	return admin_gateway_repository.UpdateParams{
-		ID:               body.ID,
-		Name:             body.Name,
-		Description:      body.Description,
-		ClientID:         body.ClientID,
-		ClientSecret:     body.ClientSecret,
-		Order:            body.Order,
-		Active:           body.Active,
-		TestEnvironment:  body.TestEnvironment,
-		NotifUser:        body.NotifUser,
-		NotifPassword:    body.NotifPassword,
-		SoftDescriptor:   body.SoftDescriptor,
-		GatewayProcessID: body.GatewayProcessID,
-		WebhookUrl:       body.WebhookUrl,
-		Url:              body.Url,
-		AuthType:         body.AuthType,
-		Use3ds:           body.Use3ds,
-		AdqCode3ds:       body.AdqCode3ds,
-		DefaultAdqCode:   body.DefaultAdqCode,
-		UseAntifraud:     body.UseAntifraud,
-		UpdatedBy:        body.UpdatedBy,
+		Name:         s.Name,
+		Description:  s.Description,
+		ClientID:     s.ClientID,
+		ClientSecret: s.ClientSecret,
+		Order:        s.Order,
+		Active:       s.Active,
+
+		TestEnvironment:  s.TestEnvironment,
+		NotifUser:        s.NotifUser,
+		NotifPassword:    s.NotifPassword,
+		SoftDescriptor:   s.SoftDescriptor,
+		GatewayProcessID: s.GatewayProcessID,
+		WebhookUrl:       s.WebhookUrl,
+		Url:              s.Url,
+		AuthType:         s.AuthType,
+		Use3ds:           s.Use3ds,
+		AdqCode3ds:       s.AdqCode3ds,
+		DefaultAdqCode:   s.DefaultAdqCode,
+		UseAntifraud:     s.UseAntifraud,
+		UpdatedBy:        s.UpdatedBy,
 	}
 }
 
-func getAllDomainToDto(p []admin_gateway_repository.GetAllResponse) []GetAllResDTO {
+func (_ *GetAllResDTO) FromDomain(p []admin_gateway_repository.GetAllResponse) []GetAllResDTO {
 	r := []GetAllResDTO{}
 
 	for _, v := range p {
@@ -132,7 +158,7 @@ func getAllDomainToDto(p []admin_gateway_repository.GetAllResponse) []GetAllResD
 	return r
 }
 
-func getOneByIdDomainToDto(p *admin_gateway_repository.GetOneByIdResponse) *GetOneByIdResDTO {
+func (s *GetOneByIdResDTO) FromDomain(p *admin_gateway_repository.GetOneByIdResponse) *GetOneByIdResDTO {
 	paymentTypes := []GatewayPaymentTypesDTO{}
 
 	for _, v := range p.GatewayPaymentTypes {
@@ -175,9 +201,27 @@ func getOneByIdDomainToDto(p *admin_gateway_repository.GetOneByIdResponse) *GetO
 	}
 }
 
-func SoftDeleteDtoToDomain(p SoftDeleteDTO) admin_gateway_repository.SoftDeleteParams {
+func (s *SoftDeleteDTO) ToDomain() admin_gateway_repository.SoftDeleteParams {
 	return admin_gateway_repository.SoftDeleteParams{
-		ID:        p.ID,
-		UpdatedBy: &p.UpdatedBy,
+		ID:        s.ID,
+		UpdatedBy: &s.UpdatedBy,
 	}
+}
+
+func (_ *CreatePaymentTypeResDTO) FromDomain(p []admin_gateway_repository.CreatePaymentTypesResponse) []CreatePaymentTypeResDTO {
+	paymentTypes := []CreatePaymentTypeResDTO{}
+
+	for _, v := range p {
+		paymentTypes = append(paymentTypes, CreatePaymentTypeResDTO{
+			ID:                   v.ID,
+			GatewayID:            v.GatewayID,
+			GatewayPaymentTypeID: v.GatewayPaymentTypeID,
+			CreatedBy:            v.CreatedBy,
+			UpdatedBy:            v.UpdatedBy,
+			CreatedAt:            v.CreatedAt,
+			UpdatedAt:            v.UpdatedAt,
+		})
+	}
+
+	return paymentTypes
 }

@@ -152,3 +152,20 @@ type gatewayPaymentTypes struct {
 	Name string `json:"name"`
 	ID   int32  `json:"id"`
 }
+
+type CreatePaymentTypesParams struct {
+	GatewayID            int32  `json:"gatewayId"`
+	GatewayPaymentTypeID int32  `json:"gatewayPaymentTypeId"`
+	CreatedBy            int32  `json:"createdBy"`
+	UpdatedBy            *int32 `json:"updatedBy"`
+}
+
+type CreatePaymentTypesResponse struct {
+	ID                   int32     `json:"id"`
+	GatewayID            int32     `json:"gatewayId"`
+	GatewayPaymentTypeID int32     `json:"gatewayPaymentTypeId"`
+	CreatedBy            int32     `json:"createdBy"`
+	UpdatedBy            *int32    `json:"updatedBy"`
+	CreatedAt            time.Time `json:"createdAt"`
+	UpdatedAt            time.Time `json:"updatedAt"`
+}
