@@ -260,6 +260,419 @@ definitions:
         example: FL
         type: string
     type: object
+  admin_gateway_controller.CreatePaymentTypeResDTO:
+    properties:
+      gatewayId:
+        example: 1
+        type: integer
+      gatewayPaymentTypeId:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+    type: object
+  admin_gateway_controller.CreateReqDTO:
+    properties:
+      active:
+        example: true
+        type: boolean
+      adqCode3ds:
+        example: "123456"
+        type: string
+      authType:
+        enum:
+        - bearer
+        - basic
+        example: bearer
+        type: string
+      clientId:
+        example: ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q
+        type: string
+      clientSecret:
+        example: 52caa7c6-d107-42bd-afac-0226a501e66e
+        type: string
+      defaultAdqCode:
+        example: "654321"
+        type: string
+      description:
+        example: Payment gateway for Stripe
+        type: string
+      gatewayProcessId:
+        example: 1
+        minimum: 1
+        type: integer
+      name:
+        example: Stripe
+        minLength: 3
+        type: string
+      notifPassword:
+        example: notification_password
+        type: string
+      notifUser:
+        example: notification_user
+        type: string
+      order:
+        example: 1
+        minimum: 0
+        type: integer
+      paymentTypes:
+        example:
+        - 1
+        - 2
+        items:
+          type: integer
+        minItems: 1
+        type: array
+      softDescriptor:
+        example: Company Name
+        type: string
+      testEnvironment:
+        example: false
+        type: boolean
+      url:
+        example: https://api.stripe.com
+        type: string
+      use3ds:
+        example: false
+        type: boolean
+      useAntifraud:
+        example: true
+        type: boolean
+      webhookUrl:
+        example: https://example.com/webhook
+        type: string
+    required:
+    - authType
+    - gatewayProcessId
+    - name
+    - order
+    - paymentTypes
+    type: object
+  admin_gateway_controller.CreateResDTO:
+    properties:
+      active:
+        example: true
+        type: boolean
+      adqCode3ds:
+        example: "123456"
+        type: string
+      authType:
+        example: bearer
+        type: string
+      clientId:
+        example: ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q
+        type: string
+      clientSecret:
+        example: 52caa7c6-d107-42bd-afac-0226a501e66e
+        type: string
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      defaultAdqCode:
+        example: "654321"
+        type: string
+      description:
+        example: Payment gateway for Stripe
+        type: string
+      gatewayProcessId:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      isDeleted:
+        example: false
+        type: boolean
+      name:
+        example: Stripe
+        type: string
+      notifPassword:
+        example: notification_password
+        type: string
+      notifUser:
+        example: notification_user
+        type: string
+      order:
+        example: 1
+        type: integer
+      paymentTypes:
+        items:
+          $ref: '#/definitions/admin_gateway_controller.CreatePaymentTypeResDTO'
+        type: array
+      softDescriptor:
+        example: Company Name
+        type: string
+      testEnvironment:
+        example: false
+        type: boolean
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      url:
+        example: https://api.stripe.com
+        type: string
+      use3ds:
+        example: false
+        type: boolean
+      useAntifraud:
+        example: true
+        type: boolean
+      uuid:
+        example: 78e5259f-1b4e-460c-90d2-83e640a7d024
+        type: string
+      webhookUrl:
+        example: https://example.com/webhook
+        type: string
+    type: object
+  admin_gateway_controller.GatewayPaymentTypesDTO:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Installment
+        type: string
+    type: object
+  admin_gateway_controller.GatewayProcessDTO:
+    properties:
+      id:
+        example: 2
+        type: integer
+      name:
+        example: Authorize Only
+        type: string
+    type: object
+  admin_gateway_controller.GetAllResDTO:
+    properties:
+      active:
+        example: true
+        type: boolean
+      adqCode3ds:
+        example: "123456"
+        type: string
+      authType:
+        example: bearer
+        type: string
+      clientId:
+        example: ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q
+        type: string
+      clientSecret:
+        example: 52caa7c6-d107-42bd-afac-0226a501e66e
+        type: string
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      defaultAdqCode:
+        example: "654321"
+        type: string
+      description:
+        example: Payment gateway for Stripe
+        type: string
+      gatewayPaymentTypes:
+        items:
+          $ref: '#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO'
+        type: array
+      gatewayProcess:
+        $ref: '#/definitions/admin_gateway_controller.GatewayProcessDTO'
+      gatewayProcessId:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Stripe
+        type: string
+      notifPassword:
+        example: notification_password
+        type: string
+      notifUser:
+        example: notification_user
+        type: string
+      order:
+        example: 1
+        type: integer
+      softDescriptor:
+        example: Company Name
+        type: string
+      testEnvironment:
+        example: false
+        type: boolean
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      url:
+        example: https://api.stripe.com
+        type: string
+      use3ds:
+        example: false
+        type: boolean
+      useAntifraud:
+        example: true
+        type: boolean
+      uuid:
+        example: 78e5259f-1b4e-460c-90d2-83e640a7d024
+        type: string
+      webhookUrl:
+        example: https://example.com/webhook
+        type: string
+    type: object
+  admin_gateway_controller.GetOneByIdResDTO:
+    properties:
+      active:
+        example: true
+        type: boolean
+      adqCode3ds:
+        example: "123456"
+        type: string
+      authType:
+        example: bearer
+        type: string
+      clientId:
+        example: ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q
+        type: string
+      clientSecret:
+        example: 52caa7c6-d107-42bd-afac-0226a501e66e
+        type: string
+      createdAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      createdBy:
+        example: 1
+        type: integer
+      defaultAdqCode:
+        example: "654321"
+        type: string
+      description:
+        example: Payment gateway for Stripe
+        type: string
+      gatewayPaymentTypes:
+        items:
+          $ref: '#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO'
+        type: array
+      gatewayProcess:
+        $ref: '#/definitions/admin_gateway_controller.GatewayProcessDTO'
+      gatewayProcessId:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Stripe
+        type: string
+      notifPassword:
+        example: notification_password
+        type: string
+      notifUser:
+        example: notification_user
+        type: string
+      order:
+        example: 1
+        type: integer
+      softDescriptor:
+        example: Company Name
+        type: string
+      testEnvironment:
+        example: false
+        type: boolean
+      updatedAt:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      updatedBy:
+        example: 1
+        type: integer
+      url:
+        example: https://api.stripe.com
+        type: string
+      use3ds:
+        example: false
+        type: boolean
+      useAntifraud:
+        example: true
+        type: boolean
+      uuid:
+        example: 78e5259f-1b4e-460c-90d2-83e640a7d024
+        type: string
+      webhookUrl:
+        example: https://example.com/webhook
+        type: string
+    type: object
+  admin_gateway_controller.UpdateReqDTO:
+    properties:
+      active:
+        example: true
+        type: boolean
+      adqCode3ds:
+        example: "123456"
+        type: string
+      authType:
+        enum:
+        - bearer
+        - basic
+        example: bearer
+        type: string
+      clientId:
+        example: ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q
+        type: string
+      clientSecret:
+        example: 52caa7c6-d107-42bd-afac-0226a501e66e
+        type: string
+      defaultAdqCode:
+        example: "654321"
+        type: string
+      description:
+        example: Payment gateway for Stripe
+        type: string
+      gatewayProcessId:
+        example: 1
+        minimum: 1
+        type: integer
+      name:
+        example: Stripe
+        minLength: 3
+        type: string
+      notifPassword:
+        example: notification_password
+        type: string
+      notifUser:
+        example: notification_user
+        type: string
+      order:
+        example: 1
+        minimum: 0
+        type: integer
+      softDescriptor:
+        example: Company Name
+        type: string
+      testEnvironment:
+        example: false
+        type: boolean
+      url:
+        example: https://api.stripe.com
+        type: string
+      use3ds:
+        example: false
+        type: boolean
+      useAntifraud:
+        example: true
+        type: boolean
+      webhookUrl:
+        example: https://example.com/webhook
+        type: string
+    required:
+    - authType
+    - gatewayProcessId
+    - name
+    - order
+    type: object
   admin_product_controller.CategoryResponseDto:
     properties:
       description:
@@ -1603,6 +2016,189 @@ paths:
       summary: Update a event
       tags:
       - Admin Event
+  /admin/gateway:
+    get:
+      description: Get all gateway
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin_gateway_controller.GetAllResDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get all gateway
+      tags:
+      - Admin Gateway
+    post:
+      description: Create a gateway
+      parameters:
+      - description: New Gateway
+        in: body
+        name: Gateway
+        required: true
+        schema:
+          $ref: '#/definitions/admin_gateway_controller.CreateReqDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/admin_gateway_controller.CreateResDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Create a gateway
+      tags:
+      - Admin Gateway
+  /admin/gateway/{id}:
+    delete:
+      description: Soft Delete a gateway
+      parameters:
+      - description: Gateway ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Soft Delete a gateway
+      tags:
+      - Admin Gateway
+    get:
+      description: Get One By Id
+      parameters:
+      - description: Gateway ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin_gateway_controller.GetOneByIdResDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Get One By Id
+      tags:
+      - Admin Gateway
+    put:
+      description: Update a gateway
+      parameters:
+      - description: Gateway ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update gateway
+        in: body
+        name: Gateway
+        required: true
+        schema:
+          $ref: '#/definitions/admin_gateway_controller.UpdateReqDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middleware.AuthenticationError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/middleware.RolePermissionError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpException'
+      summary: Update a gateway
+      tags:
+      - Admin Gateway
   /admin/products:
     get:
       description: Get all products

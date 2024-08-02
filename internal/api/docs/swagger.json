@@ -334,6 +334,282 @@
                 }
             }
         },
+        "/admin/gateway": {
+            "get": {
+                "description": "Get all gateway",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Gateway"
+                ],
+                "summary": "Get all gateway",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin_gateway_controller.GetAllResDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a gateway",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Gateway"
+                ],
+                "summary": "Create a gateway",
+                "parameters": [
+                    {
+                        "description": "New Gateway",
+                        "name": "Gateway",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_gateway_controller.CreateReqDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/admin_gateway_controller.CreateResDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/gateway/{id}": {
+            "get": {
+                "description": "Get One By Id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Gateway"
+                ],
+                "summary": "Get One By Id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Gateway ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin_gateway_controller.GetOneByIdResDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a gateway",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Gateway"
+                ],
+                "summary": "Update a gateway",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Gateway ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update gateway",
+                        "name": "Gateway",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin_gateway_controller.UpdateReqDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Soft Delete a gateway",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Gateway"
+                ],
+                "summary": "Soft Delete a gateway",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Gateway ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.AuthenticationError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.RolePermissionError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpException"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/products": {
             "get": {
                 "description": "Get all products",
@@ -1845,6 +2121,564 @@
                 "state": {
                     "type": "string",
                     "example": "FL"
+                }
+            }
+        },
+        "admin_gateway_controller.CreatePaymentTypeResDTO": {
+            "type": "object",
+            "properties": {
+                "gatewayId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "gatewayPaymentTypeId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "admin_gateway_controller.CreateReqDTO": {
+            "type": "object",
+            "required": [
+                "authType",
+                "gatewayProcessId",
+                "name",
+                "order",
+                "paymentTypes"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "adqCode3ds": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "authType": {
+                    "type": "string",
+                    "enum": [
+                        "bearer",
+                        "basic"
+                    ],
+                    "example": "bearer"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "52caa7c6-d107-42bd-afac-0226a501e66e"
+                },
+                "defaultAdqCode": {
+                    "type": "string",
+                    "example": "654321"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Payment gateway for Stripe"
+                },
+                "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "Stripe"
+                },
+                "notifPassword": {
+                    "type": "string",
+                    "example": "notification_password"
+                },
+                "notifUser": {
+                    "type": "string",
+                    "example": "notification_user"
+                },
+                "order": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "paymentTypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        1,
+                        2
+                    ]
+                },
+                "softDescriptor": {
+                    "type": "string",
+                    "example": "Company Name"
+                },
+                "testEnvironment": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://api.stripe.com"
+                },
+                "use3ds": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "useAntifraud": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "webhookUrl": {
+                    "type": "string",
+                    "example": "https://example.com/webhook"
+                }
+            }
+        },
+        "admin_gateway_controller.CreateResDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "adqCode3ds": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "authType": {
+                    "type": "string",
+                    "example": "bearer"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "52caa7c6-d107-42bd-afac-0226a501e66e"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "defaultAdqCode": {
+                    "type": "string",
+                    "example": "654321"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Payment gateway for Stripe"
+                },
+                "gatewayProcessId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Stripe"
+                },
+                "notifPassword": {
+                    "type": "string",
+                    "example": "notification_password"
+                },
+                "notifUser": {
+                    "type": "string",
+                    "example": "notification_user"
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "paymentTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_gateway_controller.CreatePaymentTypeResDTO"
+                    }
+                },
+                "softDescriptor": {
+                    "type": "string",
+                    "example": "Company Name"
+                },
+                "testEnvironment": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://api.stripe.com"
+                },
+                "use3ds": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "useAntifraud": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "78e5259f-1b4e-460c-90d2-83e640a7d024"
+                },
+                "webhookUrl": {
+                    "type": "string",
+                    "example": "https://example.com/webhook"
+                }
+            }
+        },
+        "admin_gateway_controller.GatewayPaymentTypesDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Installment"
+                }
+            }
+        },
+        "admin_gateway_controller.GatewayProcessDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Authorize Only"
+                }
+            }
+        },
+        "admin_gateway_controller.GetAllResDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "adqCode3ds": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "authType": {
+                    "type": "string",
+                    "example": "bearer"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "52caa7c6-d107-42bd-afac-0226a501e66e"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "defaultAdqCode": {
+                    "type": "string",
+                    "example": "654321"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Payment gateway for Stripe"
+                },
+                "gatewayPaymentTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO"
+                    }
+                },
+                "gatewayProcess": {
+                    "$ref": "#/definitions/admin_gateway_controller.GatewayProcessDTO"
+                },
+                "gatewayProcessId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Stripe"
+                },
+                "notifPassword": {
+                    "type": "string",
+                    "example": "notification_password"
+                },
+                "notifUser": {
+                    "type": "string",
+                    "example": "notification_user"
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "softDescriptor": {
+                    "type": "string",
+                    "example": "Company Name"
+                },
+                "testEnvironment": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://api.stripe.com"
+                },
+                "use3ds": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "useAntifraud": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "78e5259f-1b4e-460c-90d2-83e640a7d024"
+                },
+                "webhookUrl": {
+                    "type": "string",
+                    "example": "https://example.com/webhook"
+                }
+            }
+        },
+        "admin_gateway_controller.GetOneByIdResDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "adqCode3ds": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "authType": {
+                    "type": "string",
+                    "example": "bearer"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "52caa7c6-d107-42bd-afac-0226a501e66e"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "createdBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "defaultAdqCode": {
+                    "type": "string",
+                    "example": "654321"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Payment gateway for Stripe"
+                },
+                "gatewayPaymentTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO"
+                    }
+                },
+                "gatewayProcess": {
+                    "$ref": "#/definitions/admin_gateway_controller.GatewayProcessDTO"
+                },
+                "gatewayProcessId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Stripe"
+                },
+                "notifPassword": {
+                    "type": "string",
+                    "example": "notification_password"
+                },
+                "notifUser": {
+                    "type": "string",
+                    "example": "notification_user"
+                },
+                "order": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "softDescriptor": {
+                    "type": "string",
+                    "example": "Company Name"
+                },
+                "testEnvironment": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2023-01-01T00:00:00Z"
+                },
+                "updatedBy": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://api.stripe.com"
+                },
+                "use3ds": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "useAntifraud": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "uuid": {
+                    "type": "string",
+                    "example": "78e5259f-1b4e-460c-90d2-83e640a7d024"
+                },
+                "webhookUrl": {
+                    "type": "string",
+                    "example": "https://example.com/webhook"
+                }
+            }
+        },
+        "admin_gateway_controller.UpdateReqDTO": {
+            "type": "object",
+            "required": [
+                "authType",
+                "gatewayProcessId",
+                "name",
+                "order"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "adqCode3ds": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "authType": {
+                    "type": "string",
+                    "enum": [
+                        "bearer",
+                        "basic"
+                    ],
+                    "example": "bearer"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "ZYDPLLBWSK3MVQJSIYHB1OR2JXCY0X2C5UJ2QAR2MAAIT5Q"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "52caa7c6-d107-42bd-afac-0226a501e66e"
+                },
+                "defaultAdqCode": {
+                    "type": "string",
+                    "example": "654321"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Payment gateway for Stripe"
+                },
+                "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "Stripe"
+                },
+                "notifPassword": {
+                    "type": "string",
+                    "example": "notification_password"
+                },
+                "notifUser": {
+                    "type": "string",
+                    "example": "notification_user"
+                },
+                "order": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1
+                },
+                "softDescriptor": {
+                    "type": "string",
+                    "example": "Company Name"
+                },
+                "testEnvironment": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://api.stripe.com"
+                },
+                "use3ds": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "useAntifraud": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "webhookUrl": {
+                    "type": "string",
+                    "example": "https://example.com/webhook"
                 }
             }
         },
