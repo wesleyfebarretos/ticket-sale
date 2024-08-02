@@ -67,20 +67,6 @@ WHERE
     uuid = $1
 LIMIT 1;
 
--- name: CreateWithStock :one
-BEGIN;
-    INSERT INTO products 
-        (name, description, uuid, price, discount_price, active, image, image_mobile, image_thumbnail, category_id, created_by)
-    VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
-    RETURNING *;
-    INSERT INTO product_stocks
-        (product_id, qty, min_qty, created_by)
-    VALUES
-        ($12,$13,$14,$15)
-    RETURNING *;
-COMMIT;
-
 -- name: GetAllProductInstallmentTimes :many
 SELECT 
     id,

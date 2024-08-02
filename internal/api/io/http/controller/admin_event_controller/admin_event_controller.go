@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_event_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
@@ -44,7 +44,7 @@ func Create(c *gin.Context) {
 		CreatedBy: adminUserClaims.Id,
 	}
 
-	newProductReq := admin_products_repository.CreateParams{
+	newProductReq := admin_product_repository.CreateParams{
 		Name:           body.Product.Name,
 		Description:    body.Product.Description,
 		Price:          body.Product.Price,
@@ -63,10 +63,10 @@ func Create(c *gin.Context) {
 		CreatedBy: adminUserClaims.Id,
 	}
 
-	newProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+	newProductInstallments := []admin_product_repository.CreateInstallmentsParams{}
 
 	for _, installment := range body.Product.Installments {
-		newProductInstallments = append(newProductInstallments, admin_products_repository.CreateInstallmentsParams{
+		newProductInstallments = append(newProductInstallments, admin_product_repository.CreateInstallmentsParams{
 			PaymentTypeID:     installment.PaymentTypeID,
 			InstallmentTimeID: installment.ID,
 			Fee:               *installment.Fee,
@@ -160,7 +160,7 @@ func Update(c *gin.Context) {
 		UpdatedAt: time.Now().UTC(),
 	}
 
-	updateProductReq := admin_products_repository.UpdateParams{
+	updateProductReq := admin_product_repository.UpdateParams{
 		Name:           body.Product.Name,
 		Description:    body.Product.Description,
 		Price:          body.Product.Price,
@@ -173,10 +173,10 @@ func Update(c *gin.Context) {
 		UpdatedBy:      &adminUserClaims.Id,
 	}
 
-	updateProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+	updateProductInstallments := []admin_product_repository.CreateInstallmentsParams{}
 
 	for _, installment := range body.Product.Installments {
-		updateProductInstallments = append(updateProductInstallments, admin_products_repository.CreateInstallmentsParams{
+		updateProductInstallments = append(updateProductInstallments, admin_product_repository.CreateInstallmentsParams{
 			PaymentTypeID:     installment.PaymentTypeID,
 			InstallmentTimeID: installment.ID,
 			Fee:               *installment.Fee,

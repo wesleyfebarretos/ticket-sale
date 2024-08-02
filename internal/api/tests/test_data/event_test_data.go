@@ -7,8 +7,8 @@ import (
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_event_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
 )
@@ -21,7 +21,10 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 	image := "https://example.com/images/red-hot-chilly-peppers.jpg"
 	imageMobile := "https://example.com/images/red-hot-chilly-peppers-mobile.jpg"
 	ImageThumbnail := "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
-	newProduct, err := repository.AdminProducts.Create(ctx, admin_products_repository.CreateParams{
+
+	adminProductRepository := admin_product_repository.New()
+
+	newProduct := adminProductRepository.Create(ctx, admin_product_repository.CreateParams{
 		Name:           "Red Hot Chilly Peppers",
 		Description:    &description,
 		Price:          5.99,
@@ -33,9 +36,6 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 		CategoryID:     product_categories_enum.EVENT,
 		CreatedBy:      userID,
 	})
-	if err != nil {
-		t.Fatalf("error on creating product: %v", err)
-	}
 
 	startAt, err := time.Parse(time.RFC3339, "2024-01-01T00:00:00Z")
 	if err != nil {

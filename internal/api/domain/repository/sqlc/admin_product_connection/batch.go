@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: batch.go
 
-package admin_products_repository
+package admin_product_connection
 
 import (
 	"context"

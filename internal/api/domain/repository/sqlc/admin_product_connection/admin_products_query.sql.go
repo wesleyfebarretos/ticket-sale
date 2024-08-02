@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: admin_products_query.sql
 
-package admin_products_repository
+package admin_product_connection
 
 import (
 	"context"
@@ -64,20 +64,6 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (Product, error)
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
-	return i, err
-}
-
-const createWithStock = `-- name: CreateWithStock :one
-BEGIN
-`
-
-type CreateWithStockRow struct {
-}
-
-func (q *Queries) CreateWithStock(ctx context.Context) (CreateWithStockRow, error) {
-	row := q.db.QueryRow(ctx, createWithStock)
-	var i CreateWithStockRow
-	err := row.Scan()
 	return i, err
 }
 

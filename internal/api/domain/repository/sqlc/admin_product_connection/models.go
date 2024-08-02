@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package admin_products_repository
+package admin_product_connection
 
 import (
 	"time"

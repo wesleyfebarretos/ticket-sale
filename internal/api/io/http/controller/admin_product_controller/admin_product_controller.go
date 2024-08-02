@@ -1,13 +1,9 @@
 package admin_product_controller
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_product_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 )
@@ -32,91 +28,13 @@ func Create(c *gin.Context) {
 
 	adminUser := controller.GetClaims(c)
 
-	newProductRequest := admin_products_repository.CreateParams{
-		Name:           body.Name,
-		Description:    body.Description,
-		Price:          body.Price,
-		DiscountPrice:  body.DiscountPrice,
-		Active:         body.Active,
-		Image:          body.Image,
-		ImageMobile:    body.ImageMobile,
-		ImageThumbnail: body.ImageThumbnail,
-		CategoryID:     body.CategoryID,
-		CreatedBy:      adminUser.Id,
-	}
+	domainObj := body.ToDomain(adminUser.Id)
 
-	newProductStockRequest := admin_product_stocks_repository.CreateParams{
-		Qty:       body.Stock.Qty,
-		MinQty:    body.Stock.MinQty,
-		CreatedBy: adminUser.Id,
-	}
+	newProduct := admin_product_service.Create(c, domainObj.Product, domainObj.Stock, domainObj.Installments)
 
-	newProductInstallments := []admin_products_repository.CreateInstallmentsParams{}
+	res := CreateResponseDto{}
 
-	for _, installment := range body.Installments {
-		newInstallment := admin_products_repository.CreateInstallmentsParams{
-			PaymentTypeID:     installment.PaymentTypeID,
-			InstallmentTimeID: installment.ID,
-			Fee:               0,
-			Tariff:            0,
-			CreatedBy:         adminUser.Id,
-		}
-
-		if installment.Fee != nil {
-			newInstallment.Fee = *installment.Fee
-		}
-
-		if installment.Tariff != nil {
-			newInstallment.Tariff = *installment.Tariff
-		}
-
-		newProductInstallments = append(newProductInstallments, newInstallment)
-	}
-
-	res := admin_product_service.Create(c, newProductRequest, newProductStockRequest, newProductInstallments)
-
-	newProduct := res.Product
-	newProductStock := res.Stock
-
-	newInstallments := []CreateInstallmentsResponseDto{}
-
-	for _, i := range res.Installments {
-		newInstallments = append(newInstallments, CreateInstallmentsResponseDto{
-			ID:            i.ID,
-			PaymentTypeID: i.PaymentTypeID,
-			Fee:           i.Fee,
-			Tariff:        i.Tariff,
-			InstallmentID: i.InstallmentTimeID,
-		})
-	}
-
-	newProductResponse := CreateResponseDto{
-		ID:             newProduct.ID,
-		Name:           newProduct.Name,
-		Description:    newProduct.Description,
-		Price:          newProduct.Price,
-		DiscountPrice:  newProduct.DiscountPrice,
-		Active:         newProduct.Active,
-		Image:          newProduct.Image,
-		ImageMobile:    newProduct.ImageMobile,
-		ImageThumbnail: newProduct.ImageThumbnail,
-		CategoryID:     newProduct.CategoryID,
-		CreatedBy:      newProduct.CreatedBy,
-		Uuid:           newProduct.Uuid,
-		IsDeleted:      newProduct.IsDeleted,
-		UpdatedBy:      newProduct.UpdatedBy,
-		CreatedAt:      newProduct.CreatedAt,
-		UpdatedAt:      newProduct.UpdatedAt,
-		Stock: CreateStockResponseDto{
-			ID:        newProductStock.ID,
-			ProductID: newProductStock.ProductID,
-			Qty:       newProductStock.Qty,
-			MinQty:    newProductStock.MinQty,
-		},
-		Installments: newInstallments,
-	}
-
-	c.JSON(http.StatusCreated, newProductResponse)
+	c.JSON(http.StatusCreated, res.FromDomain(newProduct))
 }
 
 // UpdateProduct godoc
@@ -143,43 +61,9 @@ func Update(c *gin.Context) {
 
 	adminUser := controller.GetClaims(c)
 
-	updateProduct := admin_products_repository.UpdateParams{
-		Name:           body.Name,
-		Description:    body.Description,
-		Price:          body.Price,
-		DiscountPrice:  body.DiscountPrice,
-		Active:         body.Active,
-		Image:          body.Image,
-		ImageMobile:    body.ImageMobile,
-		ImageThumbnail: body.ImageThumbnail,
-		CategoryID:     body.CategoryID,
-		UpdatedBy:      &adminUser.Id,
-		ID:             id,
-	}
+	domainObj := body.ToDomain(adminUser.Id, id)
 
-	updateInstallments := []admin_products_repository.CreateInstallmentsParams{}
-
-	for _, installment := range body.Installments {
-		updatedInstallment := admin_products_repository.CreateInstallmentsParams{
-			PaymentTypeID:     installment.PaymentTypeID,
-			InstallmentTimeID: installment.ID,
-			Fee:               0,
-			Tariff:            0,
-			CreatedBy:         adminUser.Id,
-			ProductID:         id,
-		}
-		if installment.Fee != nil {
-			updatedInstallment.Fee = *installment.Fee
-		}
-
-		if installment.Tariff != nil {
-			updatedInstallment.Tariff = *installment.Tariff
-		}
-
-		updateInstallments = append(updateInstallments, updatedInstallment)
-	}
-
-	admin_product_service.Update(c, updateProduct, updateInstallments)
+	admin_product_service.Update(c, domainObj.Product, domainObj.Installments)
 
 	c.JSON(http.StatusOK, true)
 }
@@ -202,10 +86,9 @@ func SoftDelete(c *gin.Context) {
 
 	adminUser := controller.GetClaims(c)
 
-	admin_product_service.SoftDelete(c, admin_products_repository.SoftDeleteParams{
-		ID:        id,
-		UpdatedBy: &adminUser.Id,
-	})
+	params := SoftDeleteRequestDto{}
+
+	admin_product_service.SoftDelete(c, params.ToDomain(id, adminUser.Id))
 
 	c.JSON(http.StatusOK, true)
 }
@@ -225,30 +108,9 @@ func SoftDelete(c *gin.Context) {
 func GetAll(c *gin.Context) {
 	products := admin_product_service.GetAll(c)
 
-	productsResponse := []GetAllResponseDto{}
+	res := GetAllResponseDto{}
 
-	for _, product := range products {
-		productsResponse = append(productsResponse, GetAllResponseDto{
-			ID:             product.ID,
-			Name:           product.Name,
-			Description:    product.Description,
-			Uuid:           product.Uuid,
-			Price:          product.Price,
-			DiscountPrice:  product.DiscountPrice,
-			Active:         product.Active,
-			IsDeleted:      product.IsDeleted,
-			Image:          product.Image,
-			ImageMobile:    product.ImageMobile,
-			ImageThumbnail: product.ImageThumbnail,
-			CategoryID:     product.CategoryID,
-			CreatedBy:      product.CreatedBy,
-			UpdatedBy:      product.UpdatedBy,
-			CreatedAt:      product.CreatedAt,
-			UpdatedAt:      product.UpdatedAt,
-		})
-	}
-
-	c.JSON(http.StatusOK, productsResponse)
+	c.JSON(http.StatusOK, res.FromDomain(products))
 }
 
 // GetAllProductsWithRelations godoc
@@ -266,63 +128,9 @@ func GetAll(c *gin.Context) {
 func GetAllWithRelations(c *gin.Context) {
 	products := admin_product_service.GetAllWithRelations(c)
 
-	productsResponse := []GetAllWithRelationsResponseDto{}
+	res := GetAllWithRelationsResponseDto{}
 
-	for _, product := range products {
-		stock := &StockResponseDto{}
-		category := &CategoryResponseDto{}
-		installments := InstallmentsResponseDto{}
-
-		bStock, err := json.Marshal(product.Stock)
-		if err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		bCategory, err := json.Marshal(product.Category)
-		if err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		bInstallments, err := json.Marshal(product.Installments)
-		if err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		if err := json.Unmarshal(bStock, &stock); err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		if err := json.Unmarshal(bCategory, &category); err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		if err := json.Unmarshal(bInstallments, &installments); err != nil {
-			panic(exception.InternalServerException(err.Error()))
-		}
-
-		productsResponse = append(productsResponse, GetAllWithRelationsResponseDto{
-			ID:             product.ID,
-			Name:           product.Name,
-			Description:    product.Description,
-			Uuid:           product.Uuid,
-			Price:          product.Price,
-			DiscountPrice:  product.DiscountPrice,
-			Active:         product.Active,
-			IsDeleted:      product.IsDeleted,
-			Image:          product.Image,
-			ImageMobile:    product.ImageMobile,
-			ImageThumbnail: product.ImageThumbnail,
-			CategoryID:     product.CategoryID,
-			CreatedBy:      product.CreatedBy,
-			UpdatedBy:      product.UpdatedBy,
-			CreatedAt:      product.CreatedAt,
-			UpdatedAt:      product.UpdatedAt,
-			Stock:          stock,
-			Category:       category,
-			Installments:   installments,
-		})
-	}
-	c.JSON(http.StatusOK, productsResponse)
+	c.JSON(http.StatusOK, res.FromDomain(products))
 }
 
 // GetOneById godoc
@@ -344,49 +152,9 @@ func GetOneById(c *gin.Context) {
 
 	product := admin_product_service.GetOneById(c, id)
 
-	stock := &StockResponseDto{}
-	category := &CategoryResponseDto{}
+	res := GetOneByIdResponseDto{}
 
-	bStock, err := json.Marshal(product.Stock)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	bCategory, err := json.Marshal(product.Category)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bStock, &stock); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bCategory, &category); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	productResponse := GetOneByIdResponseDto{
-		ID:             product.ID,
-		Name:           product.Name,
-		Description:    product.Description,
-		Uuid:           product.Uuid,
-		Price:          product.Price,
-		DiscountPrice:  product.DiscountPrice,
-		Active:         product.Active,
-		IsDeleted:      product.IsDeleted,
-		Image:          product.Image,
-		ImageMobile:    product.ImageMobile,
-		ImageThumbnail: product.ImageThumbnail,
-		CategoryID:     product.CategoryID,
-		CreatedBy:      product.CreatedBy,
-		UpdatedBy:      product.UpdatedBy,
-		CreatedAt:      product.CreatedAt,
-		UpdatedAt:      product.UpdatedAt,
-		Stock:          stock,
-		Category:       category,
-	}
-
-	c.JSON(http.StatusOK, productResponse)
+	c.JSON(http.StatusOK, res.FromDomain(product))
 }
 
 // GetOneByUuid godoc
@@ -408,47 +176,7 @@ func GetOneByUuid(c *gin.Context) {
 
 	product := admin_product_service.GetOneByUuid(c, uuid)
 
-	stock := &StockResponseDto{}
-	category := &CategoryResponseDto{}
+	res := GetOneByUuidResponseDto{}
 
-	bStock, err := json.Marshal(product.Stock)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	bCategory, err := json.Marshal(product.Category)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bStock, &stock); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bCategory, &category); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	productResponse := GetOneByUuidResponseDto{
-		ID:             product.ID,
-		Name:           product.Name,
-		Description:    product.Description,
-		Uuid:           product.Uuid,
-		Price:          product.Price,
-		DiscountPrice:  product.DiscountPrice,
-		Active:         product.Active,
-		IsDeleted:      product.IsDeleted,
-		Image:          product.Image,
-		ImageMobile:    product.ImageMobile,
-		ImageThumbnail: product.ImageThumbnail,
-		CategoryID:     product.CategoryID,
-		CreatedBy:      product.CreatedBy,
-		UpdatedBy:      product.UpdatedBy,
-		CreatedAt:      product.CreatedAt,
-		UpdatedAt:      product.UpdatedAt,
-		Stock:          stock,
-		Category:       category,
-	}
-
-	c.JSON(http.StatusOK, productResponse)
+	c.JSON(http.StatusOK, res.FromDomain(product))
 }

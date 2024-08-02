@@ -7,28 +7,25 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 )
 
 func Create(
 	c *gin.Context,
 	tx pgx.Tx,
-	newProductRequest admin_products_repository.CreateParams,
+	newProductRequest admin_product_repository.CreateParams,
 	newProductStockRequest admin_product_stocks_repository.CreateParams,
-	newProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
+	newProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) (
-	admin_products_repository.Product,
+	admin_product_repository.CreateResponse,
 	admin_product_stocks_repository.ProductStock,
-	[]admin_products_repository.FinProductPaymentTypeInstallmentTime,
+	[]admin_product_repository.CreateInstallmentsResponse,
 ) {
-	adminProductsRepository := repository.AdminProducts.WithTx(tx)
+	adminProductRepository := admin_product_repository.New().WithTx(tx)
 	adminProductStocksRepository := repository.AdminProductStocks.WithTx(tx)
 
-	newProduct, err := adminProductsRepository.Create(c, newProductRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	newProduct := adminProductRepository.Create(c, newProductRequest)
 
 	newProductStockRequest.ProductID = newProduct.ID
 
@@ -41,23 +38,7 @@ func Create(
 		newProductInstallmentsRequest[i].ProductID = newProduct.ID
 	}
 
-	installmentsBatchQuery := adminProductsRepository.CreateInstallments(c, newProductInstallmentsRequest)
-
-	newProductInstallments := []admin_products_repository.FinProductPaymentTypeInstallmentTime{}
-
-	installmentsBatchQuery.QueryRow(
-		func(
-			index int,
-			installment admin_products_repository.FinProductPaymentTypeInstallmentTime,
-			err error,
-		) {
-			if err != nil {
-				panic(exception.InternalServerException(fmt.Sprintf("query of index %d failed: %v", index, err)))
-			}
-
-			newProductInstallments = append(newProductInstallments, installment)
-		},
-	)
+	newProductInstallments := adminProductRepository.CreateInstallments(c, newProductInstallmentsRequest)
 
 	return newProduct, newProductStock, newProductInstallments
 }
@@ -65,57 +46,33 @@ func Create(
 func Update(
 	c *gin.Context,
 	tx pgx.Tx,
-	updateProductRequest admin_products_repository.UpdateParams,
-	updateProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
+	updateProductRequest admin_product_repository.UpdateParams,
+	updateProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) {
-	adminProductRepository := repository.AdminProducts.WithTx(tx)
+	adminProductRepository := admin_product_repository.New().WithTx(tx)
 
-	_, err := adminProductRepository.GetOneById(c, updateProductRequest.ID)
+	product := adminProductRepository.GetOneById(c, updateProductRequest.ID)
 
-	if err == pgx.ErrNoRows {
+	if product == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", updateProductRequest.ID)))
 	}
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	adminProductRepository.Update(c, updateProductRequest)
 
-	err = adminProductRepository.Update(c, updateProductRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	persistedInstallments, err := adminProductRepository.GetAllProductInstallmentTimes(
+	persistedInstallments := adminProductRepository.GetAllInstallmentTimes(
 		c,
 		updateProductRequest.ID,
 	)
 
-	if err != nil && err != pgx.ErrNoRows {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
 	if someInstallmentChanged(updateProductInstallmentsRequest, persistedInstallments) {
-		adminProductRepository.DeleteAllProductInstallmentTimes(c, updateProductRequest.ID)
-
-		installmentsBatchQuery := adminProductRepository.CreateInstallments(c, updateProductInstallmentsRequest)
-
-		installmentsBatchQuery.QueryRow(
-			func(
-				index int,
-				_ admin_products_repository.FinProductPaymentTypeInstallmentTime,
-				err error,
-			) {
-				if err != nil {
-					panic(exception.InternalServerException(fmt.Sprintf("query of index %d failed: %v", index, err)))
-				}
-			},
-		)
+		adminProductRepository.DeleteAllInstallmentTimes(c, updateProductRequest.ID)
+		adminProductRepository.CreateInstallments(c, updateProductInstallmentsRequest)
 	}
 }
 
 func someInstallmentChanged(
-	newInstallments []admin_products_repository.CreateInstallmentsParams,
-	oldInstallments []admin_products_repository.GetAllProductInstallmentTimesRow,
+	newInstallments []admin_product_repository.CreateInstallmentsParams,
+	oldInstallments []admin_product_repository.GetAllInstallmentTimeResponse,
 ) bool {
 	if len(newInstallments) != len(oldInstallments) {
 		return true

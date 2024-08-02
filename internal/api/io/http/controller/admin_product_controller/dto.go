@@ -125,7 +125,7 @@ type GetAllWithRelationsResponseDto struct {
 	CreatedAt      time.Time               `json:"createdAt" example:"2023-01-01T00:00:00Z"`
 	UpdatedAt      time.Time               `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
 	Stock          *StockResponseDto       `json:"stock"`
-	Category       *CategoryResponseDto    `json:"category"`
+	Category       CategoryResponseDto     `json:"category"`
 	Installments   InstallmentsResponseDto `json:"installments"`
 }
 
@@ -156,43 +156,48 @@ type CategoryResponseDto struct {
 }
 
 type GetOneByIdResponseDto struct {
-	ID             int32                `json:"id" example:"1"`
-	Name           string               `json:"name" example:"Red Hot Chilly Peppers"`
-	Description    *string              `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
-	Uuid           uuid.UUID            `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
-	Price          float64              `json:"price" example:"5.99"`
-	DiscountPrice  *float64             `json:"discountPrice" example:"4.99"`
-	Active         bool                 `json:"active" example:"true"`
-	IsDeleted      bool                 `json:"isDeleted" example:"false"`
-	Image          *string              `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
-	ImageMobile    *string              `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
-	ImageThumbnail *string              `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
-	CategoryID     int32                `json:"categoryId" example:"3"`
-	CreatedBy      int32                `json:"createdBy" example:"1"`
-	UpdatedBy      *int32               `json:"updatedBy" example:"1"`
-	CreatedAt      time.Time            `json:"createdAt" example:"2023-01-01T00:00:00Z"`
-	UpdatedAt      time.Time            `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
-	Stock          *StockResponseDto    `json:"stock"`
-	Category       *CategoryResponseDto `json:"category"`
+	ID             int32               `json:"id" example:"1"`
+	Name           string              `json:"name" example:"Red Hot Chilly Peppers"`
+	Description    *string             `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
+	Uuid           uuid.UUID           `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
+	Price          float64             `json:"price" example:"5.99"`
+	DiscountPrice  *float64            `json:"discountPrice" example:"4.99"`
+	Active         bool                `json:"active" example:"true"`
+	IsDeleted      bool                `json:"isDeleted" example:"false"`
+	Image          *string             `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
+	ImageMobile    *string             `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
+	ImageThumbnail *string             `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
+	CategoryID     int32               `json:"categoryId" example:"3"`
+	CreatedBy      int32               `json:"createdBy" example:"1"`
+	UpdatedBy      *int32              `json:"updatedBy" example:"1"`
+	CreatedAt      time.Time           `json:"createdAt" example:"2023-01-01T00:00:00Z"`
+	UpdatedAt      time.Time           `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
+	Stock          *StockResponseDto   `json:"stock"`
+	Category       CategoryResponseDto `json:"category"`
 }
 
 type GetOneByUuidResponseDto struct {
-	ID             int32                `json:"id" example:"1"`
-	Name           string               `json:"name" example:"Red Hot Chilly Peppers"`
-	Description    *string              `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
-	Uuid           uuid.UUID            `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
-	Price          float64              `json:"price" example:"5.99"`
-	DiscountPrice  *float64             `json:"discountPrice" example:"4.99"`
-	Active         bool                 `json:"active" example:"true"`
-	IsDeleted      bool                 `json:"isDeleted" example:"false"`
-	Image          *string              `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
-	ImageMobile    *string              `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
-	ImageThumbnail *string              `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
-	CategoryID     int32                `json:"categoryId" example:"3"`
-	CreatedBy      int32                `json:"createdBy" example:"1"`
-	UpdatedBy      *int32               `json:"updatedBy" example:"1"`
-	CreatedAt      time.Time            `json:"createdAt" example:"2023-01-01T00:00:00Z"`
-	UpdatedAt      time.Time            `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
-	Stock          *StockResponseDto    `json:"stock"`
-	Category       *CategoryResponseDto `json:"category"`
+	ID             int32               `json:"id" example:"1"`
+	Name           string              `json:"name" example:"Red Hot Chilly Peppers"`
+	Description    *string             `json:"description" example:"Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."`
+	Uuid           uuid.UUID           `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
+	Price          float64             `json:"price" example:"5.99"`
+	DiscountPrice  *float64            `json:"discountPrice" example:"4.99"`
+	Active         bool                `json:"active" example:"true"`
+	IsDeleted      bool                `json:"isDeleted" example:"false"`
+	Image          *string             `json:"image" example:"https://example.com/images/red-hot-chilly-peppers.jpg"`
+	ImageMobile    *string             `json:"imageMobile" example:"https://example.com/images/red-hot-chilly-peppers-mobile.jpg"`
+	ImageThumbnail *string             `json:"imageThumbnail" example:"https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"`
+	CategoryID     int32               `json:"categoryId" example:"3"`
+	CreatedBy      int32               `json:"createdBy" example:"1"`
+	UpdatedBy      *int32              `json:"updatedBy" example:"1"`
+	CreatedAt      time.Time           `json:"createdAt" example:"2023-01-01T00:00:00Z"`
+	UpdatedAt      time.Time           `json:"updatedAt" example:"2023-01-01T00:00:00Z"`
+	Stock          *StockResponseDto   `json:"stock"`
+	Category       CategoryResponseDto `json:"category"`
+}
+
+type SoftDeleteRequestDto struct {
+	ID        int32
+	UpdatedBy int32
 }

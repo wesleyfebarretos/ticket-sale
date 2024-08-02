@@ -7,24 +7,29 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 type CreateResponse struct {
-	Product      admin_products_repository.Product
+	Product      admin_product_repository.CreateResponse
 	Stock        admin_product_stocks_repository.ProductStock
-	Installments []admin_products_repository.FinProductPaymentTypeInstallmentTime
+	Installments []admin_product_repository.CreateInstallmentsResponse
+}
+
+type CreateParams struct {
+	Product      admin_product_repository.CreateParams
+	Stock        admin_product_stocks_repository.CreateParams
+	Installments []admin_product_repository.CreateInstallmentsParams
 }
 
 func Create(
 	c *gin.Context,
-	newProductRequest admin_products_repository.CreateParams,
+	newProductRequest admin_product_repository.CreateParams,
 	newProductStockRequest admin_product_stocks_repository.CreateParams,
-	newProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
+	newProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) CreateResponse {
 	return utils.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
 		newProduct, newProductStock, newProductInstallments := admin_product_shared.Create(
@@ -43,10 +48,15 @@ func Create(
 	})
 }
 
+type UpdateParams struct {
+	Product      admin_product_repository.UpdateParams
+	Installments []admin_product_repository.CreateInstallmentsParams
+}
+
 func Update(
 	c *gin.Context,
-	updateProductRequest admin_products_repository.UpdateParams,
-	updateProductInstallmentsRequest []admin_products_repository.CreateInstallmentsParams,
+	updateProductRequest admin_product_repository.UpdateParams,
+	updateProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) {
 	utils.WithTransaction(c, func(tx pgx.Tx) struct{} {
 		admin_product_shared.Update(c, tx, updateProductRequest, updateProductInstallmentsRequest)
@@ -54,63 +64,45 @@ func Update(
 	})
 }
 
-func SoftDelete(c *gin.Context, params admin_products_repository.SoftDeleteParams) {
-	_, err := repository.AdminProducts.GetOneById(c, params.ID)
+func SoftDelete(c *gin.Context, params admin_product_repository.SoftDeleteParams) {
+	repository := admin_product_repository.New()
 
-	if err == pgx.ErrNoRows {
+	product := repository.GetOneById(c, params.ID)
+
+	if product == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", params.ID)))
 	}
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	err = repository.AdminProducts.SoftDelete(c, params)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	repository.SoftDelete(c, params)
 }
 
-func GetAll(c *gin.Context) []admin_products_repository.Product {
-	products, err := repository.AdminProducts.GetAll(c)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return products
+func GetAll(c *gin.Context) []admin_product_repository.GetAllResponse {
+	return admin_product_repository.New().GetAll(c)
 }
 
-func GetAllWithRelations(c *gin.Context) []admin_products_repository.ProductsDetail {
-	products, err := repository.AdminProducts.GetAllProductsDetails(c)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return products
+func GetAllWithRelations(c *gin.Context) []admin_product_repository.GetAllWithDetailsResponse {
+	return admin_product_repository.New().GetAllWithDetails(c)
 }
 
-func GetOneById(c *gin.Context, id int32) admin_products_repository.ProductsDetail {
-	product, err := repository.AdminProducts.GetOneById(c, id)
-	if err == pgx.ErrNoRows {
+func GetOneById(c *gin.Context, id int32) admin_product_repository.GetOneByIdResponse {
+	repository := admin_product_repository.New()
+
+	product := repository.GetOneById(c, id)
+
+	if product == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("product of id %d not found", id)))
 	}
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return product
+	return *product
 }
 
-func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_products_repository.ProductsDetail {
-	product, err := repository.AdminProducts.GetOneByUuid(c, uuid)
-	if err == pgx.ErrNoRows {
+func GetOneByUuid(c *gin.Context, uuid uuid.UUID) admin_product_repository.GetOneByUuidResponse {
+	repository := admin_product_repository.New()
+
+	product := repository.GetOneByUuid(c, uuid)
+	if product == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("product of uuid %s not found", uuid)))
 	}
 
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return product
+	return *product
 }

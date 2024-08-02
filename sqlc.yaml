@@ -47,8 +47,8 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "admin_products_repository"
-        out: "internal/api/domain/repository/sqlc/admin_products_repository"
+        package: "admin_product_connection"
+        out: "internal/api/domain/repository/sqlc/admin_product_connection"
         overrides:
           - column: "products_details.stock"
             go_type: 

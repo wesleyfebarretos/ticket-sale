@@ -7,26 +7,26 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_products_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 type CreateResponse struct {
 	Event               admin_events_repository.Event
-	Product             admin_products_repository.Product
+	Product             admin_product_repository.CreateResponse
 	ProductStock        admin_product_stocks_repository.ProductStock
-	ProductInstallments []admin_products_repository.FinProductPaymentTypeInstallmentTime
+	ProductInstallments []admin_product_repository.CreateInstallmentsResponse
 }
 
 func Create(
 	c *gin.Context,
 	newEventReq admin_events_repository.CreateParams,
-	newProductReq admin_products_repository.CreateParams,
+	newProductReq admin_product_repository.CreateParams,
 	newStockReq admin_product_stocks_repository.CreateParams,
-	newProductInstallments []admin_products_repository.CreateInstallmentsParams,
+	newProductInstallments []admin_product_repository.CreateInstallmentsParams,
 ) CreateResponse {
 	return utils.WithTransaction(c, func(tx pgx.Tx) CreateResponse {
 		newProduct, newStock, newInstallments := admin_product_shared.Create(c, tx, newProductReq, newStockReq, newProductInstallments)
@@ -51,8 +51,8 @@ func Create(
 
 func Update(c *gin.Context,
 	updateEventReq admin_events_repository.UpdateParams,
-	updateProductReq admin_products_repository.UpdateParams,
-	updateProductInstallmentsReq []admin_products_repository.CreateInstallmentsParams,
+	updateProductReq admin_product_repository.UpdateParams,
+	updateProductInstallmentsReq []admin_product_repository.CreateInstallmentsParams,
 ) {
 	utils.WithTransaction(c, func(tx pgx.Tx) struct{} {
 		eventRepository := repository.AdminEvents.WithTx(tx)
