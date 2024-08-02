@@ -2,7 +2,7 @@ package admin_product_controller
 
 import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_product_service"
 )
 
@@ -21,7 +21,7 @@ func (s *CreateRequestDto) ToDomain(userID int32) admin_product_service.CreatePa
 		CreatedBy:      userID,
 	}
 
-	newProductStockRequest := admin_product_stocks_repository.CreateParams{
+	newProductStockRequest := admin_product_stock_repository.CreateParams{
 		Qty:       s.Stock.Qty,
 		MinQty:    s.Stock.MinQty,
 		CreatedBy: userID,

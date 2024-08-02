@@ -8,8 +8,8 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
@@ -17,7 +17,7 @@ import (
 type CreateResponse struct {
 	Event               admin_events_repository.Event
 	Product             admin_product_repository.CreateResponse
-	ProductStock        admin_product_stocks_repository.ProductStock
+	ProductStock        admin_product_stock_repository.CreateResponse
 	ProductInstallments []admin_product_repository.CreateInstallmentsResponse
 }
 
@@ -25,7 +25,7 @@ func Create(
 	c *gin.Context,
 	newEventReq admin_events_repository.CreateParams,
 	newProductReq admin_product_repository.CreateParams,
-	newStockReq admin_product_stocks_repository.CreateParams,
+	newStockReq admin_product_stock_repository.CreateParams,
 	newProductInstallments []admin_product_repository.CreateInstallmentsParams,
 ) CreateResponse {
 	return utils.WithTransaction(c, func(tx pgx.Tx) CreateResponse {

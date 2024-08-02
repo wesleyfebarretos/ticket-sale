@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: admin_product_stocks_query.sql
 
-package admin_product_stocks_repository
+package admin_product_stock_connection
 
 import (
 	"context"

@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_event_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
@@ -57,7 +57,7 @@ func Create(c *gin.Context) {
 		CreatedBy:      adminUserClaims.Id,
 	}
 
-	newStockReq := admin_product_stocks_repository.CreateParams{
+	newStockReq := admin_product_stock_repository.CreateParams{
 		Qty:       body.Product.Stock.Qty,
 		MinQty:    body.Product.Stock.MinQty,
 		CreatedBy: adminUserClaims.Id,

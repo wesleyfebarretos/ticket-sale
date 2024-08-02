@@ -8,27 +8,27 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/shared/admin_product_shared"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 type CreateResponse struct {
 	Product      admin_product_repository.CreateResponse
-	Stock        admin_product_stocks_repository.ProductStock
+	Stock        admin_product_stock_repository.CreateResponse
 	Installments []admin_product_repository.CreateInstallmentsResponse
 }
 
 type CreateParams struct {
 	Product      admin_product_repository.CreateParams
-	Stock        admin_product_stocks_repository.CreateParams
+	Stock        admin_product_stock_repository.CreateParams
 	Installments []admin_product_repository.CreateInstallmentsParams
 }
 
 func Create(
 	c *gin.Context,
 	newProductRequest admin_product_repository.CreateParams,
-	newProductStockRequest admin_product_stocks_repository.CreateParams,
+	newProductStockRequest admin_product_stock_repository.CreateParams,
 	newProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) CreateResponse {
 	return utils.WithTransaction(c, func(tx pgx.Tx) CreateResponse {

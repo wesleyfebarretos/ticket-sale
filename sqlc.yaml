@@ -73,8 +73,8 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "admin_product_stocks_repository"
-        out: "internal/api/domain/repository/sqlc/admin_product_stocks_repository"
+        package: "admin_product_stock_connection"
+        out: "internal/api/domain/repository/sqlc/admin_product_stock_connection"
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/admin_events_query.sql"

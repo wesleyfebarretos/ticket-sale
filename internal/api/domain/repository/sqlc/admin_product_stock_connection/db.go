@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package admin_product_stocks_repository
+package admin_product_stock_connection
 
 import (
 	"context"

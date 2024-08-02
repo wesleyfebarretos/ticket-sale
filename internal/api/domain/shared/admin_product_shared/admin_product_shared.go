@@ -6,33 +6,29 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_stocks_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
 )
 
 func Create(
 	c *gin.Context,
 	tx pgx.Tx,
 	newProductRequest admin_product_repository.CreateParams,
-	newProductStockRequest admin_product_stocks_repository.CreateParams,
+	newProductStockRequest admin_product_stock_repository.CreateParams,
 	newProductInstallmentsRequest []admin_product_repository.CreateInstallmentsParams,
 ) (
 	admin_product_repository.CreateResponse,
-	admin_product_stocks_repository.ProductStock,
+	admin_product_stock_repository.CreateResponse,
 	[]admin_product_repository.CreateInstallmentsResponse,
 ) {
 	adminProductRepository := admin_product_repository.New().WithTx(tx)
-	adminProductStocksRepository := repository.AdminProductStocks.WithTx(tx)
+	adminProductStocksRepository := admin_product_stock_repository.New().WithTx(tx)
 
 	newProduct := adminProductRepository.Create(c, newProductRequest)
 
 	newProductStockRequest.ProductID = newProduct.ID
 
-	newProductStock, err := adminProductStocksRepository.Create(c, newProductStockRequest)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	newProductStock := adminProductStocksRepository.Create(c, newProductStockRequest)
 
 	for i := range newProductInstallmentsRequest {
 		newProductInstallmentsRequest[i].ProductID = newProduct.ID
