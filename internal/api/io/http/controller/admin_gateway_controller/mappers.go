@@ -104,7 +104,6 @@ func (s *UpdateReqDTO) ToDomain() admin_gateway_repository.UpdateParams {
 		AdqCode3ds:       s.AdqCode3ds,
 		DefaultAdqCode:   s.DefaultAdqCode,
 		UseAntifraud:     s.UseAntifraud,
-		UpdatedBy:        s.UpdatedBy,
 	}
 }
 

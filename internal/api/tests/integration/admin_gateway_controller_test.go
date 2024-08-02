@@ -106,7 +106,6 @@ func TestAdminGatewayController(t *testing.T) {
 			AdqCode3ds:       TPointer("new-adq-code-3ds"),
 			DefaultAdqCode:   TPointer("new-default-adq-code"),
 			UseAntifraud:     true,
-			UpdatedBy:        &adminUser.ID, // Random UpdatedBy ID
 		}
 
 		res := TMakeRequest(t, http.MethodPut, fmt.Sprintf("admin/gateway/%d", newGateway.ID), updateParams)
@@ -180,7 +179,13 @@ func TestAdminGatewayController(t *testing.T) {
 			t.Fatalf("error on marshal json :%v", err)
 		}
 
-		requiredFields := []string{}
+		requiredFields := []string{
+			"name",
+			"order",
+			"gatewayProcessId",
+			"authType",
+			"paymentTypes",
+		}
 
 		for _, k := range requiredFields {
 			structMap := make(map[string]interface{})
@@ -219,7 +224,6 @@ func TestAdminGatewayController(t *testing.T) {
 			AdqCode3ds:       TPointer("new-adq-code-3ds"),
 			DefaultAdqCode:   TPointer("new-default-adq-code"),
 			UseAntifraud:     true,
-			UpdatedBy:        &adminUser.ID, // Random UpdatedBy ID
 		}
 
 		bStruct, err := json.Marshal(updateParams)
@@ -227,7 +231,12 @@ func TestAdminGatewayController(t *testing.T) {
 			t.Fatalf("error on marshal json :%v", err)
 		}
 
-		requiredFields := []string{}
+		requiredFields := []string{
+			"name",
+			"order",
+			"gatewayProcessId",
+			"authType",
+		}
 
 		newGateway := test_data.NewGateway(t, adminUser.ID)
 

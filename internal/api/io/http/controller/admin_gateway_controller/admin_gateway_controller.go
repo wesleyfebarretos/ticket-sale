@@ -27,11 +27,9 @@ func Update(c *gin.Context) {
 
 	body := UpdateReqDTO{}
 
-	body.UpdatedBy = &adminUser.Id
-
 	controller.ReadBody(c, &body)
 
-	res := admin_gateway_service.Update(c, body.ToDomain())
+	res := admin_gateway_service.Update(c, body.ToDomain(), adminUser.Id)
 
 	c.JSON(http.StatusOK, res)
 }

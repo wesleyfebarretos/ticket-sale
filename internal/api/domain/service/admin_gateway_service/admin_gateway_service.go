@@ -44,8 +44,10 @@ func Create(c *gin.Context, body CreateReq, userID int32) CreateRes {
 	})
 }
 
-func Update(c *gin.Context, body admin_gateway_repository.UpdateParams) bool {
+func Update(c *gin.Context, body admin_gateway_repository.UpdateParams, userID int32) bool {
 	repository := admin_gateway_repository.New()
+
+	body.UpdatedBy = &userID
 
 	res := repository.Update(c, body)
 
