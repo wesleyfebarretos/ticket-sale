@@ -168,7 +168,6 @@ func TestAdminGatewayController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on create", TRun(func(t *testing.T) {
-		//  TODO: Finish after validate IO Struct
 		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
@@ -201,7 +200,6 @@ func TestAdminGatewayController(t *testing.T) {
 	}))
 
 	t.Run("it should validate required fields on update", TRun(func(t *testing.T) {
-		//  TODO: Finish after validate IO struct
 		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
