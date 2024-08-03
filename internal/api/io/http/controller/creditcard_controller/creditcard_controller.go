@@ -2,10 +2,8 @@ package creditcard_controller
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/creditcard_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/creditcard_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
 )
@@ -27,30 +25,9 @@ func GetAllUserCreditcards(c *gin.Context) {
 
 	creditcards := creditcard_service.GetAllUserCreditcards(c, user.Id)
 
-	creditcardsResponse := []GetAllUserCreditcardsResponseDto{}
+	creditcardsResponse := GetAllUserCreditcardsResponseDto{}
 
-	for _, cc := range creditcards {
-		creditcardsResponse = append(creditcardsResponse, GetAllUserCreditcardsResponseDto{
-			Uuid:       cc.Uuid,
-			Name:       cc.Name,
-			Number:     cc.Number,
-			Expiration: cc.Expiration,
-			UserID:     cc.UserID,
-			CreatedAt:  cc.CreatedAt,
-			CreditcardFlag: CreditcardFlag{
-				Id:          cc.CreditcardFlag.Id,
-				Name:        cc.CreditcardFlag.Name,
-				Description: cc.CreditcardFlag.Description,
-				Regex:       cc.CreditcardFlag.Regex,
-			},
-			CreditcardType: CreditcardType{
-				Id:   cc.CreditcardType.Id,
-				Name: cc.CreditcardType.Name,
-			},
-		})
-	}
-
-	c.JSON(http.StatusOK, creditcardsResponse)
+	c.JSON(http.StatusOK, creditcardsResponse.FromDomain(creditcards))
 }
 
 // CreateCreditCard godoc
@@ -73,36 +50,11 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	newCreditcardRequest := creditcard_repository.CreateParams{
-		Name:             body.Name,
-		Number:           body.Number,
-		Expiration:       body.Expiration,
-		Priority:         body.Priority,
-		NotifyExpiration: body.NotifyExpiration,
-		UserID:           user.Id,
-		CreditcardTypeID: body.CreditcardTypeID,
-		CreditcardFlagID: body.CreditcardFlagID,
-	}
+	newCreditcard := creditcard_service.Create(c, body.ToDomain(user.Id))
 
-	newCreditcard := creditcard_service.Create(c, newCreditcardRequest)
+	res := CreateResponseDto{}
 
-	newCreditcardResponse := CreateResponseDto{
-		ID:               newCreditcard.ID,
-		Uuid:             newCreditcard.Uuid,
-		Name:             newCreditcard.Name,
-		Number:           newCreditcard.Number,
-		Expiration:       newCreditcard.Expiration,
-		Priority:         newCreditcard.Priority,
-		NotifyExpiration: newCreditcard.NotifyExpiration,
-		UserID:           newCreditcard.UserID,
-		CreditcardTypeID: newCreditcard.CreditcardTypeID,
-		CreditcardFlagID: newCreditcard.CreditcardFlagID,
-		IsDeleted:        newCreditcard.IsDeleted,
-		CreatedAt:        newCreditcard.CreatedAt,
-		UpdatedAt:        newCreditcard.UpdatedAt,
-	}
-
-	c.JSON(http.StatusCreated, newCreditcardResponse)
+	c.JSON(http.StatusCreated, res.FromDomain(newCreditcard))
 }
 
 // UpdateProduct godoc
@@ -129,20 +81,7 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	updateCreditcardRequest := creditcard_repository.UpdateParams{
-		Name:             body.Name,
-		Number:           body.Number,
-		Expiration:       body.Expiration,
-		Priority:         body.Priority,
-		NotifyExpiration: body.NotifyExpiration,
-		UserID:           user.Id,
-		CreditcardTypeID: body.CreditcardTypeID,
-		CreditcardFlagID: body.CreditcardFlagID,
-		UpdatedAt:        time.Now().UTC(),
-		Uuid:             uuid,
-	}
-
-	creditcard_service.Update(c, updateCreditcardRequest)
+	creditcard_service.Update(c, body.ToDomain(uuid, user.Id))
 
 	c.JSON(http.StatusOK, true)
 }
@@ -163,10 +102,9 @@ func Update(c *gin.Context) {
 func SoftDelete(c *gin.Context) {
 	uuid := controller.GetUuid(c)
 
-	creditcard_service.SoftDelete(c, creditcard_repository.SoftDeleteParams{
-		Uuid:      uuid,
-		UpdatedAt: time.Now().UTC(),
-	})
+	params := SoftDeleteRequestDto{}
+
+	creditcard_service.SoftDelete(c, params.ToDomain(uuid))
 
 	c.JSON(http.StatusOK, true)
 }

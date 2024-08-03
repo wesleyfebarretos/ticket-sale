@@ -64,3 +64,8 @@ type UpdateRequestDto struct {
 	CreditcardTypeID int32     `json:"creditcardTypeId" binding:"required,min=1" example:"2"`
 	CreditcardFlagID int32     `json:"creditcardFlagId" binding:"required,min=1" example:"2"`
 }
+
+type SoftDeleteRequestDto struct {
+	Uuid      uuid.UUID `json:"uuid"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}

@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package creditcard_repository
+package creditcard_connection
 
 import (
 	"context"

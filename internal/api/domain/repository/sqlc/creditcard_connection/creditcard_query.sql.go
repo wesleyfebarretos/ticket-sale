@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: creditcard_query.sql
 
-package creditcard_repository
+package creditcard_connection
 
 import (
 	"context"

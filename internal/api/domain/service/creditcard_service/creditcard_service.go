@@ -5,32 +5,23 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/creditcard_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
 )
 
-func GetAllUserCreditcards(c *gin.Context, userID int32) []creditcard_repository.UserCreditcard {
-	creditcards, err := repository.Creditcard.GetAllUserCreditcards(c, userID)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+func GetAllUserCreditcards(c *gin.Context, userID int32) []creditcard_repository.GetAllUserCreditcardsResponse {
+	return creditcard_repository.New().GetAllUserCreditcards(c, userID)
 
-	return creditcards
 }
 
 func Create(
 	c *gin.Context,
 	newCreditcard creditcard_repository.CreateParams,
-) creditcard_repository.FinCreditcard {
+) creditcard_repository.CreateResponse {
 	regex := regexp.MustCompile("[^0-9]")
 
 	newCreditcard.Number = regex.ReplaceAllString(newCreditcard.Number, "")
 
-	creditcard, err := repository.Creditcard.Create(c, newCreditcard)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	creditcard := creditcard_repository.New().Create(c, newCreditcard)
 
 	return creditcard
 }
@@ -42,10 +33,8 @@ func Update(
 	regex := regexp.MustCompile("[^0-9]")
 
 	updatedCreditcard.Number = regex.ReplaceAllString(updatedCreditcard.Number, "")
-	err := repository.Creditcard.Update(c, updatedCreditcard)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+
+	creditcard_repository.New().Update(c, updatedCreditcard)
 
 	return true
 }
@@ -56,10 +45,7 @@ func SoftDelete(
 ) bool {
 	deleteParams.UpdatedAt = time.Now().UTC()
 
-	err := repository.Creditcard.SoftDelete(c, deleteParams)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
+	creditcard_repository.New().SoftDelete(c, deleteParams)
 
 	return true
 }

@@ -98,8 +98,8 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "creditcard_repository"
-        out: "internal/api/domain/repository/sqlc/creditcard_repository"
+        package: "creditcard_connection"
+        out: "internal/api/domain/repository/sqlc/creditcard_connection"
         overrides:
           - column: "user_creditcards.creditcardFlag"
             go_type:
