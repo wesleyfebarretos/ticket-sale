@@ -3,7 +3,7 @@ package admin_event_controller
 import (
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
 )
 
@@ -94,7 +94,7 @@ type GetOneByIdProductDto struct {
 	Uuid           uuid.UUID                                        `json:"uuid" example:"998f91f3-4dd7-419d-a543-0d26a0e945ec"`
 	IsDeleted      bool                                             `json:"isDeleted" example:"false"`
 	Category       CategoryDto                                      `json:"category"`
-	Stock          StockDto                                         `json:"stock"`
+	Stock          *StockDto                                        `json:"stock"`
 	Installments   admin_product_controller.InstallmentsResponseDto `json:"installments"`
 }
 

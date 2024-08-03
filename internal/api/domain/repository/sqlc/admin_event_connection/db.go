@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package admin_events_repository
+package admin_event_connection
 
 import (
 	"context"

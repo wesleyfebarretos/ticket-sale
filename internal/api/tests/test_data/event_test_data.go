@@ -6,9 +6,8 @@ import (
 	"time"
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_event_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_event_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
 )
@@ -51,7 +50,7 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 	state := "FL"
 	location := "Disney"
 
-	newEvent, err := repository.AdminEvents.Create(ctx, admin_events_repository.CreateParams{
+	newEvent := admin_event_repository.New().Create(ctx, admin_event_repository.CreateParams{
 		ProductID: newProduct.ID,
 		StartAt:   &startAt,
 		EndAt:     &endAt,
@@ -60,9 +59,6 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 		Location:  &location,
 		CreatedBy: userID,
 	})
-	if err != nil {
-		t.Fatalf("error on creating event: %v", err)
-	}
 
 	return admin_event_controller.CreateResponseDto{
 		ID:        newEvent.ID,

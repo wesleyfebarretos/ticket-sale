@@ -8,11 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_event_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_event_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
@@ -150,9 +149,9 @@ func TestAdminEventController(t *testing.T) {
 
 		updatedEventResponse := false
 
-		event, err := repository.AdminEvents.GetOneById(context.Background(), newEvent.ID)
-		if err != nil {
-			t.Fatalf("error on try to get updated event %v", err)
+		event := admin_event_repository.New().GetOneById(context.Background(), newEvent.ID)
+		if event == nil {
+			t.Fatal("error on try to get updated event")
 		}
 
 		test_utils.Decode(t, res.Body, &updatedEventResponse)
@@ -175,11 +174,11 @@ func TestAdminEventController(t *testing.T) {
 
 		deleteEventResponse := false
 
-		_, err := repository.AdminEvents.GetOneById(context.Background(), newEvent.ID)
+		event := admin_event_repository.New().GetOneById(context.Background(), newEvent.ID)
 
 		test_utils.Decode(t, res.Body, &deleteEventResponse)
 
-		assert.IsType(t, pgx.ErrNoRows, err)
+		assert.Nil(t, event)
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, true, deleteEventResponse)
 	}))

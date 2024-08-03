@@ -1,18 +1,11 @@
 package admin_event_controller
 
 import (
-	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_stock_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_events_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_event_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
 )
 
 // CreateEvent godoc
@@ -35,96 +28,13 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	newEventReq := admin_events_repository.CreateParams{
-		StartAt:   body.StartAt,
-		EndAt:     body.EndAt,
-		City:      body.City,
-		State:     body.State,
-		Location:  body.Location,
-		CreatedBy: adminUserClaims.Id,
-	}
+	domainObj := body.ToDomain(adminUserClaims.Id)
 
-	newProductReq := admin_product_repository.CreateParams{
-		Name:           body.Product.Name,
-		Description:    body.Product.Description,
-		Price:          body.Product.Price,
-		DiscountPrice:  body.Product.DiscountPrice,
-		Active:         body.Product.Active,
-		Image:          body.Product.Image,
-		ImageMobile:    body.Product.ImageMobile,
-		ImageThumbnail: body.Product.ImageThumbnail,
-		CategoryID:     body.Product.CategoryID,
-		CreatedBy:      adminUserClaims.Id,
-	}
+	newEvent := admin_event_service.Create(c, domainObj.NewEvent, domainObj.NewProduct, domainObj.NewStock, domainObj.NewProductInstallments)
 
-	newStockReq := admin_product_stock_repository.CreateParams{
-		Qty:       body.Product.Stock.Qty,
-		MinQty:    body.Product.Stock.MinQty,
-		CreatedBy: adminUserClaims.Id,
-	}
+	res := CreateResponseDto{}
 
-	newProductInstallments := []admin_product_repository.CreateInstallmentsParams{}
-
-	for _, installment := range body.Product.Installments {
-		newProductInstallments = append(newProductInstallments, admin_product_repository.CreateInstallmentsParams{
-			PaymentTypeID:     installment.PaymentTypeID,
-			InstallmentTimeID: installment.ID,
-			Fee:               *installment.Fee,
-			Tariff:            *installment.Tariff,
-			CreatedBy:         adminUserClaims.Id,
-		})
-	}
-
-	res := admin_event_service.Create(c, newEventReq, newProductReq, newStockReq, newProductInstallments)
-
-	installmentsResponse := []admin_product_controller.CreateInstallmentsResponseDto{}
-
-	for _, newInstallment := range res.ProductInstallments {
-		installmentsResponse = append(installmentsResponse, admin_product_controller.CreateInstallmentsResponseDto{
-			ID:            newInstallment.ID,
-			PaymentTypeID: newInstallment.PaymentTypeID,
-			InstallmentID: newInstallment.InstallmentTimeID,
-			Fee:           newInstallment.Fee,
-			Tariff:        newInstallment.Tariff,
-		})
-	}
-
-	newEventRes := CreateResponseDto{
-		ID:        res.Event.ID,
-		ProductID: res.Event.ProductID,
-		StartAt:   res.Event.StartAt,
-		EndAt:     res.Event.EndAt,
-		City:      res.Event.City,
-		State:     res.Event.State,
-		Location:  res.Event.Location,
-		Product: admin_product_controller.CreateResponseDto{
-			ID:             res.Product.ID,
-			Name:           res.Product.Name,
-			Description:    res.Product.Description,
-			Price:          res.Product.Price,
-			DiscountPrice:  res.Product.DiscountPrice,
-			Active:         res.Product.Active,
-			Image:          res.Product.Image,
-			ImageMobile:    res.Product.ImageMobile,
-			ImageThumbnail: res.Product.ImageThumbnail,
-			CategoryID:     res.Product.CategoryID,
-			CreatedBy:      res.Product.CreatedBy,
-			Uuid:           res.Product.Uuid,
-			IsDeleted:      res.Product.IsDeleted,
-			UpdatedBy:      res.Product.UpdatedBy,
-			CreatedAt:      res.Product.CreatedAt,
-			UpdatedAt:      res.Product.UpdatedAt,
-			Stock: admin_product_controller.CreateStockResponseDto{
-				ID:        res.ProductStock.ID,
-				ProductID: res.ProductStock.ProductID,
-				Qty:       res.ProductStock.Qty,
-				MinQty:    res.ProductStock.MinQty,
-			},
-			Installments: installmentsResponse,
-		},
-	}
-
-	c.JSON(http.StatusCreated, newEventRes)
+	c.JSON(http.StatusCreated, res.FromDomain(newEvent))
 }
 
 // UpdateEvent godoc
@@ -150,42 +60,9 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	updateEventReq := admin_events_repository.UpdateParams{
-		ID:        id,
-		StartAt:   body.StartAt,
-		EndAt:     body.EndAt,
-		City:      body.City,
-		State:     body.State,
-		Location:  body.Location,
-		UpdatedAt: time.Now().UTC(),
-	}
+	domainObj := body.ToDomain(id, adminUserClaims.Id)
 
-	updateProductReq := admin_product_repository.UpdateParams{
-		Name:           body.Product.Name,
-		Description:    body.Product.Description,
-		Price:          body.Product.Price,
-		DiscountPrice:  body.Product.DiscountPrice,
-		Active:         body.Product.Active,
-		Image:          body.Product.Image,
-		ImageMobile:    body.Product.ImageMobile,
-		ImageThumbnail: body.Product.ImageThumbnail,
-		CategoryID:     body.Product.CategoryID,
-		UpdatedBy:      &adminUserClaims.Id,
-	}
-
-	updateProductInstallments := []admin_product_repository.CreateInstallmentsParams{}
-
-	for _, installment := range body.Product.Installments {
-		updateProductInstallments = append(updateProductInstallments, admin_product_repository.CreateInstallmentsParams{
-			PaymentTypeID:     installment.PaymentTypeID,
-			InstallmentTimeID: installment.ID,
-			Fee:               *installment.Fee,
-			Tariff:            *installment.Tariff,
-			CreatedBy:         adminUserClaims.Id,
-		})
-	}
-
-	admin_event_service.Update(c, updateEventReq, updateProductReq, updateProductInstallments)
+	admin_event_service.Update(c, domainObj.UpdateEvent, domainObj.UpdateProduct, domainObj.UpdateProductInstallments)
 
 	c.JSON(http.StatusOK, true)
 }
@@ -226,18 +103,9 @@ func SoftDelete(c *gin.Context) {
 func GetAll(c *gin.Context) {
 	events := admin_event_service.GetAll(c)
 
-	eventsResponse := []GetAllResponseDto{}
+	eventsResponse := GetAllResponseDto{}
 
-	bEvents, err := json.Marshal(events)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bEvents, &eventsResponse); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	c.JSON(http.StatusOK, eventsResponse)
+	c.JSON(http.StatusOK, eventsResponse.FromDomain(events))
 }
 
 // GetOneById godoc
@@ -261,14 +129,5 @@ func GetOneById(c *gin.Context) {
 
 	eventResponse := GetOneByIdResponseDto{}
 
-	bEvent, err := json.Marshal(event)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err := json.Unmarshal(bEvent, &eventResponse); err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	c.JSON(http.StatusOK, eventResponse)
+	c.JSON(http.StatusOK, eventResponse.FromDomain(event))
 }

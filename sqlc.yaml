@@ -81,8 +81,8 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "admin_events_repository"
-        out: "internal/api/domain/repository/sqlc/admin_events_repository"
+        package: "admin_event_connection"
+        out: "internal/api/domain/repository/sqlc/admin_event_connection"
         overrides:
           - column: "events_get_all.product"
             go_type:
