@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/jackc/pgx/v4"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_event_connection"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
@@ -28,14 +29,14 @@ func New() *AdminEventRepository {
 	return repository
 }
 
-func (r *AdminEventRepository) WithTx(tx pgx.Tx) *AdminEventRepository {
+func (this *AdminEventRepository) WithTx(tx pgx.Tx) *AdminEventRepository {
 	return &AdminEventRepository{
-		queries: r.queries.WithTx(tx),
+		queries: this.queries.WithTx(tx),
 	}
 }
 
-func (r *AdminEventRepository) Create(c context.Context, createParams CreateParams) CreateResponse {
-	event, err := r.queries.Create(c, createParams.ToEntity())
+func (this *AdminEventRepository) Create(c context.Context, createParams CreateParams) CreateResponse {
+	event, err := this.queries.Create(c, createParams.ToEntity())
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -44,8 +45,8 @@ func (r *AdminEventRepository) Create(c context.Context, createParams CreatePara
 	return res.FromEntity(event)
 }
 
-func (r *AdminEventRepository) Update(c context.Context, updateParams UpdateParams) int32 {
-	productID, err := r.queries.Update(c, updateParams.ToEntity())
+func (this *AdminEventRepository) Update(c context.Context, updateParams UpdateParams) int32 {
+	productID, err := this.queries.Update(c, updateParams.ToEntity())
 
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
@@ -54,8 +55,8 @@ func (r *AdminEventRepository) Update(c context.Context, updateParams UpdatePara
 	return productID
 }
 
-func (r *AdminEventRepository) GetAll(c context.Context) []GetAllResponse {
-	events, err := r.queries.GetAll(c)
+func (this *AdminEventRepository) GetAll(c context.Context) []GetAllResponse {
+	events, err := this.queries.GetAll(c)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -65,8 +66,8 @@ func (r *AdminEventRepository) GetAll(c context.Context) []GetAllResponse {
 	return res.FromEntity(events)
 }
 
-func (r *AdminEventRepository) GetOneById(c context.Context, eventID int32) *GetOneByIdResponse {
-	event, err := r.queries.GetOneById(c, eventID)
+func (this *AdminEventRepository) GetOneById(c context.Context, eventID int32) *GetOneByIdResponse {
+	event, err := this.queries.GetOneById(c, eventID)
 	if err == pgx.ErrNoRows {
 		return nil
 	}
@@ -79,8 +80,8 @@ func (r *AdminEventRepository) GetOneById(c context.Context, eventID int32) *Get
 	return res.FromEntity(event)
 }
 
-func (r *AdminEventRepository) SoftDelete(c context.Context, eventID int32) {
-	err := r.queries.SoftDelete(c, eventID)
+func (this *AdminEventRepository) SoftDelete(c context.Context, eventID int32) {
+	err := this.queries.SoftDelete(c, eventID)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}

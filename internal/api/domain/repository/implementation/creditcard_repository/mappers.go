@@ -2,20 +2,20 @@ package creditcard_repository
 
 import "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/creditcard_connection"
 
-func (s *CreateParams) ToEntity() creditcard_connection.CreateParams {
+func (this *CreateParams) ToEntity() creditcard_connection.CreateParams {
 	return creditcard_connection.CreateParams{
-		Name:             s.Name,
-		Number:           s.Number,
-		Expiration:       s.Expiration,
-		Priority:         s.Priority,
-		NotifyExpiration: s.NotifyExpiration,
-		UserID:           s.UserID,
-		CreditcardTypeID: s.CreditcardTypeID,
-		CreditcardFlagID: s.CreditcardFlagID,
+		Name:             this.Name,
+		Number:           this.Number,
+		Expiration:       this.Expiration,
+		Priority:         this.Priority,
+		NotifyExpiration: this.NotifyExpiration,
+		UserID:           this.UserID,
+		CreditcardTypeID: this.CreditcardTypeID,
+		CreditcardFlagID: this.CreditcardFlagID,
 	}
 }
 
-func (s *CreateResponse) FromEntity(p creditcard_connection.FinCreditcard) CreateResponse {
+func (this *CreateResponse) FromEntity(p creditcard_connection.FinCreditcard) CreateResponse {
 	return CreateResponse{
 		ID:               p.ID,
 		Uuid:             p.Uuid,
@@ -33,22 +33,22 @@ func (s *CreateResponse) FromEntity(p creditcard_connection.FinCreditcard) Creat
 	}
 }
 
-func (s *UpdateParams) ToEntity() creditcard_connection.UpdateParams {
+func (this *UpdateParams) ToEntity() creditcard_connection.UpdateParams {
 	return creditcard_connection.UpdateParams{
-		Name:             s.Name,
-		Number:           s.Number,
-		Expiration:       s.Expiration,
-		Priority:         s.Priority,
-		NotifyExpiration: s.NotifyExpiration,
-		UserID:           s.UserID,
-		CreditcardTypeID: s.CreditcardTypeID,
-		CreditcardFlagID: s.CreditcardFlagID,
-		UpdatedAt:        s.UpdatedAt,
-		Uuid:             s.Uuid,
+		Name:             this.Name,
+		Number:           this.Number,
+		Expiration:       this.Expiration,
+		Priority:         this.Priority,
+		NotifyExpiration: this.NotifyExpiration,
+		UserID:           this.UserID,
+		CreditcardTypeID: this.CreditcardTypeID,
+		CreditcardFlagID: this.CreditcardFlagID,
+		UpdatedAt:        this.UpdatedAt,
+		Uuid:             this.Uuid,
 	}
 }
 
-func (s *GetAllUserCreditcardsResponse) FromEntity(p []creditcard_connection.UserCreditcard) []GetAllUserCreditcardsResponse {
+func (this *GetAllUserCreditcardsResponse) FromEntity(p []creditcard_connection.UserCreditcard) []GetAllUserCreditcardsResponse {
 	res := []GetAllUserCreditcardsResponse{}
 
 	for _, v := range p {

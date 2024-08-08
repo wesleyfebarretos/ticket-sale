@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
@@ -62,8 +62,8 @@ func TestUsersController(t *testing.T) {
 				Favorite:      newUserRequest.Address.Favorite,
 				State:         newUserRequest.Address.State,
 				City:          newUserRequest.Address.City,
-				UpdatedAt:     newUserRequest.Address.UpdatedAt,
-				CreatedAt:     newUserRequest.Address.CreatedAt,
+				UpdatedAt:     newUserResponse.Address.UpdatedAt,
+				CreatedAt:     newUserResponse.Address.CreatedAt,
 			},
 			Phone: user_controller.PhoneResponseDto{
 				ID:     newUserResponse.Phone.ID,
@@ -108,13 +108,12 @@ func TestUsersController(t *testing.T) {
 
 		res := TMakeRequest(t, http.MethodGet, "users", nil)
 
-		users := []users_repository.GetAllRow{}
+		users := []user_controller.GetAllResponseDto{}
 
 		test_utils.Decode(t, res.Body, &users)
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, 1, len(users))
-		assert.IsType(t, users_repository.GetAllRow{}, users[0])
 	}))
 
 	t.Run("it should get user full profile", TRun(func(t *testing.T) {
@@ -132,7 +131,7 @@ func TestUsersController(t *testing.T) {
 
 		defer res.Body.Close()
 
-		userFullProfileRes := users_repository.GetFullProfileRow{}
+		userFullProfileRes := user_controller.GetProfileResponseDto{}
 
 		err = json.Unmarshal(bSlice, &userFullProfileRes)
 		if err != nil {
@@ -177,7 +176,7 @@ func TestUsersController(t *testing.T) {
 			t.Fatalf("could not marshal json to bytes: %v", err)
 		}
 
-		expectedUserFullProfile := users_repository.GetFullProfileRow{}
+		expectedUserFullProfile := user_controller.GetProfileResponseDto{}
 
 		err = json.Unmarshal(expectedBSlice, &expectedUserFullProfile)
 		if err != nil {
@@ -191,20 +190,21 @@ func TestUsersController(t *testing.T) {
 	t.Run("it should get user by id", TRun(func(t *testing.T) {
 		user := test_data.NewUser(roles_enum.USER)
 		TSetCookieWithUser(t, user)
+
 		res := TMakeRequest(t, http.MethodGet, fmt.Sprintf("users/%d", user.ID), nil)
 
-		userResponse := &users_repository.GetOneByIdRow{}
-		expectedUser := users_repository.GetOneByIdRow{
-			ID:    user.ID,
+		userResponse := &user_controller.GetOneByIdResponseDto{}
+		expectedUser := user_controller.GetOneByIdResponseDto{
+			Id:    user.ID,
 			Email: user.Email,
-			Role:  user.Role,
+			Role:  string(user.Role),
 		}
 
 		test_utils.Decode(t, res.Body, &userResponse)
 
 		assert.NotEmpty(t, userResponse)
 		assert.Equal(t, http.StatusOK, res.StatusCode)
-		assert.Equal(t, expectedUser.ID, userResponse.ID)
+		assert.Equal(t, expectedUser.Id, userResponse.Id)
 		assert.Equal(t, expectedUser.Email, userResponse.Email)
 		assert.Equal(t, expectedUser.Role, userResponse.Role)
 	}))

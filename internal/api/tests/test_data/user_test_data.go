@@ -4,30 +4,45 @@ import (
 	"context"
 	"log"
 
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 const UserTestPassword = "123"
 
-func NewUser(role string) users_repository.GetOneWithPasswordByEmailRow {
+func NewUser(role string) *user_repository.GetOneWithPasswordByEmailResponse {
 	password, err := utils.HashPassword(UserTestPassword)
 	if err != nil {
 		log.Fatalf("could not hash password: %v", err)
 	}
 
-	newUser := users_repository.CreateParams{
+	newUser := user_repository.CreateParams{
 		FirstName: "John",
 		LastName:  "Doe",
 		Email:     "johndoetest@gmail.com",
 		Password:  password,
-		Role:      users_repository.Roles(role),
 	}
 
-	user, _ := repository.Users.Create(context.Background(), newUser)
+	_repository := user_repository.New()
 
-	nUser, _ := repository.Users.GetOneWithPasswordByEmail(context.Background(), user.Email)
+	ctx := context.Background()
+
+	user := _repository.Create(ctx, newUser)
+
+	if role == roles_enum.ADMIN {
+		repository.AdminUsers.Update(ctx, admin_users_repository.UpdateParams{
+			ID:        user.ID,
+			FirstName: user.FirstName,
+			LastName:  user.LastName,
+			Email:     user.Email,
+			Role:      roles_enum.ADMIN,
+		})
+	}
+
+	nUser := _repository.GetOneWithPasswordByEmail(ctx, user.Email)
 
 	return nUser
 }

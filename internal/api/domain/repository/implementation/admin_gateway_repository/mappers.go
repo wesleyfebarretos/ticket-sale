@@ -4,7 +4,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_gateway_connection"
 )
 
-func (s *CreateResponse) FromEntity(p admin_gateway_connection.FinGateway) CreateResponse {
+func (this *CreateResponse) FromEntity(p admin_gateway_connection.FinGateway) CreateResponse {
 	return CreateResponse{
 		ID:               p.ID,
 		Uuid:             p.Uuid,
@@ -34,53 +34,53 @@ func (s *CreateResponse) FromEntity(p admin_gateway_connection.FinGateway) Creat
 	}
 }
 
-func (s *CreateParams) ToEntity() admin_gateway_connection.CreateParams {
+func (this *CreateParams) ToEntity() admin_gateway_connection.CreateParams {
 	return admin_gateway_connection.CreateParams{
-		Name:             s.Name,
-		Description:      s.Description,
-		ClientID:         s.ClientID,
-		ClientSecret:     s.ClientSecret,
-		Order:            s.Order,
-		Active:           s.Active,
-		TestEnvironment:  s.TestEnvironment,
-		NotifUser:        s.NotifUser,
-		NotifPassword:    s.NotifPassword,
-		SoftDescriptor:   s.SoftDescriptor,
-		GatewayProcessID: s.GatewayProcessID,
-		WebhookUrl:       s.WebhookUrl,
-		Url:              s.Url,
-		AuthType:         admin_gateway_connection.GatewayAuthType(s.AuthType),
-		Use3ds:           s.Use3ds,
-		AdqCode3ds:       s.AdqCode3ds,
-		DefaultAdqCode:   s.DefaultAdqCode,
-		UseAntifraud:     s.UseAntifraud,
-		CreatedBy:        s.CreatedBy,
-		UpdatedBy:        s.UpdatedBy,
+		Name:             this.Name,
+		Description:      this.Description,
+		ClientID:         this.ClientID,
+		ClientSecret:     this.ClientSecret,
+		Order:            this.Order,
+		Active:           this.Active,
+		TestEnvironment:  this.TestEnvironment,
+		NotifUser:        this.NotifUser,
+		NotifPassword:    this.NotifPassword,
+		SoftDescriptor:   this.SoftDescriptor,
+		GatewayProcessID: this.GatewayProcessID,
+		WebhookUrl:       this.WebhookUrl,
+		Url:              this.Url,
+		AuthType:         admin_gateway_connection.GatewayAuthType(this.AuthType),
+		Use3ds:           this.Use3ds,
+		AdqCode3ds:       this.AdqCode3ds,
+		DefaultAdqCode:   this.DefaultAdqCode,
+		UseAntifraud:     this.UseAntifraud,
+		CreatedBy:        this.CreatedBy,
+		UpdatedBy:        this.UpdatedBy,
 	}
 }
 
-func (s *UpdateParams) ToEntity() admin_gateway_connection.UpdateParams {
+func (this *UpdateParams) ToEntity() admin_gateway_connection.UpdateParams {
 	return admin_gateway_connection.UpdateParams{
-		ID:               s.ID,
-		Name:             s.Name,
-		Description:      s.Description,
-		ClientID:         s.ClientID,
-		ClientSecret:     s.ClientSecret,
-		Order:            s.Order,
-		Active:           s.Active,
-		TestEnvironment:  s.TestEnvironment,
-		NotifUser:        s.NotifUser,
-		NotifPassword:    s.NotifPassword,
-		SoftDescriptor:   s.SoftDescriptor,
-		GatewayProcessID: s.GatewayProcessID,
-		WebhookUrl:       s.WebhookUrl,
-		Url:              s.Url,
-		AuthType:         admin_gateway_connection.GatewayAuthType(s.AuthType),
-		Use3ds:           s.Use3ds,
-		AdqCode3ds:       s.AdqCode3ds,
-		DefaultAdqCode:   s.DefaultAdqCode,
-		UseAntifraud:     s.UseAntifraud,
-		UpdatedBy:        s.UpdatedBy,
+		ID:               this.ID,
+		Name:             this.Name,
+		Description:      this.Description,
+		ClientID:         this.ClientID,
+		ClientSecret:     this.ClientSecret,
+		Order:            this.Order,
+		Active:           this.Active,
+		TestEnvironment:  this.TestEnvironment,
+		NotifUser:        this.NotifUser,
+		NotifPassword:    this.NotifPassword,
+		SoftDescriptor:   this.SoftDescriptor,
+		GatewayProcessID: this.GatewayProcessID,
+		WebhookUrl:       this.WebhookUrl,
+		Url:              this.Url,
+		AuthType:         admin_gateway_connection.GatewayAuthType(this.AuthType),
+		Use3ds:           this.Use3ds,
+		AdqCode3ds:       this.AdqCode3ds,
+		DefaultAdqCode:   this.DefaultAdqCode,
+		UseAntifraud:     this.UseAntifraud,
+		UpdatedBy:        this.UpdatedBy,
 	}
 }
 
@@ -134,10 +134,10 @@ func (_ *GetAllResponse) FromEntity(p []admin_gateway_connection.GatewayDetail) 
 	return r
 }
 
-func (s *SoftDeleteParams) ToEntity() admin_gateway_connection.SoftDeleteParams {
+func (this *SoftDeleteParams) ToEntity() admin_gateway_connection.SoftDeleteParams {
 	return admin_gateway_connection.SoftDeleteParams{
-		ID:        s.ID,
-		UpdatedBy: s.UpdatedBy,
+		ID:        this.ID,
+		UpdatedBy: this.UpdatedBy,
 	}
 }
 
@@ -184,16 +184,16 @@ func (_ *GetOneByIdResponse) FromEntity(p admin_gateway_connection.GatewayDetail
 	}
 }
 
-func (s *CreatePaymentTypesParams) ToEntity() admin_gateway_connection.CreatePaymentTypesParams {
+func (this *CreatePaymentTypesParams) ToEntity() admin_gateway_connection.CreatePaymentTypesParams {
 	return admin_gateway_connection.CreatePaymentTypesParams{
-		GatewayID:            s.GatewayID,
-		GatewayPaymentTypeID: s.GatewayPaymentTypeID,
-		CreatedBy:            s.CreatedBy,
-		UpdatedBy:            s.UpdatedBy,
+		GatewayID:            this.GatewayID,
+		GatewayPaymentTypeID: this.GatewayPaymentTypeID,
+		CreatedBy:            this.CreatedBy,
+		UpdatedBy:            this.UpdatedBy,
 	}
 }
 
-func (s *CreatePaymentTypesResponse) FromEntity(p admin_gateway_connection.FinGatewayPaymentTypeAssociation) CreatePaymentTypesResponse {
+func (this *CreatePaymentTypesResponse) FromEntity(p admin_gateway_connection.FinGatewayPaymentTypeAssociation) CreatePaymentTypesResponse {
 	return CreatePaymentTypesResponse{
 		ID:                   p.ID,
 		GatewayID:            p.GatewayID,

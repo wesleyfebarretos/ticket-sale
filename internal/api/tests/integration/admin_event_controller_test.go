@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_event_repository"

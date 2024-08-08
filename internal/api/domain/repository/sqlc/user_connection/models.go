@@ -2,11 +2,14 @@
 // versions:
 //   sqlc v1.26.0
 
-package users_repository
+package user_connection
 
 import (
 	"database/sql/driver"
 	"fmt"
+	"time"
+
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
 )
 
 type Roles string
@@ -71,4 +74,16 @@ func AllRolesValues() []Roles {
 		RolesWebservice,
 		RolesSuperadmin,
 	}
+}
+
+type UserProfile struct {
+	ID        int32                         `json:"id"`
+	FirstName string                        `json:"firstName"`
+	LastName  string                        `json:"lastName"`
+	Email     string                        `json:"email"`
+	Role      Roles                         `json:"role"`
+	CreatedAt time.Time                     `json:"createdAt"`
+	UpdatedAt time.Time                     `json:"updatedAt"`
+	Addresses []override.UserProfileAddress `json:"addresses"`
+	Phones    []override.UserProfilePhone   `json:"phones"`
 }

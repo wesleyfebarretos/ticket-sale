@@ -2,6 +2,7 @@ package user_phone_service
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_phones_repository"

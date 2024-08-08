@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/jackc/pgx/v4"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/creditcard_connection"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
@@ -28,15 +29,15 @@ func New() *CreditcardRepository {
 	return repository
 }
 
-func (r *CreditcardRepository) WithTx(tx pgx.Tx) *CreditcardRepository {
+func (this *CreditcardRepository) WithTx(tx pgx.Tx) *CreditcardRepository {
 	return &CreditcardRepository{
-		queries: r.queries.WithTx(tx),
+		queries: this.queries.WithTx(tx),
 	}
 }
 
-func (r *CreditcardRepository) Create(ctx context.Context, params CreateParams) CreateResponse {
+func (this *CreditcardRepository) Create(ctx context.Context, params CreateParams) CreateResponse {
 	entityParams := params.ToEntity()
-	createdCreditcard, err := r.queries.Create(ctx, entityParams)
+	createdCreditcard, err := this.queries.Create(ctx, entityParams)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -45,8 +46,8 @@ func (r *CreditcardRepository) Create(ctx context.Context, params CreateParams) 
 	return response.FromEntity(createdCreditcard)
 }
 
-func (r *CreditcardRepository) GetAllUserCreditcards(ctx context.Context, userID int32) []GetAllUserCreditcardsResponse {
-	userCreditcards, err := r.queries.GetAllUserCreditcards(ctx, userID)
+func (this *CreditcardRepository) GetAllUserCreditcards(ctx context.Context, userID int32) []GetAllUserCreditcardsResponse {
+	userCreditcards, err := this.queries.GetAllUserCreditcards(ctx, userID)
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -55,8 +56,8 @@ func (r *CreditcardRepository) GetAllUserCreditcards(ctx context.Context, userID
 	return response.FromEntity(userCreditcards)
 }
 
-func (r *CreditcardRepository) SoftDelete(ctx context.Context, params SoftDeleteParams) {
-	err := r.queries.SoftDelete(ctx, creditcard_connection.SoftDeleteParams{
+func (this *CreditcardRepository) SoftDelete(ctx context.Context, params SoftDeleteParams) {
+	err := this.queries.SoftDelete(ctx, creditcard_connection.SoftDeleteParams{
 		Uuid:      params.Uuid,
 		UpdatedAt: params.UpdatedAt,
 	})
@@ -66,8 +67,8 @@ func (r *CreditcardRepository) SoftDelete(ctx context.Context, params SoftDelete
 	}
 }
 
-func (r *CreditcardRepository) Update(ctx context.Context, params UpdateParams) {
-	err := r.queries.Update(ctx, params.ToEntity())
+func (this *CreditcardRepository) Update(ctx context.Context, params UpdateParams) {
+	err := this.queries.Update(ctx, params.ToEntity())
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}

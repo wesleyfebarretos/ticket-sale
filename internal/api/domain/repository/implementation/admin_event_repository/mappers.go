@@ -4,19 +4,19 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_event_connection"
 )
 
-func (s *CreateParams) ToEntity() admin_event_connection.CreateParams {
+func (this *CreateParams) ToEntity() admin_event_connection.CreateParams {
 	return admin_event_connection.CreateParams{
-		ProductID: s.ProductID,
-		StartAt:   s.StartAt,
-		EndAt:     s.EndAt,
-		City:      s.City,
-		State:     s.State,
-		Location:  s.Location,
-		CreatedBy: s.CreatedBy,
+		ProductID: this.ProductID,
+		StartAt:   this.StartAt,
+		EndAt:     this.EndAt,
+		City:      this.City,
+		State:     this.State,
+		Location:  this.Location,
+		CreatedBy: this.CreatedBy,
 	}
 }
 
-func (s *CreateResponse) FromEntity(p admin_event_connection.Event) CreateResponse {
+func (this *CreateResponse) FromEntity(p admin_event_connection.Event) CreateResponse {
 	return CreateResponse{
 		ID:        p.ID,
 		ProductID: p.ProductID,
@@ -32,19 +32,19 @@ func (s *CreateResponse) FromEntity(p admin_event_connection.Event) CreateRespon
 	}
 }
 
-func (s *UpdateParams) ToEntity() admin_event_connection.UpdateParams {
+func (this *UpdateParams) ToEntity() admin_event_connection.UpdateParams {
 	return admin_event_connection.UpdateParams{
-		ID:        s.ID,
-		StartAt:   s.StartAt,
-		EndAt:     s.EndAt,
-		City:      s.City,
-		State:     s.State,
-		Location:  s.Location,
-		UpdatedAt: s.UpdatedAt,
+		ID:        this.ID,
+		StartAt:   this.StartAt,
+		EndAt:     this.EndAt,
+		City:      this.City,
+		State:     this.State,
+		Location:  this.Location,
+		UpdatedAt: this.UpdatedAt,
 	}
 }
 
-func (s *GetAllResponse) FromEntity(p []admin_event_connection.EventsGetAll) []GetAllResponse {
+func (this *GetAllResponse) FromEntity(p []admin_event_connection.EventsGetAll) []GetAllResponse {
 	res := []GetAllResponse{}
 
 	for _, v := range p {
@@ -85,7 +85,7 @@ func (s *GetAllResponse) FromEntity(p []admin_event_connection.EventsGetAll) []G
 	return res
 }
 
-func (s *GetOneByIdResponse) FromEntity(p admin_event_connection.EventsDetail) *GetOneByIdResponse {
+func (this *GetOneByIdResponse) FromEntity(p admin_event_connection.EventsDetail) *GetOneByIdResponse {
 	creditcard := []PaymentTypeInstallmentResponse{}
 	paymentSlip := []PaymentTypeInstallmentResponse{}
 	pix := []PaymentTypeInstallmentResponse{}
@@ -169,5 +169,4 @@ func (s *GetOneByIdResponse) FromEntity(p admin_event_connection.EventsDetail) *
 			},
 		},
 	}
-
 }

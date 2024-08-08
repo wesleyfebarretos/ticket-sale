@@ -4,14 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/phone_types_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/user_address_service"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/user_phone_service"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/user_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_addresses_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_phones_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_repository"
 )
 
 // GetAll godoc
@@ -27,21 +22,9 @@ import (
 func GetAll(c *gin.Context) {
 	users := user_service.GetAll(c)
 
-	usersResponse := []GetAllResponseDto{}
+	usersResponse := GetAllResponseDto{}
 
-	for _, u := range users {
-		usersResponse = append(usersResponse, GetAllResponseDto{
-			Id:        u.ID,
-			FirstName: u.FirstName,
-			LastName:  u.LastName,
-			Email:     u.Email,
-			Role:      string(u.Role),
-			CreatedAt: u.CreatedAt,
-			UpdatedAt: u.UpdatedAt,
-		})
-	}
-
-	c.JSON(http.StatusOK, usersResponse)
+	c.JSON(http.StatusOK, usersResponse.FromDomain(users))
 }
 
 // GetOneById godoc
@@ -62,16 +45,9 @@ func GetOneById(c *gin.Context) {
 
 	user := user_service.GetOneById(c, id)
 
-	userResponse := GetOneByIdResponseDto{
-		Id:        user.ID,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Email:     user.Email,
-		Role:      string(user.Role),
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
-	c.JSON(http.StatusOK, userResponse)
+	userResponse := GetOneByIdResponseDto{}
+
+	c.JSON(http.StatusOK, userResponse.FromDomain(user))
 }
 
 // Create godoc
@@ -91,62 +67,13 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	createUser := users_repository.CreateParams{
-		Email:     body.Email,
-		FirstName: body.FirstName,
-		LastName:  body.LastName,
-		Password:  body.Password,
-	}
+	domainBody := body.ToDomain()
 
-	newUserResponse := user_service.Create(c, createUser)
+	newUserResponse := user_service.Create(c, domainBody)
 
-	createUserAddress := users_addresses_repository.CreateParams{
-		UserID:        int32(newUserResponse.ID),
-		AddressType:   body.Address.AddressType,
-		StreetAddress: body.Address.StreetAddress,
-		City:          body.Address.City,
-		Complement:    body.Address.Complement,
-		State:         body.Address.State,
-		PostalCode:    body.Address.PostalCode,
-		Country:       body.Address.Country,
-		Favorite:      body.Address.Favorite,
-	}
-	newUserAddress := user_address_service.Create(c, createUserAddress)
+	res := CreateResponseDto{}
 
-	newUserPhone := user_phone_service.Create(c, users_phones_repository.CreateParams{
-		UserID: newUserResponse.ID,
-		Ddd:    body.Phone.Ddd,
-		Number: body.Phone.Number,
-		Type:   phone_types_enum.PHONE,
-	})
-
-	newUser := CreateResponseDto{
-		Id:        int(newUserResponse.ID),
-		Email:     newUserResponse.Email,
-		FirstName: newUserResponse.FirstName,
-		LastName:  newUserResponse.LastName,
-		Role:      string(newUserResponse.Role),
-		Address: AddressResponseDto{
-			ID:            newUserAddress.ID,
-			UserID:        newUserAddress.UserID,
-			City:          newUserAddress.City,
-			State:         newUserAddress.State,
-			Country:       newUserAddress.Country,
-			Complement:    newUserAddress.Complement,
-			Favorite:      newUserAddress.Favorite,
-			PostalCode:    newUserAddress.PostalCode,
-			AddressType:   newUserAddress.AddressType,
-			StreetAddress: newUserAddress.StreetAddress,
-		},
-		Phone: PhoneResponseDto{
-			ID:     newUserPhone.ID,
-			UserID: newUserPhone.UserID,
-			Ddd:    newUserPhone.Ddd,
-			Number: newUserPhone.Number,
-		},
-	}
-
-	c.JSON(http.StatusCreated, newUser)
+	c.JSON(http.StatusCreated, res.FromDomain(newUserResponse))
 }
 
 // UpdateUser godoc
@@ -166,18 +93,12 @@ func Create(c *gin.Context) {
 //	@Router			/users/{id} [put]
 func Update(c *gin.Context) {
 	user := controller.GetClaims(c)
+
 	body := UpdateRequestDto{}
 
 	controller.ReadBody(c, &body)
 
-	updateUser := users_repository.UpdateParams{
-		ID:        user.Id,
-		FirstName: body.FirstName,
-		LastName:  body.LastName,
-		Email:     body.Email,
-	}
-
-	user_service.Update(c, updateUser)
+	user_service.Update(c, body.ToDomain(user.Id))
 
 	c.JSON(http.StatusOK, true)
 }
@@ -187,5 +108,7 @@ func GetFullProfile(c *gin.Context) {
 
 	user := user_service.GetFullProfile(c, claims.Id)
 
-	c.JSON(http.StatusOK, user)
+	res := GetProfileResponseDto{}
+
+	c.JSON(http.StatusOK, res.FromDomain(user))
 }

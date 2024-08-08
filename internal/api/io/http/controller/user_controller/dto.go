@@ -90,3 +90,36 @@ type PhoneResponseDto struct {
 	Ddd    string `json:"ddd" example:"021"`
 	Number string `json:"number" example:"999999999"`
 }
+
+type GetProfileResponseDto struct {
+	ID        int32                           `json:"id"`
+	FirstName string                          `json:"firstName"`
+	LastName  string                          `json:"lastName"`
+	Email     string                          `json:"email"`
+	Role      string                          `json:"role"`
+	CreatedAt time.Time                       `json:"createdAt"`
+	UpdatedAt time.Time                       `json:"updatedAt"`
+	Addresses []UserProfileAddressResponseDto `json:"addresses"`
+	Phones    []UserProfilePhoneResponseDto   `json:"phones"`
+}
+
+type UserProfilePhoneResponseDto struct {
+	ID     int32  `json:"id" example:"1"`
+	UserID int32  `json:"userId" example:"2"`
+	DDD    string `json:"ddd" example:"021"`
+	Number string `json:"number" example:"999999999"`
+	Type   string `json:"type" example:"phone"`
+}
+
+type UserProfileAddressResponseDto struct {
+	ID            int32   `json:"id" example:"1"`
+	UserID        int32   `json:"userId" example:"1"`
+	Favorite      *bool   `json:"favorite" example:"true"`
+	Complement    *string `json:"complement" example:"Apt 101"`
+	PostalCode    *string `json:"postalCode" example:"12345"`
+	AddressType   *string `json:"addressType" example:"home"`
+	StreetAddress string  `json:"streetAddress" example:"123 Main St"`
+	City          string  `json:"city" example:"Springfield"`
+	State         string  `json:"state" example:"IL"`
+	Country       string  `json:"country" example:"USA"`
+}

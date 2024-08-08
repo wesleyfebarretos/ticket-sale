@@ -9,10 +9,10 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
@@ -73,10 +73,7 @@ func InitJWT() {
 func loginHandler(c *gin.Context) (interface{}, error) {
 	body := SignInRequest{}
 	readBody(c, &body)
-	user, err := repository.Users.GetOneWithPasswordByEmail(c, body.Email)
-	if err != nil {
-		return nil, jwt.ErrFailedAuthentication
-	}
+	user := user_repository.New().GetOneWithPasswordByEmail(c, body.Email)
 
 	if !utils.ComparePassword(user.Password, body.Password) {
 		return nil, jwt.ErrFailedAuthentication
@@ -100,7 +97,7 @@ func readBody(c *gin.Context, body any) {
 }
 
 func payloadHandler(data interface{}) jwt.MapClaims {
-	user := data.(users_repository.GetOneWithPasswordByEmailRow)
+	user := data.(*user_repository.GetOneWithPasswordByEmailResponse)
 
 	return jwt.MapClaims{
 		"id":   user.ID,

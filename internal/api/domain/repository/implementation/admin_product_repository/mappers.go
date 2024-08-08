@@ -4,7 +4,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_product_connection"
 )
 
-func (s *CreateResponse) FromEntity(p admin_product_connection.Product) CreateResponse {
+func (this *CreateResponse) FromEntity(p admin_product_connection.Product) CreateResponse {
 	return CreateResponse{
 		ID:             p.ID,
 		Name:           p.Name,
@@ -25,34 +25,34 @@ func (s *CreateResponse) FromEntity(p admin_product_connection.Product) CreateRe
 	}
 }
 
-func (s *CreateParams) ToEntity() admin_product_connection.CreateParams {
+func (this *CreateParams) ToEntity() admin_product_connection.CreateParams {
 	return admin_product_connection.CreateParams{
-		Name:           s.Name,
-		Description:    s.Description,
-		Price:          s.Price,
-		DiscountPrice:  s.DiscountPrice,
-		Active:         s.Active,
-		Image:          s.Image,
-		ImageMobile:    s.ImageMobile,
-		ImageThumbnail: s.ImageThumbnail,
-		CategoryID:     s.CategoryID,
-		CreatedBy:      s.CreatedBy,
+		Name:           this.Name,
+		Description:    this.Description,
+		Price:          this.Price,
+		DiscountPrice:  this.DiscountPrice,
+		Active:         this.Active,
+		Image:          this.Image,
+		ImageMobile:    this.ImageMobile,
+		ImageThumbnail: this.ImageThumbnail,
+		CategoryID:     this.CategoryID,
+		CreatedBy:      this.CreatedBy,
 	}
 }
 
-func (s *UpdateParams) ToEntity() admin_product_connection.UpdateParams {
+func (this *UpdateParams) ToEntity() admin_product_connection.UpdateParams {
 	return admin_product_connection.UpdateParams{
-		Name:           s.Name,
-		Description:    s.Description,
-		Price:          s.Price,
-		DiscountPrice:  s.DiscountPrice,
-		Active:         s.Active,
-		Image:          s.Image,
-		ImageMobile:    s.ImageMobile,
-		ImageThumbnail: s.ImageThumbnail,
-		CategoryID:     s.CategoryID,
-		UpdatedBy:      s.UpdatedBy,
-		ID:             s.ID,
+		Name:           this.Name,
+		Description:    this.Description,
+		Price:          this.Price,
+		DiscountPrice:  this.DiscountPrice,
+		Active:         this.Active,
+		Image:          this.Image,
+		ImageMobile:    this.ImageMobile,
+		ImageThumbnail: this.ImageThumbnail,
+		CategoryID:     this.CategoryID,
+		UpdatedBy:      this.UpdatedBy,
+		ID:             this.ID,
 	}
 }
 
@@ -78,16 +78,15 @@ func (_ *GetAllResponse) FromEntity(p []admin_product_connection.Product) []GetA
 			CreatedAt:      v.CreatedAt,
 			UpdatedAt:      v.UpdatedAt,
 		})
-
 	}
 
 	return r
 }
 
-func (s *SoftDeleteParams) ToEntity() admin_product_connection.SoftDeleteParams {
+func (this *SoftDeleteParams) ToEntity() admin_product_connection.SoftDeleteParams {
 	return admin_product_connection.SoftDeleteParams{
-		ID:        s.ID,
-		UpdatedBy: s.UpdatedBy,
+		ID:        this.ID,
+		UpdatedBy: this.UpdatedBy,
 	}
 }
 
@@ -103,7 +102,6 @@ func (_ *GetOneByIdResponse) FromEntity(p admin_product_connection.ProductsDetai
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 
 	for _, v := range p.Installments.PaymentSlip {
@@ -113,7 +111,6 @@ func (_ *GetOneByIdResponse) FromEntity(p admin_product_connection.ProductsDetai
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 	for _, v := range p.Installments.Pix {
 		pix = append(pix, PaymentTypeInstallment{
@@ -122,7 +119,6 @@ func (_ *GetOneByIdResponse) FromEntity(p admin_product_connection.ProductsDetai
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 
 	stock := &ProductStockResponse{}
@@ -167,7 +163,7 @@ func (_ *GetOneByIdResponse) FromEntity(p admin_product_connection.ProductsDetai
 	}
 }
 
-func (s *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDetail) *GetOneByUuidResponse {
+func (this *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDetail) *GetOneByUuidResponse {
 	creditcard := []PaymentTypeInstallment{}
 	paymentSlip := []PaymentTypeInstallment{}
 	pix := []PaymentTypeInstallment{}
@@ -179,7 +175,6 @@ func (s *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDet
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 
 	for _, v := range p.Installments.PaymentSlip {
@@ -189,7 +184,6 @@ func (s *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDet
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 	for _, v := range p.Installments.Pix {
 		pix = append(pix, PaymentTypeInstallment{
@@ -198,7 +192,6 @@ func (s *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDet
 			Fee:                 v.Fee,
 			Tariff:              v.Tariff,
 		})
-
 	}
 
 	stock := &ProductStockResponse{}
@@ -243,7 +236,7 @@ func (s *GetOneByUuidResponse) FromEntity(p admin_product_connection.ProductsDet
 	}
 }
 
-func (s *GetAllInstallmentTimeResponse) FromEntity(p []admin_product_connection.GetAllProductInstallmentTimesRow) []GetAllInstallmentTimeResponse {
+func (this *GetAllInstallmentTimeResponse) FromEntity(p []admin_product_connection.GetAllProductInstallmentTimesRow) []GetAllInstallmentTimeResponse {
 	res := []GetAllInstallmentTimeResponse{}
 	for _, v := range p {
 		res = append(res, GetAllInstallmentTimeResponse{
@@ -258,7 +251,7 @@ func (s *GetAllInstallmentTimeResponse) FromEntity(p []admin_product_connection.
 	return res
 }
 
-func (s *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.ProductsDetail) []GetAllWithDetailsResponse {
+func (this *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.ProductsDetail) []GetAllWithDetailsResponse {
 	res := []GetAllWithDetailsResponse{}
 
 	for _, pd := range p {
@@ -273,7 +266,6 @@ func (s *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.Prod
 				Fee:                 v.Fee,
 				Tariff:              v.Tariff,
 			})
-
 		}
 
 		for _, v := range pd.Installments.PaymentSlip {
@@ -283,7 +275,6 @@ func (s *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.Prod
 				Fee:                 v.Fee,
 				Tariff:              v.Tariff,
 			})
-
 		}
 		for _, v := range pd.Installments.Pix {
 			pix = append(pix, PaymentTypeInstallment{
@@ -292,7 +283,6 @@ func (s *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.Prod
 				Fee:                 v.Fee,
 				Tariff:              v.Tariff,
 			})
-
 		}
 
 		stock := &ProductStockResponse{}
@@ -340,18 +330,18 @@ func (s *GetAllWithDetailsResponse) FromEntity(p []admin_product_connection.Prod
 	return res
 }
 
-func (s *CreateInstallmentsParams) ToEntity() admin_product_connection.CreateInstallmentsParams {
+func (this *CreateInstallmentsParams) ToEntity() admin_product_connection.CreateInstallmentsParams {
 	return admin_product_connection.CreateInstallmentsParams{
-		ProductID:         s.ProductID,
-		PaymentTypeID:     s.PaymentTypeID,
-		InstallmentTimeID: s.InstallmentTimeID,
-		Fee:               s.Fee,
-		Tariff:            s.Tariff,
-		CreatedBy:         s.CreatedBy,
+		ProductID:         this.ProductID,
+		PaymentTypeID:     this.PaymentTypeID,
+		InstallmentTimeID: this.InstallmentTimeID,
+		Fee:               this.Fee,
+		Tariff:            this.Tariff,
+		CreatedBy:         this.CreatedBy,
 	}
 }
 
-func (s *CreateInstallmentsResponse) FromEntity(p []admin_product_connection.FinProductPaymentTypeInstallmentTime) []CreateInstallmentsResponse {
+func (this *CreateInstallmentsResponse) FromEntity(p []admin_product_connection.FinProductPaymentTypeInstallmentTime) []CreateInstallmentsResponse {
 	res := []CreateInstallmentsResponse{}
 
 	for _, v := range p {

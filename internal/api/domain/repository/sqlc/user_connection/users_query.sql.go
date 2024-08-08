@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: users_query.sql
 
-package users_repository
+package user_connection
 
 import (
 	"context"
@@ -165,87 +165,6 @@ func (q *Queries) GetAll(ctx context.Context, role Roles) ([]GetAllRow, error) {
 		return nil, err
 	}
 	return items, nil
-}
-
-const getFullProfile = `-- name: GetFullProfile :one
-SELECT 
-    u.id, 
-    u.first_name,
-    u.last_name,
-    u.email,
-    u.role,
-    u.created_at,
-    u.updated_at,
-    COALESCE(
-        json_agg(
-            json_build_object(
-                'id', ua.id,
-                'userId', ua.user_id,
-                'streetAddress', ua.street_address,
-                'city', ua.city,
-                'complement', ua.complement,
-                'state', ua.state,
-                'postalCode', ua.postal_code,
-                'country', ua.country,
-                'addressType', ua.address_type,
-                'favorite', ua.favorite
-            ) ORDER BY ua.favorite DESC
-        ) FILTER (WHERE ua.id IS NOT NULL), '[]'::json
-    ) AS addresses,
-    COALESCE(
-        json_agg(
-            json_build_object(
-                'id', up.id,
-                'userId', up.user_id,
-                'ddd', up.ddd,
-                'number', up.number,
-                'type', up.type
-            ) ORDER BY up.id ASC
-        ) FILTER (WHERE up.id IS NOT NULL), '[]'::json
-    ) AS phones
-FROM 
-    users AS u
-LEFT JOIN 
-    users_addresses AS ua
-ON 
-    u.id = ua.user_id
-LEFT JOIN
-    users_phones as up
-ON
-    u.id = up.user_id
-WHERE 
-    u.id = $1 
-GROUP BY u.id 
-LIMIT 1
-`
-
-type GetFullProfileRow struct {
-	ID        int32       `json:"id"`
-	FirstName string      `json:"firstName"`
-	LastName  string      `json:"lastName"`
-	Email     string      `json:"email"`
-	Role      Roles       `json:"role"`
-	CreatedAt time.Time   `json:"createdAt"`
-	UpdatedAt time.Time   `json:"updatedAt"`
-	Addresses interface{} `json:"addresses"`
-	Phones    interface{} `json:"phones"`
-}
-
-func (q *Queries) GetFullProfile(ctx context.Context, id int32) (GetFullProfileRow, error) {
-	row := q.db.QueryRow(ctx, getFullProfile, id)
-	var i GetFullProfileRow
-	err := row.Scan(
-		&i.ID,
-		&i.FirstName,
-		&i.LastName,
-		&i.Email,
-		&i.Role,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.Addresses,
-		&i.Phones,
-	)
-	return i, err
 }
 
 const getOneByEmail = `-- name: GetOneByEmail :one
@@ -426,6 +345,27 @@ func (q *Queries) GetOneWithPasswordByEmail(ctx context.Context, email string) (
 		&i.LastName,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getProfile = `-- name: GetProfile :one
+SELECT id, first_name, last_name, email, role, created_at, updated_at, addresses, phones FROM user_profile WHERE id = $1
+`
+
+func (q *Queries) GetProfile(ctx context.Context, id int32) (UserProfile, error) {
+	row := q.db.QueryRow(ctx, getProfile, id)
+	var i UserProfile
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Addresses,
+		&i.Phones,
 	)
 	return i, err
 }

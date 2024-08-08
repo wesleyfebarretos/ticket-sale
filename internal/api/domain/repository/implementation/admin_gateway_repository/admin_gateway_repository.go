@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/jackc/pgx/v4"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_gateway_connection"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
@@ -29,14 +30,14 @@ func New() *AdminGatewayRepository {
 	return repository
 }
 
-func (r *AdminGatewayRepository) WithTx(tx pgx.Tx) *AdminGatewayRepository {
+func (this *AdminGatewayRepository) WithTx(tx pgx.Tx) *AdminGatewayRepository {
 	return &AdminGatewayRepository{
-		queries: r.queries.WithTx(tx),
+		queries: this.queries.WithTx(tx),
 	}
 }
 
-func (r *AdminGatewayRepository) Create(ctx context.Context, createParams CreateParams) CreateResponse {
-	newGateway, err := r.queries.Create(ctx, createParams.ToEntity())
+func (this *AdminGatewayRepository) Create(ctx context.Context, createParams CreateParams) CreateResponse {
+	newGateway, err := this.queries.Create(ctx, createParams.ToEntity())
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
@@ -46,13 +47,13 @@ func (r *AdminGatewayRepository) Create(ctx context.Context, createParams Create
 	return res.FromEntity(newGateway)
 }
 
-func (r *AdminGatewayRepository) CreatePaymentTypes(ctx context.Context, createParams []CreatePaymentTypesParams) []CreatePaymentTypesResponse {
+func (this *AdminGatewayRepository) CreatePaymentTypes(ctx context.Context, createParams []CreatePaymentTypesParams) []CreatePaymentTypesResponse {
 	paymentTypes := []admin_gateway_connection.CreatePaymentTypesParams{}
 	for _, v := range createParams {
 		paymentTypes = append(paymentTypes, v.ToEntity())
 	}
 
-	paymentTypesBatch := r.queries.CreatePaymentTypes(ctx, paymentTypes)
+	paymentTypesBatch := this.queries.CreatePaymentTypes(ctx, paymentTypes)
 
 	newPaymentTypes := []admin_gateway_connection.FinGatewayPaymentTypeAssociation{}
 
@@ -74,8 +75,8 @@ func (r *AdminGatewayRepository) CreatePaymentTypes(ctx context.Context, createP
 	return res
 }
 
-func (r *AdminGatewayRepository) Update(ctx context.Context, updateParams UpdateParams) bool {
-	err := r.queries.Update(ctx, updateParams.ToEntity())
+func (this *AdminGatewayRepository) Update(ctx context.Context, updateParams UpdateParams) bool {
+	err := this.queries.Update(ctx, updateParams.ToEntity())
 	if err == pgx.ErrNoRows {
 		return false
 	}
@@ -86,8 +87,8 @@ func (r *AdminGatewayRepository) Update(ctx context.Context, updateParams Update
 	return true
 }
 
-func (r *AdminGatewayRepository) SoftDelete(ctx context.Context, softDeleteParams SoftDeleteParams) bool {
-	err := r.queries.SoftDelete(ctx, softDeleteParams.ToEntity())
+func (this *AdminGatewayRepository) SoftDelete(ctx context.Context, softDeleteParams SoftDeleteParams) bool {
+	err := this.queries.SoftDelete(ctx, softDeleteParams.ToEntity())
 	if err == pgx.ErrNoRows {
 		return false
 	}
@@ -98,8 +99,8 @@ func (r *AdminGatewayRepository) SoftDelete(ctx context.Context, softDeleteParam
 	return true
 }
 
-func (r *AdminGatewayRepository) GetOneById(ctx context.Context, id int32) *GetOneByIdResponse {
-	gateway, err := r.queries.GetOneById(ctx, id)
+func (this *AdminGatewayRepository) GetOneById(ctx context.Context, id int32) *GetOneByIdResponse {
+	gateway, err := this.queries.GetOneById(ctx, id)
 
 	if err == pgx.ErrNoRows {
 		return nil
@@ -114,8 +115,8 @@ func (r *AdminGatewayRepository) GetOneById(ctx context.Context, id int32) *GetO
 	return res.FromEntity(gateway)
 }
 
-func (r *AdminGatewayRepository) GetAll(ctx context.Context) []GetAllResponse {
-	gateways, err := r.queries.GetAll(ctx)
+func (this *AdminGatewayRepository) GetAll(ctx context.Context) []GetAllResponse {
+	gateways, err := this.queries.GetAll(ctx)
 	if err == pgx.ErrNoRows {
 		return []GetAllResponse{}
 	}

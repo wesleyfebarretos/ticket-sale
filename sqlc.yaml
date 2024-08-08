@@ -7,8 +7,8 @@ sql:
     queries: "internal/api/domain/repository/query/users_query.sql"
     gen:
       go: &default_configs
-        package: "users_repository"
-        out: "internal/api/domain/repository/sqlc/users_repository"
+        package: "user_connection"
+        out: "internal/api/domain/repository/sqlc/user_connection"
         sql_package: "pgx/v4"
         emit_json_tags: true
         emit_empty_slices: true
@@ -17,6 +17,17 @@ sql:
         emit_enum_valid_method: true
         emit_all_enum_values: true
         omit_unused_structs: true
+        overrides:
+          - column: "user_profile.phones"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: UserProfilePhone
+              slice: true
+          - column: "user_profile.addresses"
+            go_type:
+              import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
+              type: UserProfileAddress
+              slice: true
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/users_addresses_query.sql"

@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	_ "github.com/wesleyfebarretos/ticket-sale/internal/api/docs"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
