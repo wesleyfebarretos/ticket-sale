@@ -25,7 +25,7 @@ func GetAll(c *gin.Context) {
 
 	res := GetAllResponseDto{}
 
-	c.JSON(http.StatusOK, res.FromEntity(adminUsers))
+	c.JSON(http.StatusOK, res.FromDomain(adminUsers))
 }
 
 // GetAdminUserById godoc
@@ -49,7 +49,7 @@ func GetOneById(c *gin.Context) {
 
 	res := GetOneByIdResponseDto{}
 
-	c.JSON(http.StatusOK, res.FromEntity(adminUser))
+	c.JSON(http.StatusOK, res.FromDomain(adminUser))
 }
 
 // GetAdminUserByEmail godoc
@@ -74,7 +74,7 @@ func GetOneByEmail(c *gin.Context) {
 
 	res := GetOneByEmailResponseDto{}
 
-	c.JSON(http.StatusOK, res.FromEntity(adminUser))
+	c.JSON(http.StatusOK, res.FromDomain(adminUser))
 }
 
 // CreateAdminUser godoc
@@ -95,11 +95,11 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	newAdminUser := admin_user_service.Create(c, body.ToEntity())
+	newAdminUser := admin_user_service.Create(c, body.ToDomain())
 
 	res := CreateResponseDto{}
 
-	c.JSON(http.StatusCreated, res.FromEntity(newAdminUser))
+	c.JSON(http.StatusCreated, res.FromDomain(newAdminUser))
 }
 
 // UpdateAdminUser godoc
@@ -124,7 +124,7 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	admin_user_service.Update(c, body.ToEntity(id))
+	admin_user_service.Update(c, body.ToDomain(id))
 
 	c.JSON(http.StatusOK, true)
 }

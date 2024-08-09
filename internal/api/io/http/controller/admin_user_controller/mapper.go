@@ -5,7 +5,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_user_repository"
 )
 
-func (this *GetAllResponseDto) FromEntity(p []admin_user_repository.GetAllResponse) []GetAllResponseDto {
+func (this *GetAllResponseDto) FromDomain(p []admin_user_repository.GetAllResponse) []GetAllResponseDto {
 	res := []GetAllResponseDto{}
 
 	for _, v := range p {
@@ -22,7 +22,7 @@ func (this *GetAllResponseDto) FromEntity(p []admin_user_repository.GetAllRespon
 	return res
 }
 
-func (this *GetOneByIdResponseDto) FromEntity(p *admin_user_repository.GetOneByIdResponse) GetOneByIdResponseDto {
+func (this *GetOneByIdResponseDto) FromDomain(p *admin_user_repository.GetOneByIdResponse) GetOneByIdResponseDto {
 	return GetOneByIdResponseDto{
 		ID:        p.ID,
 		FirstName: p.FirstName,
@@ -34,7 +34,7 @@ func (this *GetOneByIdResponseDto) FromEntity(p *admin_user_repository.GetOneByI
 	}
 }
 
-func (this *GetOneByEmailResponseDto) FromEntity(p *admin_user_repository.GetOneByEmailResponse) GetOneByEmailResponseDto {
+func (this *GetOneByEmailResponseDto) FromDomain(p *admin_user_repository.GetOneByEmailResponse) GetOneByEmailResponseDto {
 	return GetOneByEmailResponseDto{
 		ID:        p.ID,
 		FirstName: p.FirstName,
@@ -46,7 +46,7 @@ func (this *GetOneByEmailResponseDto) FromEntity(p *admin_user_repository.GetOne
 	}
 }
 
-func (this *CreateRequestDto) ToEntity() admin_user_repository.CreateParams {
+func (this *CreateRequestDto) ToDomain() admin_user_repository.CreateParams {
 	return admin_user_repository.CreateParams{
 		FirstName: this.FirstName,
 		LastName:  this.LastName,
@@ -56,7 +56,7 @@ func (this *CreateRequestDto) ToEntity() admin_user_repository.CreateParams {
 	}
 }
 
-func (this *CreateResponseDto) FromEntity(p admin_user_repository.CreateResponse) CreateResponseDto {
+func (this *CreateResponseDto) FromDomain(p admin_user_repository.CreateResponse) CreateResponseDto {
 	return CreateResponseDto{
 		ID:        p.ID,
 		FirstName: p.FirstName,
@@ -68,7 +68,7 @@ func (this *CreateResponseDto) FromEntity(p admin_user_repository.CreateResponse
 	}
 }
 
-func (this *UpdateRequestDto) ToEntity(userID int32) admin_user_repository.UpdateParams {
+func (this *UpdateRequestDto) ToDomain(userID int32) admin_user_repository.UpdateParams {
 	return admin_user_repository.UpdateParams{
 		ID:        userID,
 		FirstName: this.FirstName,
