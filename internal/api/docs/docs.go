@@ -3681,7 +3681,7 @@ const docTemplate = `{
                 "number": {
                     "type": "string",
                     "minLength": 8,
-                    "example": "5574********9379"
+                    "example": "5574723384289379"
                 },
                 "priority": {
                     "type": "integer",

@@ -1404,7 +1404,7 @@ definitions:
         example: true
         type: boolean
       number:
-        example: 5574********9379
+        example: "5574723384289379"
         minLength: 8
         type: string
       priority:

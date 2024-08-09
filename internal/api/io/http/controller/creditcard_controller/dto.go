@@ -31,7 +31,7 @@ type GetAllUserCreditcardsResponseDto struct {
 
 type CreateRequestDto struct {
 	Name             string    `json:"name" binding:"required" example:"Testing"`
-	Number           string    `json:"number" binding:"required,min=8" example:"5574********9379"`
+	Number           string    `json:"number" binding:"required,min=8" example:"5574723384289379"`
 	Expiration       time.Time `json:"expiration" binding:"required" example:"2025-01-01T00:00:00Z"`
 	Priority         int32     `json:"priority" example:"1"`
 	NotifyExpiration bool      `json:"notifyExpiration" example:"true"`
