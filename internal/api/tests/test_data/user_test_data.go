@@ -5,9 +5,8 @@ import (
 	"log"
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
@@ -33,7 +32,7 @@ func NewUser(role string) *user_repository.GetOneWithPasswordByEmailResponse {
 	user := _repository.Create(ctx, newUser)
 
 	if role == roles_enum.ADMIN {
-		repository.AdminUsers.Update(ctx, admin_users_repository.UpdateParams{
+		admin_user_repository.New().Update(ctx, admin_user_repository.UpdateParams{
 			ID:        user.ID,
 			FirstName: user.FirstName,
 			LastName:  user.LastName,

@@ -1,9 +1,9 @@
 package user_controller
 
 import (
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_address_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_phone_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_addresses_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_phones_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/user_service"
 )
 
@@ -45,7 +45,7 @@ func (this *CreateRequestDto) ToDomain() user_service.CreateParams {
 			Email:     this.Email,
 			Password:  this.Password,
 		},
-		Address: users_addresses_repository.CreateParams{
+		Address: user_address_repository.CreateParams{
 			StreetAddress: this.Address.StreetAddress,
 			City:          this.Address.City,
 			Complement:    this.Address.Complement,
@@ -55,7 +55,7 @@ func (this *CreateRequestDto) ToDomain() user_service.CreateParams {
 			AddressType:   this.Address.AddressType,
 			Favorite:      this.Address.Favorite,
 		},
-		Phone: users_phones_repository.CreateParams{
+		Phone: user_phone_repository.CreateParams{
 			Ddd:    this.Phone.Ddd,
 			Number: this.Phone.Number,
 		},

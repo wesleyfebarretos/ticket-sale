@@ -3,7 +3,7 @@
 //   sqlc v1.26.0
 // source: admin_users_query.sql
 
-package admin_users_repository
+package admin_user_connection
 
 import (
 	"context"

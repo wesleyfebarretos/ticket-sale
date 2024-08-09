@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package admin_users_repository
+package admin_user_connection
 
 import (
 	"database/sql/driver"

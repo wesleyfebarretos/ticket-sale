@@ -9,7 +9,6 @@ import (
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	_ "github.com/wesleyfebarretos/ticket-sale/internal/api/docs"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/routes"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
 )
@@ -39,7 +38,6 @@ func main() {
 	defer db.Conn.Close()
 
 	router := routes.Bind()
-	repository.Bind()
 
 	if err := router.Run(fmt.Sprintf(":%s", config.Envs.Port)); err != nil {
 		log.Fatalf("Error on starting API: %v", err)

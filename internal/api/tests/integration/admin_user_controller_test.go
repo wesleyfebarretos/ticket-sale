@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/jackc/pgx/v4"
 	"github.com/stretchr/testify/assert"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_user_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
@@ -67,11 +66,11 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &updateAdminUserResponse)
 
-		updatedUser, err := repository.AdminUsers.GetOneById(context.Background(), admin_users_repository.GetOneByIdParams{
+		updatedUser := admin_user_repository.New().GetOneById(context.Background(), admin_user_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
-		if err != nil {
+		if updatedUser == nil {
 			t.Errorf("updated admin user of id %d not found", adminUser.ID)
 		}
 
@@ -92,12 +91,12 @@ func TestAdminUsersController(t *testing.T) {
 		TSetCookieWithUser(t, adminUser)
 		ctx := context.Background()
 
-		beforeDeleteAdminUser, err := repository.AdminUsers.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
+		beforeDeleteAdminUser := admin_user_repository.New().GetOneById(ctx, admin_user_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
-		if err != nil && err != pgx.ErrNoRows {
-			t.Error(err)
+		if beforeDeleteAdminUser == nil {
+			t.Error("admin user not found")
 		}
 
 		res := TMakeRequest(t, http.MethodDelete, fmt.Sprintf("admin/users/%d", adminUser.ID), nil)
@@ -106,7 +105,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		test_utils.Decode(t, res.Body, &deleteAdminUsersResponse)
 
-		_, err = repository.AdminUsers.GetOneById(ctx, admin_users_repository.GetOneByIdParams{
+		user := admin_user_repository.New().GetOneById(ctx, admin_user_repository.GetOneByIdParams{
 			ID:   adminUser.ID,
 			Role: roles_enum.ADMIN,
 		})
@@ -114,8 +113,7 @@ func TestAdminUsersController(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 		assert.Equal(t, true, deleteAdminUsersResponse)
 		assert.GreaterOrEqual(t, beforeDeleteAdminUser.ID, int32(1))
-		assert.Error(t, err)
-		assert.ErrorContains(t, err, "no rows in result set")
+		assert.Nil(t, user)
 	}))
 
 	t.Run("it should get one by id", TRun(func(t *testing.T) {
@@ -174,7 +172,7 @@ func TestAdminUsersController(t *testing.T) {
 
 		ctx := context.Background()
 		for i := 0; i < 10; i++ {
-			repository.AdminUsers.Create(ctx, admin_users_repository.CreateParams{
+			admin_user_repository.New().Create(ctx, admin_user_repository.CreateParams{
 				FirstName: "John",
 				LastName:  "Doe",
 				Email:     fmt.Sprintf("johndoefor%d@gmail.com", i),

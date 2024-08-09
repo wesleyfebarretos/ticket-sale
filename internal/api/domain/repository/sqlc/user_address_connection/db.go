@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package users_addresses_repository
+package user_address_connection
 
 import (
 	"context"

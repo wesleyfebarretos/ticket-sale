@@ -6,25 +6,25 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/phone_types_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_address_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_phone_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_addresses_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_phones_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 type CreateParams struct {
 	User    user_repository.CreateParams
-	Address users_addresses_repository.CreateParams
-	Phone   users_phones_repository.CreateParams
+	Address user_address_repository.CreateParams
+	Phone   user_phone_repository.CreateParams
 }
 
 type CreateResponse struct {
 	User    user_repository.CreateResponse
-	Address users_addresses_repository.UsersAddress
-	Phone   users_phones_repository.UsersPhone
+	Address user_address_repository.CreateResponse
+	Phone   user_phone_repository.CreateResponse
 }
 
 func GetAll(c *gin.Context) []user_repository.GetAllResponse {
@@ -65,24 +65,18 @@ func Create(c *gin.Context, body CreateParams) CreateResponse {
 
 			createdUser := userRepository.Create(c, body.User)
 
-			userAddressRepository := repository.UsersAdresses.WithTx(tx)
+			userAddressRepository := user_address_repository.New().WithTx(tx)
 
 			body.Address.UserID = createdUser.ID
 
-			newUserAddress, err := userAddressRepository.Create(c, body.Address)
-			if err != nil {
-				panic(exception.InternalServerException(err.Error()))
-			}
+			newUserAddress := userAddressRepository.Create(c, body.Address)
 
-			userPhoneRepository := repository.UsersPhones.WithTx(tx)
+			userPhoneRepository := user_phone_repository.New().WithTx(tx)
 
-			body.Phone.Type = users_phones_repository.PhoneTypesPhone
+			body.Phone.Type = phone_types_enum.PHONE
 			body.Phone.UserID = createdUser.ID
 
-			newUserPhone, err := userPhoneRepository.Create(c, body.Phone)
-			if err != nil {
-				panic(exception.InternalServerException(err.Error()))
-			}
+			newUserPhone := userPhoneRepository.Create(c, body.Phone)
 
 			return CreateResponse{
 				User:    createdUser,

@@ -4,58 +4,50 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_user_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
-func GetAll(c *gin.Context) []admin_users_repository.GetAllRow {
-	adminUsers, err := repository.AdminUsers.GetAll(c, roles_enum.ADMIN)
-	if err != nil {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	return adminUsers
+func GetAll(c *gin.Context) []admin_user_repository.GetAllResponse {
+	return admin_user_repository.New().GetAll(c)
 }
 
-func GetOneById(c *gin.Context, id int32) admin_users_repository.GetOneByIdRow {
-	adminUser, err := repository.AdminUsers.GetOneById(c, admin_users_repository.GetOneByIdParams{
+func GetOneById(c *gin.Context, id int32) *admin_user_repository.GetOneByIdResponse {
+	adminUser := admin_user_repository.New().GetOneById(c, admin_user_repository.GetOneByIdParams{
 		ID:   id,
 		Role: roles_enum.ADMIN,
 	})
-	if err != nil {
+	if adminUser == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("admin user of id %d not found", id)))
 	}
 
 	return adminUser
 }
 
-func GetOneByEmail(c *gin.Context, email string) admin_users_repository.GetOneByEmailRow {
-	adminUser, err := repository.AdminUsers.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
+func GetOneByEmail(c *gin.Context, email string) *admin_user_repository.GetOneByEmailResponse {
+	adminUser := admin_user_repository.New().GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
 		Email: email,
 		Role:  roles_enum.ADMIN,
 	})
-	if err != nil {
+
+	if adminUser == nil {
 		panic(exception.NotFoundException(fmt.Sprintf("admin user of email %s not found", email)))
 	}
 
 	return adminUser
 }
 
-func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) admin_users_repository.CreateRow {
-	_, err := repository.AdminUsers.GetOneByEmail(c, admin_users_repository.GetOneByEmailParams{
+func Create(c *gin.Context, newAdminUser admin_user_repository.CreateParams) admin_user_repository.CreateResponse {
+	repository := admin_user_repository.New()
+	adminUser := repository.GetOneByEmail(c, admin_user_repository.GetOneByEmailParams{
 		Email: newAdminUser.Email,
 		Role:  roles_enum.ADMIN,
 	})
 
-	if err != nil && err != pgx.ErrNoRows {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err == nil {
+	if adminUser != nil {
 		panic(exception.BadRequestException(fmt.Sprintf("email %s already registered", newAdminUser.Email)))
 	}
 
@@ -67,37 +59,28 @@ func Create(c *gin.Context, newAdminUser admin_users_repository.CreateParams) ad
 	newAdminUser.Password = string(hashPassword)
 	newAdminUser.Role = roles_enum.ADMIN
 
-	createdAdminUser, err := repository.AdminUsers.Create(c, newAdminUser)
-	if err != nil {
-		panic(exception.BadRequestException(err.Error()))
-	}
+	createdAdminUser := repository.Create(c, newAdminUser)
 
 	return createdAdminUser
 }
 
-func Update(c *gin.Context, adminUser admin_users_repository.UpdateParams) {
-	_, err := repository.AdminUsers.CheckIfEmailExists(c, admin_users_repository.CheckIfEmailExistsParams{
+func Update(c *gin.Context, adminUser admin_user_repository.UpdateParams) bool {
+	repository := admin_user_repository.New()
+	user := repository.CheckIfEmailExists(c, admin_user_repository.CheckIfEmailExistsParams{
 		Email: adminUser.Email,
 		ID:    adminUser.ID,
 	})
 
-	if err != nil && err != pgx.ErrNoRows {
-		panic(exception.InternalServerException(err.Error()))
-	}
-
-	if err == nil {
+	if user != nil {
 		panic(exception.BadRequestException(fmt.Sprintf("email %s already registered", adminUser.Email)))
 	}
 
-	err = repository.AdminUsers.Update(c, adminUser)
-	if err != nil {
-		panic(exception.NotFoundException(err.Error()))
-	}
+	repository.Update(c, adminUser)
+
+	return true
 }
 
-func Delete(c *gin.Context, id int32) {
-	err := repository.AdminUsers.Delete(c, id)
-	if err != nil {
-		panic(exception.NotFoundException(fmt.Sprintf("user of id %d not found", id)))
-	}
+func Delete(c *gin.Context, id int32) bool {
+	admin_user_repository.New().Delete(c, id)
+	return true
 }

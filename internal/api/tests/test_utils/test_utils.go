@@ -13,8 +13,8 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/middleware"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/migrations"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/routes"
@@ -51,7 +51,6 @@ func BeforeAll() *httptest.Server {
 
 	db.Init()
 	migrations.Up()
-	repository.Bind()
 
 	server := httptest.NewServer(routes.Bind())
 	config.Envs.PublicHost = fmt.Sprintf("http://localhost:%s", server.URL)

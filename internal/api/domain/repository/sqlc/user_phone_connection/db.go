@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.26.0
 
-package users_phones_repository
+package user_phone_connection
 
 import (
 	"context"

@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_user_service"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/admin_users_repository"
 )
 
 // GetAdminUsers godoc
@@ -23,26 +23,16 @@ import (
 func GetAll(c *gin.Context) {
 	adminUsers := admin_user_service.GetAll(c)
 
-	adminUsersResponse := []GetAllResponseDto{}
+	res := GetAllResponseDto{}
 
-	for _, u := range adminUsers {
-		adminUsersResponse = append(adminUsersResponse, GetAllResponseDto{
-			ID:        u.ID,
-			FirstName: u.FirstName,
-			LastName:  u.LastName,
-			Email:     u.Email,
-			Role:      string(u.Role),
-			CreatedAt: u.CreatedAt,
-			UpdatedAt: u.UpdatedAt,
-		})
-	}
-	c.JSON(http.StatusOK, adminUsersResponse)
+	c.JSON(http.StatusOK, res.FromEntity(adminUsers))
 }
 
 // GetAdminUserById godoc
 //
 //	@Tags			Admin Users
 //	@Summary		Get One By Id
+//
 //	@Description	Get one admin user by id
 //	@Produce		json
 //	@Param			id	path		int	true	"Admin User ID"
@@ -57,17 +47,9 @@ func GetOneById(c *gin.Context) {
 
 	adminUser := admin_user_service.GetOneById(c, id)
 
-	adminUserResponse := GetOneByIdResponseDto{
-		ID:        adminUser.ID,
-		FirstName: adminUser.FirstName,
-		LastName:  adminUser.LastName,
-		Email:     adminUser.Email,
-		Role:      string(adminUser.Role),
-		CreatedAt: adminUser.CreatedAt,
-		UpdatedAt: adminUser.UpdatedAt,
-	}
+	res := GetOneByIdResponseDto{}
 
-	c.JSON(http.StatusOK, adminUserResponse)
+	c.JSON(http.StatusOK, res.FromEntity(adminUser))
 }
 
 // GetAdminUserByEmail godoc
@@ -90,17 +72,9 @@ func GetOneByEmail(c *gin.Context) {
 
 	adminUser := admin_user_service.GetOneByEmail(c, body.Email)
 
-	adminUserResponse := GetOneByEmailResponseDto{
-		ID:        adminUser.ID,
-		FirstName: adminUser.FirstName,
-		LastName:  adminUser.LastName,
-		Email:     adminUser.Email,
-		Role:      string(adminUser.Role),
-		CreatedAt: adminUser.CreatedAt,
-		UpdatedAt: adminUser.UpdatedAt,
-	}
+	res := GetOneByEmailResponseDto{}
 
-	c.JSON(http.StatusOK, adminUserResponse)
+	c.JSON(http.StatusOK, res.FromEntity(adminUser))
 }
 
 // CreateAdminUser godoc
@@ -121,24 +95,11 @@ func Create(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	newAdminUser := admin_user_service.Create(c, admin_users_repository.CreateParams{
-		FirstName: body.FirstName,
-		LastName:  body.LastName,
-		Email:     body.Email,
-		Password:  body.Password,
-	})
+	newAdminUser := admin_user_service.Create(c, body.ToEntity())
 
-	newAdminUserResponse := CreateResponseDto{
-		ID:        newAdminUser.ID,
-		FirstName: newAdminUser.FirstName,
-		LastName:  newAdminUser.LastName,
-		Email:     newAdminUser.Email,
-		Role:      string(newAdminUser.Role),
-		CreatedAt: newAdminUser.CreatedAt,
-		UpdatedAt: newAdminUser.UpdatedAt,
-	}
+	res := CreateResponseDto{}
 
-	c.JSON(http.StatusCreated, newAdminUserResponse)
+	c.JSON(http.StatusCreated, res.FromEntity(newAdminUser))
 }
 
 // UpdateAdminUser godoc
@@ -163,13 +124,7 @@ func Update(c *gin.Context) {
 
 	controller.ReadBody(c, &body)
 
-	admin_user_service.Update(c, admin_users_repository.UpdateParams{
-		ID:        id,
-		FirstName: body.FirstName,
-		LastName:  body.LastName,
-		Email:     body.Email,
-		Role:      admin_users_repository.Roles(body.Role),
-	})
+	admin_user_service.Update(c, body.ToEntity(id))
 
 	c.JSON(http.StatusOK, true)
 }

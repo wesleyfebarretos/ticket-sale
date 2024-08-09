@@ -3,17 +3,16 @@ package test_data
 import (
 	"context"
 
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/sqlc/users_addresses_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_address_repository"
 )
 
-func NewUserAddress(userId int32) users_addresses_repository.UsersAddress {
+func NewUserAddress(userId int32) user_address_repository.CreateResponse {
 	favorite := true
 	complement := "Moon"
 	postalCode := "Jupiter"
 	addressType := "House"
 
-	newAddress := users_addresses_repository.CreateParams{
+	newAddress := user_address_repository.CreateParams{
 		Favorite:      &favorite,
 		Complement:    &complement,
 		PostalCode:    &postalCode,
@@ -25,7 +24,7 @@ func NewUserAddress(userId int32) users_addresses_repository.UsersAddress {
 		UserID:        userId,
 	}
 
-	address, _ := repository.UsersAdresses.Create(context.Background(), newAddress)
+	address := user_address_repository.New().Create(context.Background(), newAddress)
 
 	return address
 }

@@ -34,24 +34,24 @@ sql:
     gen:
       go: 
         <<: *default_configs
-        package: "users_addresses_repository"
-        out: "internal/api/domain/repository/sqlc/users_addresses_repository"
+        package: "user_address_connection"
+        out: "internal/api/domain/repository/sqlc/user_address_connection"
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/admin_users_query.sql"
     gen:
       go: 
         <<: *default_configs
-        package: "admin_users_repository"
-        out: "internal/api/domain/repository/sqlc/admin_users_repository"
+        package: "admin_user_connection"
+        out: "internal/api/domain/repository/sqlc/admin_user_connection"
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/users_phones_query.sql"
     gen:
       go: 
         <<: *default_configs
-        package: "users_phones_repository"
-        out: "internal/api/domain/repository/sqlc/users_phones_repository"
+        package: "user_phone_connection"
+        out: "internal/api/domain/repository/sqlc/user_phone_connection"
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/admin_products_query.sql"
