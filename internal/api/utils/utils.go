@@ -2,11 +2,13 @@ package utils
 
 import (
 	"context"
+	"strings"
 
 	"github.com/jackc/pgx/v4"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func HashPassword(password string) (string, error) {
@@ -36,4 +38,12 @@ func WithTransaction[R any](c context.Context, fn func(pgx.Tx) R) R {
 	}
 
 	return response
+}
+
+func MaskCreditcardNumber(number string) string {
+	firstFourDigits := number[:4]
+	lastFourDigits := number[len(number)-4:]
+	masked := strings.Repeat("*", len(number)-8)
+
+	return firstFourDigits + masked + lastFourDigits
 }

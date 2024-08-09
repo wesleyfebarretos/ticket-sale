@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 func GetAllUserCreditcards(c *gin.Context, userID int32) []creditcard_repository.GetAllUserCreditcardsResponse {
 	return creditcard_repository.New().GetAllUserCreditcards(c, userID)
-
 }
 
 func Create(
@@ -20,6 +21,8 @@ func Create(
 	regex := regexp.MustCompile("[^0-9]")
 
 	newCreditcard.Number = regex.ReplaceAllString(newCreditcard.Number, "")
+
+	newCreditcard.Number = utils.MaskCreditcardNumber(newCreditcard.Number)
 
 	creditcard := creditcard_repository.New().Create(c, newCreditcard)
 

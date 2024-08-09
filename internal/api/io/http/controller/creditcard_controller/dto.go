@@ -21,7 +21,7 @@ type CreditcardType struct {
 type GetAllUserCreditcardsResponseDto struct {
 	Uuid           uuid.UUID      `json:"uuid" example:"767c1587-1ade-4e6a-a9fe-f0e07c83bda9"`
 	Name           string         `json:"name" binding:"required" example:"Testing"`
-	Number         string         `json:"number" binding:"required,min=8" example:"5574723384289379"`
+	Number         string         `json:"number" binding:"required,min=8" example:"5574********9379"`
 	Expiration     time.Time      `json:"expiration" binding:"required" example:"2025-01-01T00:00:00Z"`
 	UserID         int32          `json:"userId" example:"1"`
 	CreatedAt      time.Time      `json:"createdAt" example:"2024-01-01T00:00:00Z"`
@@ -31,7 +31,7 @@ type GetAllUserCreditcardsResponseDto struct {
 
 type CreateRequestDto struct {
 	Name             string    `json:"name" binding:"required" example:"Testing"`
-	Number           string    `json:"number" binding:"required,min=8" example:"5574723384289379"`
+	Number           string    `json:"number" binding:"required,min=8" example:"5574********9379"`
 	Expiration       time.Time `json:"expiration" binding:"required" example:"2025-01-01T00:00:00Z"`
 	Priority         int32     `json:"priority" example:"1"`
 	NotifyExpiration bool      `json:"notifyExpiration" example:"true"`
@@ -43,7 +43,7 @@ type CreateResponseDto struct {
 	ID               int32     `json:"id" example:"1"`
 	Uuid             uuid.UUID `json:"uuid" example:"767c1587-1ade-4e6a-a9fe-f0e07c83bda9"`
 	Name             string    `json:"name" binding:"required" example:"Testing"`
-	Number           string    `json:"number" binding:"required,min=8" example:"5574723384289379"`
+	Number           string    `json:"number" binding:"required,min=8" example:"5574********9379"`
 	Expiration       time.Time `json:"expiration" binding:"required" example:"2025-01-01T00:00:00Z"`
 	Priority         int32     `json:"priority" example:"1"`
 	NotifyExpiration bool      `json:"notifyExpiration" example:"true"`
