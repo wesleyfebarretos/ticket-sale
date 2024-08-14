@@ -7,6 +7,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/pgx"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
+
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/migrations"
 )
