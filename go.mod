@@ -13,6 +13,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.9.0
+	github.com/stripe/stripe-go/v79 v79.7.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/testcontainers/testcontainers-go v0.31.0
@@ -24,7 +25,6 @@ require (
 require (
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/stripe/stripe-go/v79 v79.7.0 // indirect
 )
 
 require (
