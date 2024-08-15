@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/gateway_provider_enum"
 )
 
 type DBConfig struct {
@@ -33,6 +34,19 @@ type LoggerConfig struct {
 	Output     *os.File
 }
 
+type StripeConfig struct {
+	Key        string
+	ProviderID int32
+}
+
+type GatewaysConfig struct {
+	Stripe StripeConfig
+}
+
+type ProvidersConfig struct {
+	Gateways GatewaysConfig
+}
+
 type Config struct {
 	ApiToken   string
 	AppEnv     string
@@ -42,6 +56,7 @@ type Config struct {
 	DB         DBConfig
 	JWT        JWTConfig
 	Logger     LoggerConfig
+	Providers  ProvidersConfig
 }
 
 var (
@@ -77,6 +92,14 @@ func Init() {
 				MaxAge:     getEnvAsInt("LOG_MAX_AGE", 30),
 				Compress:   getEnvAsBool("LOG_COMPRESS", true),
 				Output:     os.Stdout,
+			},
+			Providers: ProvidersConfig{
+				Gateways: GatewaysConfig{
+					Stripe: StripeConfig{
+						Key:        getEnv("STRIPE_SECRET_KEY", "sk_test_Ho24N7La5CVDtbmpjc377lJI"),
+						ProviderID: gateway_provider_enum.STRIPE,
+					},
+				},
 			},
 		}
 	})
