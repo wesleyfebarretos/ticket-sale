@@ -13,8 +13,7 @@ kill-services:
 rebuild-services: kill-services start-services
 
 restart-db:
-	@docker compose down postgres
-	@docker volume rm ticket-sale_pgdata
+	@docker compose down postgres --volumes
 	@docker compose up postgres -d
 
 # Migrations

@@ -2146,6 +2146,7 @@
             "required": [
                 "authType",
                 "gatewayProcessId",
+                "gatewayProviderId",
                 "name",
                 "order",
                 "paymentTypes"
@@ -2184,6 +2185,11 @@
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "minimum": 1,
                     "example": 1
@@ -2279,6 +2285,10 @@
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "example": 1
                 },
@@ -2597,6 +2607,7 @@
             "required": [
                 "authType",
                 "gatewayProcessId",
+                "gatewayProviderId",
                 "name",
                 "order"
             ],
@@ -2634,6 +2645,11 @@
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "minimum": 1,
                     "example": 1

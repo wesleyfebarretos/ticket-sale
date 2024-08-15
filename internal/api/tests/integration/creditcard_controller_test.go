@@ -13,6 +13,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/creditcard_controller"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 func TestCreditcardController(t *testing.T) {
@@ -50,7 +51,7 @@ func TestCreditcardController(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, req.StatusCode)
 		assert.Equal(t, expectedDate, currentDate)
 		assert.Equal(t, newCreditcard.Name, newCreditcardResponse.Name)
-		assert.Equal(t, newCreditcard.Number, newCreditcardResponse.Number)
+		assert.Equal(t, utils.MaskCreditcardNumber(newCreditcard.Number), newCreditcardResponse.Number)
 		assert.Equal(t, newCreditcard.Priority, newCreditcardResponse.Priority)
 		assert.Equal(t, newCreditcard.NotifyExpiration, newCreditcardResponse.NotifyExpiration)
 		assert.Equal(t, newCreditcard.CreditcardTypeID, newCreditcardResponse.CreditcardTypeID)

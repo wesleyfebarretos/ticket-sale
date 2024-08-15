@@ -2152,6 +2152,7 @@ const docTemplate = `{
             "required": [
                 "authType",
                 "gatewayProcessId",
+                "gatewayProviderId",
                 "name",
                 "order",
                 "paymentTypes"
@@ -2190,6 +2191,11 @@ const docTemplate = `{
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "minimum": 1,
                     "example": 1
@@ -2285,6 +2291,10 @@ const docTemplate = `{
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "example": 1
                 },
@@ -2603,6 +2613,7 @@ const docTemplate = `{
             "required": [
                 "authType",
                 "gatewayProcessId",
+                "gatewayProviderId",
                 "name",
                 "order"
             ],
@@ -2640,6 +2651,11 @@ const docTemplate = `{
                     "example": "Payment gateway for Stripe"
                 },
                 "gatewayProcessId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "gatewayProviderId": {
                     "type": "integer",
                     "minimum": 1,
                     "example": 1

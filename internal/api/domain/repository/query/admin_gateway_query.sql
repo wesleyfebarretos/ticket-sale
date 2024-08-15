@@ -1,8 +1,8 @@
 -- name: Create :one
 INSERT INTO fin.gateway
-    ("name", description, client_id, client_secret, "order", active, test_environment, notif_user, notif_password, soft_descriptor, gateway_process_id, webhook_url, url, auth_type, use_3ds, adq_code_3ds, default_adq_code, use_antifraud, created_by, updated_by)
+    ("name", description, client_id, client_secret, "order", active, test_environment, notif_user, notif_password, soft_descriptor, gateway_process_id, webhook_url, url, auth_type, use_3ds, adq_code_3ds, default_adq_code, use_antifraud, created_by, updated_by, gateway_provider_id)
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
 RETURNING *;
 
 -- name: CreatePaymentTypes :batchone
@@ -32,7 +32,8 @@ UPDATE fin.gateway SET
     adq_code_3ds = $17,
     default_adq_code = $18,
     use_antifraud = $19,
-    updated_by = $20
+    updated_by = $20,
+    gateway_provider_id = $21
 WHERE id = $1;
 
 -- name: GetAll :many

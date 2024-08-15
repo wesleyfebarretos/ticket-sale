@@ -302,6 +302,10 @@ definitions:
         example: 1
         minimum: 1
         type: integer
+      gatewayProviderId:
+        example: 1
+        minimum: 1
+        type: integer
       name:
         example: Stripe
         minLength: 3
@@ -345,6 +349,7 @@ definitions:
     required:
     - authType
     - gatewayProcessId
+    - gatewayProviderId
     - name
     - order
     - paymentTypes
@@ -376,6 +381,9 @@ definitions:
         example: Payment gateway for Stripe
         type: string
       gatewayProcessId:
+        example: 1
+        type: integer
+      gatewayProviderId:
         example: 1
         type: integer
       id:
@@ -635,6 +643,10 @@ definitions:
         example: 1
         minimum: 1
         type: integer
+      gatewayProviderId:
+        example: 1
+        minimum: 1
+        type: integer
       name:
         example: Stripe
         minLength: 3
@@ -670,6 +682,7 @@ definitions:
     required:
     - authType
     - gatewayProcessId
+    - gatewayProviderId
     - name
     - order
     type: object
