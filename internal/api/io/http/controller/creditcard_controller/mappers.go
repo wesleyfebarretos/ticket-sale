@@ -37,7 +37,7 @@ func (s *CreateResponseDto) FromDomain(p creditcard_repository.CreateResponse) C
 }
 
 func (s *GetAllUserCreditcardsResponseDto) FromDomain(p []creditcard_repository.GetAllUserCreditcardsResponse) []GetAllUserCreditcardsResponseDto {
-	var res []GetAllUserCreditcardsResponseDto
+	res := []GetAllUserCreditcardsResponseDto{}
 	for _, v := range p {
 		res = append(res, GetAllUserCreditcardsResponseDto{
 			Uuid:       v.Uuid,
