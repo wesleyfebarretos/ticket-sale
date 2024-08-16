@@ -138,3 +138,11 @@ sql:
               import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
               type: GatewayPaymentTypes
               slice: true
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/gateway_customer_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "gateway_customer_connection"
+        out: "internal/api/domain/repository/sqlc/gateway_customer_connection"
