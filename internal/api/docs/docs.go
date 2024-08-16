@@ -3669,7 +3669,8 @@ const docTemplate = `{
                 "creditcardTypeId",
                 "expiration",
                 "name",
-                "number"
+                "number",
+                "tokenize"
             ],
             "properties": {
                 "creditcardFlagId": {
@@ -3702,6 +3703,10 @@ const docTemplate = `{
                 "priority": {
                     "type": "integer",
                     "example": 1
+                },
+                "tokenize": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },

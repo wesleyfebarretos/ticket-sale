@@ -1423,12 +1423,16 @@ definitions:
       priority:
         example: 1
         type: integer
+      tokenize:
+        example: true
+        type: boolean
     required:
     - creditcardFlagId
     - creditcardTypeId
     - expiration
     - name
     - number
+    - tokenize
     type: object
   creditcard_controller.CreateResponseDto:
     properties:
