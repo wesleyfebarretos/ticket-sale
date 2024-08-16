@@ -13,7 +13,7 @@ FROM
 WHERE
     user_id = $1;
 
--- name: FindOneByGatewayAndCustomerId :one
+-- name: FindOneByGatewayAndUserId :one
 SELECT
     *
 FROM

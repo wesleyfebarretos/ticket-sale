@@ -36,7 +36,7 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (FinGatewayCusto
 	return i, err
 }
 
-const findOneByGatewayAndCustomerId = `-- name: FindOneByGatewayAndCustomerId :one
+const findOneByGatewayAndUserId = `-- name: FindOneByGatewayAndUserId :one
 SELECT
     user_id, gateway_id, gateway_customer_id, created_at, updated_at
 FROM
@@ -47,13 +47,13 @@ AND
     gateway_id = $2
 `
 
-type FindOneByGatewayAndCustomerIdParams struct {
+type FindOneByGatewayAndUserIdParams struct {
 	UserID    int32 `json:"userId"`
 	GatewayID int32 `json:"gatewayId"`
 }
 
-func (q *Queries) FindOneByGatewayAndCustomerId(ctx context.Context, arg FindOneByGatewayAndCustomerIdParams) (FinGatewayCustomer, error) {
-	row := q.db.QueryRow(ctx, findOneByGatewayAndCustomerId, arg.UserID, arg.GatewayID)
+func (q *Queries) FindOneByGatewayAndUserId(ctx context.Context, arg FindOneByGatewayAndUserIdParams) (FinGatewayCustomer, error) {
+	row := q.db.QueryRow(ctx, findOneByGatewayAndUserId, arg.UserID, arg.GatewayID)
 	var i FinGatewayCustomer
 	err := row.Scan(
 		&i.UserID,
