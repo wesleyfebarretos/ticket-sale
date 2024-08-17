@@ -29,8 +29,8 @@ func CreateCustomer(c *CreateCustomerDTO) (*stripe.Customer, error) {
 	stripe.Key = config.Envs.Providers.Gateways.Stripe.Key
 
 	params := &stripe.CustomerParams{
-		Name:  stripe.String("Jenny Rosen"),
-		Email: stripe.String("jennyrosen@example.com"),
+		Name:  stripe.String(c.Name),
+		Email: stripe.String(c.Email),
 	}
 	newCustomer, err := customer.New(params)
 	if err != nil {

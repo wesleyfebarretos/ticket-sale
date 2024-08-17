@@ -39,7 +39,7 @@ func (this *FindOneByGatewayAndUserIdResponse) FromEntity(p gateway_customer_con
 	}
 }
 
-func (this *GatewayCustomerRepository) FindOneByGatewayAndUserIdResponse(
+func (this *GatewayCustomerRepository) FindOneByGatewayAndUserId(
 	c context.Context,
 	param FindOneByGatewayAndUserIdParams,
 ) *FindOneByGatewayAndUserIdResponse {
