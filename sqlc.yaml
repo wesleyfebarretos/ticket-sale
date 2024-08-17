@@ -146,3 +146,11 @@ sql:
         <<: *default_configs
         package: "gateway_customer_connection"
         out: "internal/api/domain/repository/sqlc/gateway_customer_connection"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/gateway_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "gateway_connection"
+        out: "internal/api/domain/repository/sqlc/gateway_connection"
