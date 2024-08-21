@@ -10,6 +10,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/gateway_customer_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/user_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 func FindOrCreateCustomer(ctx context.Context, userID int32) (*gateway_customer_repository.FindOneByGatewayAndUserIdResponse, error) {
@@ -60,7 +61,7 @@ func FindOrCreateCustomer(ctx context.Context, userID int32) (*gateway_customer_
 	newCustomer := gatewayCustomerRepository.Create(ctx, gateway_customer_repository.CreateParams{
 		UserID:            userID,
 		GatewayID:         gateway.ID,
-		GatewayCustomerID: gatewayCustomerId,
+		GatewayCustomerID: utils.Encrypt(gatewayCustomerId),
 	})
 
 	customer = &gateway_customer_repository.FindOneByGatewayAndUserIdResponse{

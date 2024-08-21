@@ -7,7 +7,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
-	"errors"
 	"io"
 	"strings"
 
@@ -56,7 +55,7 @@ func MaskCreditcardNumber(number string) string {
 	return firstFourDigits + masked + lastFourDigits
 }
 
-func Encrypt(plaintext string) (string, error) {
+func Encrypt(plaintext string) string {
 	// Hash the API token to create a 32-byte key
 	hash := sha256.Sum256([]byte(config.Envs.ApiToken))
 	key := hash[:]
@@ -64,7 +63,7 @@ func Encrypt(plaintext string) (string, error) {
 	// Create a new AES cipher with the key
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		panic(exception.InternalServerException(err.Error()))
 	}
 
 	// Create a byte slice to hold the IV + ciphertext
@@ -73,7 +72,7 @@ func Encrypt(plaintext string) (string, error) {
 	// Generate a random IV and store it at the beginning of the ciphertext slice
 	iv := ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return "", err
+		panic(exception.InternalServerException(err.Error()))
 	}
 
 	// Create the CFB encrypter and XOR the plaintext with it to create the ciphertext
@@ -81,14 +80,14 @@ func Encrypt(plaintext string) (string, error) {
 	stream.XORKeyStream(ciphertext[aes.BlockSize:], []byte(plaintext))
 
 	// Encode the ciphertext to base64 to make it easily transferable
-	return base64.StdEncoding.EncodeToString(ciphertext), nil
+	return base64.StdEncoding.EncodeToString(ciphertext)
 }
 
-func Decrypt(ciphertextBase64 string) (string, error) {
+func Decrypt(ciphertextBase64 string) string {
 	// Decode the base64-encoded ciphertext
 	ciphertext, err := base64.StdEncoding.DecodeString(ciphertextBase64)
 	if err != nil {
-		return "", err
+		panic(exception.InternalServerException(err.Error()))
 	}
 
 	// Hash the API token to create a 32-byte key
@@ -98,12 +97,12 @@ func Decrypt(ciphertextBase64 string) (string, error) {
 	// Create a new AES cipher with the key
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		panic(exception.InternalServerException(err.Error()))
 	}
 
 	// Ensure the ciphertext is long enough to contain the IV
 	if len(ciphertext) < aes.BlockSize {
-		return "", errors.New("ciphertext too short")
+		panic(exception.InternalServerException("ciphertext too short"))
 	}
 
 	// Extract the IV from the beginning of the ciphertext
@@ -115,5 +114,5 @@ func Decrypt(ciphertextBase64 string) (string, error) {
 	stream.XORKeyStream(ciphertext, ciphertext)
 
 	// Return the decrypted plaintext as a string
-	return string(ciphertext), nil
+	return string(ciphertext)
 }
