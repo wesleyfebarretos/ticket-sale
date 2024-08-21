@@ -2,11 +2,19 @@ package utils
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/base64"
+	"errors"
+	"io"
 	"strings"
 
 	"github.com/jackc/pgx/v4"
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/infra/db"
 )
@@ -46,4 +54,66 @@ func MaskCreditcardNumber(number string) string {
 	masked := strings.Repeat("*", len(number)-8)
 
 	return firstFourDigits + masked + lastFourDigits
+}
+
+func Encrypt(plaintext string) (string, error) {
+	// Hash the API token to create a 32-byte key
+	hash := sha256.Sum256([]byte(config.Envs.ApiToken))
+	key := hash[:]
+
+	// Create a new AES cipher with the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+
+	// Create a byte slice to hold the IV + ciphertext
+	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
+
+	// Generate a random IV and store it at the beginning of the ciphertext slice
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return "", err
+	}
+
+	// Create the CFB encrypter and XOR the plaintext with it to create the ciphertext
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], []byte(plaintext))
+
+	// Encode the ciphertext to base64 to make it easily transferable
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
+}
+
+func Decrypt(ciphertextBase64 string) (string, error) {
+	// Decode the base64-encoded ciphertext
+	ciphertext, err := base64.StdEncoding.DecodeString(ciphertextBase64)
+	if err != nil {
+		return "", err
+	}
+
+	// Hash the API token to create a 32-byte key
+	hash := sha256.Sum256([]byte(config.Envs.ApiToken))
+	key := hash[:]
+
+	// Create a new AES cipher with the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+
+	// Ensure the ciphertext is long enough to contain the IV
+	if len(ciphertext) < aes.BlockSize {
+		return "", errors.New("ciphertext too short")
+	}
+
+	// Extract the IV from the beginning of the ciphertext
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	// Create the CFB decrypter and XOR the ciphertext with it to recover the plaintext
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(ciphertext, ciphertext)
+
+	// Return the decrypted plaintext as a string
+	return string(ciphertext), nil
 }

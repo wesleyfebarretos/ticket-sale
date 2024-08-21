@@ -52,3 +52,59 @@ func (this *AdminGatewayProviderRepository) Create(ctx context.Context, p Create
 
 	return res.FromEntity(provider)
 }
+
+// stripe.Key = "sk_test_Ho24N7La5CVDtbmpjc377lJI"
+// params := &stripe.CustomerParams{
+// 	Name:  stripe.String("Jenny Rosen"),
+// 	Email: stripe.String("jennyrosen@example.com"),
+// }
+// customer, err := customer.New(params)
+// if err != nil {
+// 	panic(exception.InternalServerException(err.Error()))
+// }
+//
+// cardParams := &stripe.PaymentSourceParams{
+// 	Customer: stripe.String(customer.ID),
+// 	Source: &stripe.PaymentSourceSourceParams{
+// 		Card: &stripe.CardParams{
+// 			CVC:      stripe.String("777"),
+// 			ExpMonth: stripe.String("09"),
+// 			ExpYear:  stripe.String("2024"),
+// 			Number:   stripe.String("4242424242424242"),
+// 		},
+// 	},
+// }
+// resultCard, err := paymentsource.New(cardParams)
+// if err != nil {
+// 	panic(exception.InternalServerException(err.Error()))
+// }
+//
+// paymentIntentParams := &stripe.PaymentIntentParams{
+// 	Amount:   stripe.Int64(2000),
+// 	Currency: stripe.String(string(stripe.CurrencyUSD)),
+// 	AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
+// 		Enabled: stripe.Bool(true),
+// 	},
+// 	PaymentMethod: &resultCard.ID,
+// 	Customer:      &customer.ID,
+// }
+// resultPaymentIntent, err := paymentintent.New(paymentIntentParams)
+// if err != nil {
+// 	panic(exception.InternalServerException(err.Error()))
+// }
+//
+// confirmPaymentParams := &stripe.PaymentIntentConfirmParams{
+// 	PaymentMethod: stripe.String(resultCard.ID),
+// 	ReturnURL:     stripe.String("https://www.example.com"),
+// }
+//
+// resultConfirmPayment, err := paymentintent.Confirm(resultPaymentIntent.ID, confirmPaymentParams)
+// if err != nil {
+// 	panic(exception.InternalServerException(err.Error()))
+// }
+// prettyPrint(customer)
+// prettyPrint(resultCard)
+// prettyPrint(resultPaymentIntent)
+// prettyPrint(resultConfirmPayment)
+//
+// os.Exit(1)
