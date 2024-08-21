@@ -21,6 +21,8 @@ func NewGateway(t *testing.T, userID int32) admin_gateway_handler.CreateResDTO {
 	adqCode3ds := "testing"
 	defaultAdqCode := "testing"
 
+	provider := NewGatewayProvider(t, userID)
+
 	gateway := admin_gateway_repository.CreateParams{
 		Name:              "Testing",
 		Description:       &description,
@@ -42,7 +44,7 @@ func NewGateway(t *testing.T, userID int32) admin_gateway_handler.CreateResDTO {
 		UseAntifraud:      false,
 		CreatedBy:         userID,
 		UpdatedBy:         &userID,
-		GatewayProviderID: 1,
+		GatewayProviderID: provider.ID,
 	}
 
 	repository := admin_gateway_repository.New()

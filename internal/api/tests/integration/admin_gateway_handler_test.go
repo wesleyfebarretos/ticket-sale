@@ -18,6 +18,8 @@ func TestAdminGatewayHandler(t *testing.T) {
 		adminUser := test_data.NewUser(roles_enum.ADMIN)
 		TSetCookieWithUser(t, adminUser)
 
+		provider := test_data.NewGatewayProvider(t, adminUser.ID)
+
 		description := "testing"
 		clientId := "testing"
 		clientSecret := "testing"
@@ -49,7 +51,7 @@ func TestAdminGatewayHandler(t *testing.T) {
 			DefaultAdqCode:    &defaultAdqCode,
 			UseAntifraud:      false,
 			PaymentTypes:      []int32{1, 2},
-			GatewayProviderID: 1,
+			GatewayProviderID: provider.ID,
 		}
 
 		res := TMakeRequest(t, http.MethodPost, "admin/gateway", newGateway)
