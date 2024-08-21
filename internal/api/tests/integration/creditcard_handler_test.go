@@ -36,11 +36,6 @@ func TestCreditcardHandler(t *testing.T) {
 
 		req := TMakeRequest(t, http.MethodPost, "creditcard", newCreditcard)
 
-		// test, _ := io.ReadAll(req.Body)
-		//
-		// fmt.Println(string(test))
-		// os.Exit(1)
-
 		newCreditcardResponse := creditcard_handler.CreateResponseDto{}
 
 		test_utils.Decode(t, req.Body, &newCreditcardResponse)
