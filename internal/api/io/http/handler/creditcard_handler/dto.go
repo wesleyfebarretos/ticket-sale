@@ -37,7 +37,6 @@ type CreateRequestDto struct {
 	NotifyExpiration bool      `json:"notifyExpiration" example:"true"`
 	CreditcardTypeID int32     `json:"creditcardTypeId" binding:"required,min=1" example:"1"`
 	CreditcardFlagID int32     `json:"creditcardFlagId" binding:"required,min=1" example:"1"`
-	Tokenize         bool      `json:"tokenize" binding:"required" example:"true"`
 }
 
 type CreateResponseDto struct {

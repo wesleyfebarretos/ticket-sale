@@ -51,7 +51,7 @@ func Create(c *gin.Context) {
 
 	handler.ReadBody(c, &body)
 
-	newCreditcard := creditcard_service.Create(c, body.ToDomain(user.Id), body.Tokenize)
+	newCreditcard := creditcard_service.Create(c, body.ToDomain(user.Id))
 
 	res := CreateResponseDto{}
 

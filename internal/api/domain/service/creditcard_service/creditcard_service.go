@@ -20,7 +20,6 @@ func GetAllUserCreditcards(c *gin.Context, userID int32) []creditcard_repository
 func Create(
 	c *gin.Context,
 	newCreditcard creditcard_repository.CreateParams,
-	tokenize bool,
 ) creditcard_repository.CreateResponse {
 	return utils.WithTransaction(c, func(tx pgx.Tx) creditcard_repository.CreateResponse {
 		regex := regexp.MustCompile("[^0-9]")
@@ -33,11 +32,9 @@ func Create(
 
 		creditcard := creditcardRepository.Create(c, newCreditcard)
 
-		if tokenize {
-			_, err := gateway_service.FindOrCreateCustomer(c, newCreditcard.UserID)
-			if err != nil {
-				panic(exception.InternalServerException(err.Error()))
-			}
+		_, err := gateway_service.FindOrCreateCustomer(c, newCreditcard.UserID)
+		if err != nil {
+			panic(exception.InternalServerException(err.Error()))
 		}
 
 		return creditcard
