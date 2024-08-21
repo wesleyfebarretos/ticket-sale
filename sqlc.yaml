@@ -154,3 +154,11 @@ sql:
         <<: *default_configs
         package: "gateway_connection"
         out: "internal/api/domain/repository/sqlc/gateway_connection"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/admin_gateway_provider_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "admin_gateway_provider_connection"
+        out: "internal/api/domain/repository/sqlc/admin_gateway_provider_connection"
