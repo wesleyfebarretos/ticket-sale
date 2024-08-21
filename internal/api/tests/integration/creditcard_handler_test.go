@@ -1,6 +1,7 @@
 package integration_test
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/gateway_customer_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/handler/creditcard_handler"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
@@ -52,6 +54,10 @@ func TestCreditcardHandler(t *testing.T) {
 		assert.Equal(t, newCreditcard.CreditcardTypeID, newCreditcardResponse.CreditcardTypeID)
 		assert.Equal(t, newCreditcard.CreditcardFlagID, newCreditcardResponse.CreditcardFlagID)
 		assert.NotEqual(t, uuid.Nil, newCreditcardResponse.Uuid)
+
+		customer := gateway_customer_repository.New().FindOneByUserId(context.Background(), user.ID)
+
+		assert.NotNil(t, customer)
 	}))
 
 	t.Run("it should update a creditcard", TRun(func(t *testing.T) {

@@ -26,6 +26,13 @@ func CreateCustomer(c *CreateCustomerDTO) (*stripe.Customer, error) {
 		return nil, err
 	}
 
+	if config.Envs.AppEnv == "testing" {
+		return &stripe.Customer{
+			Email: "testing@example.com",
+			ID:    "cus_NffrFeUfNV2Hib",
+		}, nil
+	}
+
 	stripe.Key = config.Envs.Providers.Gateways.Stripe.Key
 
 	params := &stripe.CustomerParams{
