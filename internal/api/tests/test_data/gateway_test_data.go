@@ -6,10 +6,10 @@ import (
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_gateway_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/admin_gateway_service"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_gateway_controller"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/handler/admin_gateway_handler"
 )
 
-func NewGateway(t *testing.T, userID int32) admin_gateway_controller.CreateResDTO {
+func NewGateway(t *testing.T, userID int32) admin_gateway_handler.CreateResDTO {
 	description := "testing"
 	clientId := "testing"
 	clientSecret := "testing"
@@ -61,7 +61,7 @@ func NewGateway(t *testing.T, userID int32) admin_gateway_controller.CreateResDT
 
 	newPaymentTypes := repository.CreatePaymentTypes(ctx, paymentTypes)
 
-	response := admin_gateway_controller.CreateResDTO{}
+	response := admin_gateway_handler.CreateResDTO{}
 
 	return response.FromDomain(admin_gateway_service.CreateRes{
 		Gateway:      newGateway,

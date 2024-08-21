@@ -1,6 +1,6 @@
 basePath: /v1
 definitions:
-  admin_auth_controller.SignInRequestDto:
+  admin_auth_handler.SignInRequestDto:
     properties:
       email:
         example: ticketsale@gmail.com
@@ -12,7 +12,7 @@ definitions:
     - email
     - password
     type: object
-  admin_auth_controller.SignInResponseDto:
+  admin_auth_handler.SignInResponseDto:
     properties:
       code:
         example: 200
@@ -24,7 +24,7 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0
         type: string
     type: object
-  admin_event_controller.CategoryDto:
+  admin_event_handler.CategoryDto:
     properties:
       description:
         example: EVENT
@@ -36,7 +36,7 @@ definitions:
         example: event
         type: string
     type: object
-  admin_event_controller.CreateRequestDto:
+  admin_event_handler.CreateRequestDto:
     properties:
       city:
         example: Orlando
@@ -48,7 +48,7 @@ definitions:
         example: Disney
         type: string
       product:
-        $ref: '#/definitions/admin_product_controller.CreateRequestDto'
+        $ref: '#/definitions/admin_product_handler.CreateRequestDto'
       startAt:
         example: "2024-01-01T00:00:00Z"
         type: string
@@ -56,7 +56,7 @@ definitions:
         example: FL
         type: string
     type: object
-  admin_event_controller.CreateResponseDto:
+  admin_event_handler.CreateResponseDto:
     properties:
       city:
         example: Orlando
@@ -71,7 +71,7 @@ definitions:
         example: Disney
         type: string
       product:
-        $ref: '#/definitions/admin_product_controller.CreateResponseDto'
+        $ref: '#/definitions/admin_product_handler.CreateResponseDto'
       productId:
         example: 1
         type: integer
@@ -82,13 +82,13 @@ definitions:
         example: FL
         type: string
     type: object
-  admin_event_controller.GetAllProductDto:
+  admin_event_handler.GetAllProductDto:
     properties:
       active:
         example: true
         type: boolean
       category:
-        $ref: '#/definitions/admin_event_controller.CategoryDto'
+        $ref: '#/definitions/admin_event_handler.CategoryDto'
       categoryId:
         example: 3
         type: integer
@@ -124,7 +124,7 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_event_controller.GetAllResponseDto:
+  admin_event_handler.GetAllResponseDto:
     properties:
       city:
         example: Orlando
@@ -139,7 +139,7 @@ definitions:
         example: Disney
         type: string
       product:
-        $ref: '#/definitions/admin_event_controller.GetAllProductDto'
+        $ref: '#/definitions/admin_event_handler.GetAllProductDto'
       productId:
         example: 1
         type: integer
@@ -150,13 +150,13 @@ definitions:
         example: FL
         type: string
     type: object
-  admin_event_controller.GetOneByIdProductDto:
+  admin_event_handler.GetOneByIdProductDto:
     properties:
       active:
         example: true
         type: boolean
       category:
-        $ref: '#/definitions/admin_event_controller.CategoryDto'
+        $ref: '#/definitions/admin_event_handler.CategoryDto'
       categoryId:
         example: 3
         type: integer
@@ -180,7 +180,7 @@ definitions:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         type: string
       installments:
-        $ref: '#/definitions/admin_product_controller.InstallmentsResponseDto'
+        $ref: '#/definitions/admin_product_handler.InstallmentsResponseDto'
       isDeleted:
         example: false
         type: boolean
@@ -191,12 +191,12 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_event_controller.StockDto'
+        $ref: '#/definitions/admin_event_handler.StockDto'
       uuid:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_event_controller.GetOneByIdResponseDto:
+  admin_event_handler.GetOneByIdResponseDto:
     properties:
       city:
         example: Orlando
@@ -211,7 +211,7 @@ definitions:
         example: Disney
         type: string
       product:
-        $ref: '#/definitions/admin_event_controller.GetOneByIdProductDto'
+        $ref: '#/definitions/admin_event_handler.GetOneByIdProductDto'
       productId:
         example: 1
         type: integer
@@ -222,7 +222,7 @@ definitions:
         example: FL
         type: string
     type: object
-  admin_event_controller.StockDto:
+  admin_event_handler.StockDto:
     properties:
       id:
         example: 1
@@ -240,7 +240,7 @@ definitions:
     required:
     - qty
     type: object
-  admin_event_controller.UpdateRequestDto:
+  admin_event_handler.UpdateRequestDto:
     properties:
       city:
         example: Orlando
@@ -252,7 +252,7 @@ definitions:
         example: Disney
         type: string
       product:
-        $ref: '#/definitions/admin_product_controller.UpdateRequestDto'
+        $ref: '#/definitions/admin_product_handler.UpdateRequestDto'
       startAt:
         example: "2024-01-01T00:00:00Z"
         type: string
@@ -260,7 +260,7 @@ definitions:
         example: FL
         type: string
     type: object
-  admin_gateway_controller.CreatePaymentTypeResDTO:
+  admin_gateway_handler.CreatePaymentTypeResDTO:
     properties:
       gatewayId:
         example: 1
@@ -272,7 +272,7 @@ definitions:
         example: 1
         type: integer
     type: object
-  admin_gateway_controller.CreateReqDTO:
+  admin_gateway_handler.CreateReqDTO:
     properties:
       active:
         example: true
@@ -354,7 +354,7 @@ definitions:
     - order
     - paymentTypes
     type: object
-  admin_gateway_controller.CreateResDTO:
+  admin_gateway_handler.CreateResDTO:
     properties:
       active:
         example: true
@@ -406,7 +406,7 @@ definitions:
         type: integer
       paymentTypes:
         items:
-          $ref: '#/definitions/admin_gateway_controller.CreatePaymentTypeResDTO'
+          $ref: '#/definitions/admin_gateway_handler.CreatePaymentTypeResDTO'
         type: array
       softDescriptor:
         example: Company Name
@@ -433,7 +433,7 @@ definitions:
         example: https://example.com/webhook
         type: string
     type: object
-  admin_gateway_controller.GatewayPaymentTypesDTO:
+  admin_gateway_handler.GatewayPaymentTypesDTO:
     properties:
       id:
         example: 1
@@ -442,7 +442,7 @@ definitions:
         example: Installment
         type: string
     type: object
-  admin_gateway_controller.GatewayProcessDTO:
+  admin_gateway_handler.GatewayProcessDTO:
     properties:
       id:
         example: 2
@@ -451,7 +451,7 @@ definitions:
         example: Authorize Only
         type: string
     type: object
-  admin_gateway_controller.GetAllResDTO:
+  admin_gateway_handler.GetAllResDTO:
     properties:
       active:
         example: true
@@ -482,10 +482,10 @@ definitions:
         type: string
       gatewayPaymentTypes:
         items:
-          $ref: '#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO'
+          $ref: '#/definitions/admin_gateway_handler.GatewayPaymentTypesDTO'
         type: array
       gatewayProcess:
-        $ref: '#/definitions/admin_gateway_controller.GatewayProcessDTO'
+        $ref: '#/definitions/admin_gateway_handler.GatewayProcessDTO'
       gatewayProcessId:
         example: 1
         type: integer
@@ -532,7 +532,7 @@ definitions:
         example: https://example.com/webhook
         type: string
     type: object
-  admin_gateway_controller.GetOneByIdResDTO:
+  admin_gateway_handler.GetOneByIdResDTO:
     properties:
       active:
         example: true
@@ -563,10 +563,10 @@ definitions:
         type: string
       gatewayPaymentTypes:
         items:
-          $ref: '#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO'
+          $ref: '#/definitions/admin_gateway_handler.GatewayPaymentTypesDTO'
         type: array
       gatewayProcess:
-        $ref: '#/definitions/admin_gateway_controller.GatewayProcessDTO'
+        $ref: '#/definitions/admin_gateway_handler.GatewayProcessDTO'
       gatewayProcessId:
         example: 1
         type: integer
@@ -613,7 +613,7 @@ definitions:
         example: https://example.com/webhook
         type: string
     type: object
-  admin_gateway_controller.UpdateReqDTO:
+  admin_gateway_handler.UpdateReqDTO:
     properties:
       active:
         example: true
@@ -686,7 +686,7 @@ definitions:
     - name
     - order
     type: object
-  admin_product_controller.CategoryResponseDto:
+  admin_product_handler.CategoryResponseDto:
     properties:
       description:
         example: EVENT
@@ -698,7 +698,7 @@ definitions:
         example: event
         type: string
     type: object
-  admin_product_controller.CreateInstallmentsRequestDto:
+  admin_product_handler.CreateInstallmentsRequestDto:
     properties:
       fee:
         type: number
@@ -714,7 +714,7 @@ definitions:
     - id
     - paymentTypeId
     type: object
-  admin_product_controller.CreateInstallmentsResponseDto:
+  admin_product_handler.CreateInstallmentsResponseDto:
     properties:
       fee:
         example: 1.5
@@ -732,7 +732,7 @@ definitions:
         example: 2.3
         type: number
     type: object
-  admin_product_controller.CreateRequestDto:
+  admin_product_handler.CreateRequestDto:
     properties:
       active:
         example: true
@@ -763,7 +763,7 @@ definitions:
         type: string
       installments:
         items:
-          $ref: '#/definitions/admin_product_controller.CreateInstallmentsRequestDto'
+          $ref: '#/definitions/admin_product_handler.CreateInstallmentsRequestDto'
         minItems: 1
         type: array
       name:
@@ -774,7 +774,7 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_product_controller.CreateStockRequestDto'
+        $ref: '#/definitions/admin_product_handler.CreateStockRequestDto'
     required:
     - categoryId
     - image
@@ -784,7 +784,7 @@ definitions:
     - name
     - price
     type: object
-  admin_product_controller.CreateResponseDto:
+  admin_product_handler.CreateResponseDto:
     properties:
       active:
         example: true
@@ -819,7 +819,7 @@ definitions:
         type: string
       installments:
         items:
-          $ref: '#/definitions/admin_product_controller.CreateInstallmentsResponseDto'
+          $ref: '#/definitions/admin_product_handler.CreateInstallmentsResponseDto'
         type: array
       isDeleted:
         example: false
@@ -831,7 +831,7 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_product_controller.CreateStockResponseDto'
+        $ref: '#/definitions/admin_product_handler.CreateStockResponseDto'
       updatedAt:
         example: "2023-01-01T00:00:00Z"
         type: string
@@ -842,7 +842,7 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_product_controller.CreateStockRequestDto:
+  admin_product_handler.CreateStockRequestDto:
     properties:
       minQty:
         example: 50
@@ -854,7 +854,7 @@ definitions:
     required:
     - qty
     type: object
-  admin_product_controller.CreateStockResponseDto:
+  admin_product_handler.CreateStockResponseDto:
     properties:
       id:
         example: 1
@@ -872,7 +872,7 @@ definitions:
     required:
     - qty
     type: object
-  admin_product_controller.GetAllResponseDto:
+  admin_product_handler.GetAllResponseDto:
     properties:
       active:
         example: true
@@ -924,13 +924,13 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_product_controller.GetAllWithRelationsResponseDto:
+  admin_product_handler.GetAllWithRelationsResponseDto:
     properties:
       active:
         example: true
         type: boolean
       category:
-        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+        $ref: '#/definitions/admin_product_handler.CategoryResponseDto'
       categoryId:
         example: 3
         type: integer
@@ -960,7 +960,7 @@ definitions:
         example: https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg
         type: string
       installments:
-        $ref: '#/definitions/admin_product_controller.InstallmentsResponseDto'
+        $ref: '#/definitions/admin_product_handler.InstallmentsResponseDto'
       isDeleted:
         example: false
         type: boolean
@@ -971,7 +971,7 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+        $ref: '#/definitions/admin_product_handler.StockResponseDto'
       updatedAt:
         example: "2023-01-01T00:00:00Z"
         type: string
@@ -982,13 +982,13 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_product_controller.GetOneByIdResponseDto:
+  admin_product_handler.GetOneByIdResponseDto:
     properties:
       active:
         example: true
         type: boolean
       category:
-        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+        $ref: '#/definitions/admin_product_handler.CategoryResponseDto'
       categoryId:
         example: 3
         type: integer
@@ -1027,7 +1027,7 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+        $ref: '#/definitions/admin_product_handler.StockResponseDto'
       updatedAt:
         example: "2023-01-01T00:00:00Z"
         type: string
@@ -1038,13 +1038,13 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_product_controller.GetOneByUuidResponseDto:
+  admin_product_handler.GetOneByUuidResponseDto:
     properties:
       active:
         example: true
         type: boolean
       category:
-        $ref: '#/definitions/admin_product_controller.CategoryResponseDto'
+        $ref: '#/definitions/admin_product_handler.CategoryResponseDto'
       categoryId:
         example: 3
         type: integer
@@ -1083,7 +1083,7 @@ definitions:
         example: 5.99
         type: number
       stock:
-        $ref: '#/definitions/admin_product_controller.StockResponseDto'
+        $ref: '#/definitions/admin_product_handler.StockResponseDto'
       updatedAt:
         example: "2023-01-01T00:00:00Z"
         type: string
@@ -1094,22 +1094,22 @@ definitions:
         example: 998f91f3-4dd7-419d-a543-0d26a0e945ec
         type: string
     type: object
-  admin_product_controller.InstallmentsResponseDto:
+  admin_product_handler.InstallmentsResponseDto:
     properties:
       creditcard:
         items:
-          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+          $ref: '#/definitions/admin_product_handler.PaymentTypeInstallment'
         type: array
       paymentSlip:
         items:
-          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+          $ref: '#/definitions/admin_product_handler.PaymentTypeInstallment'
         type: array
       pix:
         items:
-          $ref: '#/definitions/admin_product_controller.PaymentTypeInstallment'
+          $ref: '#/definitions/admin_product_handler.PaymentTypeInstallment'
         type: array
     type: object
-  admin_product_controller.PaymentTypeInstallment:
+  admin_product_handler.PaymentTypeInstallment:
     properties:
       fee:
         example: 3.22
@@ -1124,7 +1124,7 @@ definitions:
         example: 7
         type: number
     type: object
-  admin_product_controller.StockResponseDto:
+  admin_product_handler.StockResponseDto:
     properties:
       id:
         example: 1
@@ -1142,7 +1142,7 @@ definitions:
     required:
     - qty
     type: object
-  admin_product_controller.UpdateInstallmentsRequestDto:
+  admin_product_handler.UpdateInstallmentsRequestDto:
     properties:
       fee:
         type: number
@@ -1158,7 +1158,7 @@ definitions:
     - id
     - paymentTypeId
     type: object
-  admin_product_controller.UpdateRequestDto:
+  admin_product_handler.UpdateRequestDto:
     properties:
       active:
         example: false
@@ -1189,7 +1189,7 @@ definitions:
         type: string
       installments:
         items:
-          $ref: '#/definitions/admin_product_controller.UpdateInstallmentsRequestDto'
+          $ref: '#/definitions/admin_product_handler.UpdateInstallmentsRequestDto'
         minItems: 1
         type: array
       name:
@@ -1208,7 +1208,7 @@ definitions:
     - name
     - price
     type: object
-  admin_user_controller.CreateRequestDto:
+  admin_user_handler.CreateRequestDto:
     properties:
       email:
         example: adminjohndoe@gmail.com
@@ -1234,7 +1234,7 @@ definitions:
     - lastName
     - password
     type: object
-  admin_user_controller.CreateResponseDto:
+  admin_user_handler.CreateResponseDto:
     properties:
       createdAt:
         example: "2024-06-29T06:29:44.999929Z"
@@ -1266,7 +1266,7 @@ definitions:
     - firstName
     - lastName
     type: object
-  admin_user_controller.GetAllResponseDto:
+  admin_user_handler.GetAllResponseDto:
     properties:
       createdAt:
         example: "2024-06-29T06:29:44.999929Z"
@@ -1290,7 +1290,7 @@ definitions:
         example: "2024-06-29T06:29:44.999929Z"
         type: string
     type: object
-  admin_user_controller.GetOneByEmailRequestDto:
+  admin_user_handler.GetOneByEmailRequestDto:
     properties:
       email:
         example: adminjohndoe@gmail.com
@@ -1298,7 +1298,7 @@ definitions:
     required:
     - email
     type: object
-  admin_user_controller.GetOneByEmailResponseDto:
+  admin_user_handler.GetOneByEmailResponseDto:
     properties:
       createdAt:
         example: "2024-06-29T06:29:44.999929Z"
@@ -1322,7 +1322,7 @@ definitions:
         example: "2024-06-29T06:29:44.999929Z"
         type: string
     type: object
-  admin_user_controller.GetOneByIdResponseDto:
+  admin_user_handler.GetOneByIdResponseDto:
     properties:
       createdAt:
         example: "2024-06-29T06:29:44.999929Z"
@@ -1346,7 +1346,7 @@ definitions:
         example: "2024-06-29T06:29:44.999929Z"
         type: string
     type: object
-  admin_user_controller.UpdateRequestDto:
+  admin_user_handler.UpdateRequestDto:
     properties:
       email:
         example: adminjohndoe@gmail.com
@@ -1373,7 +1373,7 @@ definitions:
     - lastName
     - role
     type: object
-  auth_controller.SignInRequestDto:
+  auth_handler.SignInRequestDto:
     properties:
       email:
         example: johndoe@gmail.com
@@ -1385,7 +1385,7 @@ definitions:
     - email
     - password
     type: object
-  auth_controller.SignInResponseDto:
+  auth_handler.SignInResponseDto:
     properties:
       code:
         example: 200
@@ -1397,7 +1397,7 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk3OTExNzMsImlkIjozLCJvcmlnX2lhdCI6MTcxOTcwNDc3Mywicm9sZSI6InVzZXIifQ.c8HuyRAxgNDC4FavwQ_mv-qWOm4Ch6--1-kSQEmK4x0
         type: string
     type: object
-  creditcard_controller.CreateRequestDto:
+  creditcard_handler.CreateRequestDto:
     properties:
       creditcardFlagId:
         example: 1
@@ -1408,7 +1408,7 @@ definitions:
         minimum: 1
         type: integer
       expiration:
-        example: "2025-01-01T00:00:00Z"
+        example: "2025-01-01"
         type: string
       name:
         example: Testing
@@ -1417,7 +1417,7 @@ definitions:
         example: true
         type: boolean
       number:
-        example: "5574723384289379"
+        example: "4242424242424242"
         minLength: 8
         type: string
       priority:
@@ -1434,7 +1434,7 @@ definitions:
     - number
     - tokenize
     type: object
-  creditcard_controller.CreateResponseDto:
+  creditcard_handler.CreateResponseDto:
     properties:
       createdAt:
         example: "2024-01-01T00:00:00Z"
@@ -1448,7 +1448,7 @@ definitions:
         minimum: 1
         type: integer
       expiration:
-        example: "2025-01-01T00:00:00Z"
+        example: "2025-01-01"
         type: string
       id:
         example: 1
@@ -1463,7 +1463,7 @@ definitions:
         example: true
         type: boolean
       number:
-        example: 5574********9379
+        example: 4242********4242
         minLength: 8
         type: string
       priority:
@@ -1485,7 +1485,7 @@ definitions:
     - name
     - number
     type: object
-  creditcard_controller.CreditcardFlag:
+  creditcard_handler.CreditcardFlag:
     properties:
       description:
         example: VISA
@@ -1500,7 +1500,7 @@ definitions:
         example: '''^4d{5}'''
         type: string
     type: object
-  creditcard_controller.CreditcardType:
+  creditcard_handler.CreditcardType:
     properties:
       id:
         example: 1
@@ -1509,15 +1509,15 @@ definitions:
         example: Credit
         type: string
     type: object
-  creditcard_controller.GetAllUserCreditcardsResponseDto:
+  creditcard_handler.GetAllUserCreditcardsResponseDto:
     properties:
       createdAt:
         example: "2024-01-01T00:00:00Z"
         type: string
       creditcardFlag:
-        $ref: '#/definitions/creditcard_controller.CreditcardFlag'
+        $ref: '#/definitions/creditcard_handler.CreditcardFlag'
       creditcardType:
-        $ref: '#/definitions/creditcard_controller.CreditcardType'
+        $ref: '#/definitions/creditcard_handler.CreditcardType'
       expiration:
         example: "2025-01-01T00:00:00Z"
         type: string
@@ -1525,7 +1525,7 @@ definitions:
         example: Testing
         type: string
       number:
-        example: 5574********9379
+        example: 4242********4242
         minLength: 8
         type: string
       userId:
@@ -1539,7 +1539,7 @@ definitions:
     - name
     - number
     type: object
-  creditcard_controller.UpdateRequestDto:
+  creditcard_handler.UpdateRequestDto:
     properties:
       creditcardFlagId:
         example: 2
@@ -1550,7 +1550,7 @@ definitions:
         minimum: 1
         type: integer
       expiration:
-        example: "2025-01-01T00:00:00Z"
+        example: "2025-01-01"
         type: string
       name:
         example: Testing Update
@@ -1599,7 +1599,7 @@ definitions:
         example: 403
         type: integer
     type: object
-  user_controller.AddressRequestDto:
+  user_handler.AddressRequestDto:
     properties:
       addressType:
         example: home
@@ -1632,7 +1632,7 @@ definitions:
         example: "2023-01-02T00:00:00Z"
         type: string
     type: object
-  user_controller.AddressResponseDto:
+  user_handler.AddressResponseDto:
     properties:
       addressType:
         example: home
@@ -1671,10 +1671,10 @@ definitions:
         example: 1
         type: integer
     type: object
-  user_controller.CreateRequestDto:
+  user_handler.CreateRequestDto:
     properties:
       address:
-        $ref: '#/definitions/user_controller.AddressRequestDto'
+        $ref: '#/definitions/user_handler.AddressRequestDto'
       email:
         example: johndoe@gmail.com
         type: string
@@ -1688,17 +1688,17 @@ definitions:
         example: "123456"
         type: string
       phone:
-        $ref: '#/definitions/user_controller.PhoneRequestDto'
+        $ref: '#/definitions/user_handler.PhoneRequestDto'
     required:
     - email
     - firstName
     - lastName
     - password
     type: object
-  user_controller.CreateResponseDto:
+  user_handler.CreateResponseDto:
     properties:
       address:
-        $ref: '#/definitions/user_controller.AddressResponseDto'
+        $ref: '#/definitions/user_handler.AddressResponseDto'
       email:
         example: johndoe@gmail.com
         type: string
@@ -1712,12 +1712,12 @@ definitions:
         example: Doe
         type: string
       phone:
-        $ref: '#/definitions/user_controller.PhoneResponseDto'
+        $ref: '#/definitions/user_handler.PhoneResponseDto'
       role:
         example: user
         type: string
     type: object
-  user_controller.GetAllResponseDto:
+  user_handler.GetAllResponseDto:
     properties:
       createdAt:
         example: "2023-01-01T00:00:00Z"
@@ -1741,7 +1741,7 @@ definitions:
         example: "2023-01-01T00:00:00Z"
         type: string
     type: object
-  user_controller.GetOneByIdResponseDto:
+  user_handler.GetOneByIdResponseDto:
     properties:
       createdAt:
         example: "2023-01-01T00:00:00Z"
@@ -1765,7 +1765,7 @@ definitions:
         example: "2023-01-01T00:00:00Z"
         type: string
     type: object
-  user_controller.PhoneRequestDto:
+  user_handler.PhoneRequestDto:
     properties:
       ddd:
         example: "021"
@@ -1779,7 +1779,7 @@ definitions:
     - ddd
     - number
     type: object
-  user_controller.PhoneResponseDto:
+  user_handler.PhoneResponseDto:
     properties:
       ddd:
         example: "021"
@@ -1794,7 +1794,7 @@ definitions:
         example: 2
         type: integer
     type: object
-  user_controller.UpdateRequestDto:
+  user_handler.UpdateRequestDto:
     properties:
       email:
         example: johndoeupdate@gmail.com
@@ -1835,14 +1835,14 @@ paths:
         name: login
         required: true
         schema:
-          $ref: '#/definitions/admin_auth_controller.SignInRequestDto'
+          $ref: '#/definitions/admin_auth_handler.SignInRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_auth_controller.SignInResponseDto'
+            $ref: '#/definitions/admin_auth_handler.SignInResponseDto'
         "401":
           description: Unauthorized
           schema:
@@ -1860,7 +1860,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/admin_event_controller.GetAllResponseDto'
+              $ref: '#/definitions/admin_event_handler.GetAllResponseDto'
             type: array
         "400":
           description: Bad Request
@@ -1889,14 +1889,14 @@ paths:
         name: Event
         required: true
         schema:
-          $ref: '#/definitions/admin_event_controller.CreateRequestDto'
+          $ref: '#/definitions/admin_event_handler.CreateRequestDto'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/admin_event_controller.CreateResponseDto'
+            $ref: '#/definitions/admin_event_handler.CreateResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -1965,7 +1965,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_event_controller.GetOneByIdResponseDto'
+            $ref: '#/definitions/admin_event_handler.GetOneByIdResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2002,7 +2002,7 @@ paths:
         name: Event
         required: true
         schema:
-          $ref: '#/definitions/admin_event_controller.UpdateRequestDto'
+          $ref: '#/definitions/admin_event_handler.UpdateRequestDto'
       produces:
       - application/json
       responses:
@@ -2043,7 +2043,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/admin_gateway_controller.GetAllResDTO'
+              $ref: '#/definitions/admin_gateway_handler.GetAllResDTO'
             type: array
         "400":
           description: Bad Request
@@ -2072,14 +2072,14 @@ paths:
         name: Gateway
         required: true
         schema:
-          $ref: '#/definitions/admin_gateway_controller.CreateReqDTO'
+          $ref: '#/definitions/admin_gateway_handler.CreateReqDTO'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/admin_gateway_controller.CreateResDTO'
+            $ref: '#/definitions/admin_gateway_handler.CreateResDTO'
         "400":
           description: Bad Request
           schema:
@@ -2148,7 +2148,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_gateway_controller.GetOneByIdResDTO'
+            $ref: '#/definitions/admin_gateway_handler.GetOneByIdResDTO'
         "400":
           description: Bad Request
           schema:
@@ -2185,7 +2185,7 @@ paths:
         name: Gateway
         required: true
         schema:
-          $ref: '#/definitions/admin_gateway_controller.UpdateReqDTO'
+          $ref: '#/definitions/admin_gateway_handler.UpdateReqDTO'
       produces:
       - application/json
       responses:
@@ -2226,7 +2226,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/admin_product_controller.GetAllResponseDto'
+              $ref: '#/definitions/admin_product_handler.GetAllResponseDto'
             type: array
         "400":
           description: Bad Request
@@ -2255,14 +2255,14 @@ paths:
         name: Product
         required: true
         schema:
-          $ref: '#/definitions/admin_product_controller.CreateRequestDto'
+          $ref: '#/definitions/admin_product_handler.CreateRequestDto'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/admin_product_controller.CreateResponseDto'
+            $ref: '#/definitions/admin_product_handler.CreateResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2331,7 +2331,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_product_controller.GetOneByIdResponseDto'
+            $ref: '#/definitions/admin_product_handler.GetOneByIdResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2368,7 +2368,7 @@ paths:
         name: Product
         required: true
         schema:
-          $ref: '#/definitions/admin_product_controller.UpdateRequestDto'
+          $ref: '#/definitions/admin_product_handler.UpdateRequestDto'
       produces:
       - application/json
       responses:
@@ -2409,7 +2409,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/admin_product_controller.GetAllWithRelationsResponseDto'
+              $ref: '#/definitions/admin_product_handler.GetAllWithRelationsResponseDto'
             type: array
         "400":
           description: Bad Request
@@ -2445,7 +2445,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_product_controller.GetOneByUuidResponseDto'
+            $ref: '#/definitions/admin_product_handler.GetOneByUuidResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2479,7 +2479,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/admin_user_controller.GetAllResponseDto'
+              $ref: '#/definitions/admin_user_handler.GetAllResponseDto'
             type: array
         "401":
           description: Unauthorized
@@ -2504,14 +2504,14 @@ paths:
         name: AdminUser
         required: true
         schema:
-          $ref: '#/definitions/admin_user_controller.CreateRequestDto'
+          $ref: '#/definitions/admin_user_handler.CreateRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_user_controller.CreateResponseDto'
+            $ref: '#/definitions/admin_user_handler.CreateResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2580,7 +2580,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_user_controller.GetOneByIdResponseDto'
+            $ref: '#/definitions/admin_user_handler.GetOneByIdResponseDto'
         "401":
           description: Unauthorized
           schema:
@@ -2608,7 +2608,7 @@ paths:
         name: AdminUser
         required: true
         schema:
-          $ref: '#/definitions/admin_user_controller.UpdateRequestDto'
+          $ref: '#/definitions/admin_user_handler.UpdateRequestDto'
       - description: Admin User ID
         in: path
         name: id
@@ -2653,14 +2653,14 @@ paths:
         name: email
         required: true
         schema:
-          $ref: '#/definitions/admin_user_controller.GetOneByEmailRequestDto'
+          $ref: '#/definitions/admin_user_handler.GetOneByEmailRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin_user_controller.GetOneByEmailResponseDto'
+            $ref: '#/definitions/admin_user_handler.GetOneByEmailResponseDto'
         "401":
           description: Unauthorized
           schema:
@@ -2691,14 +2691,14 @@ paths:
         name: login
         required: true
         schema:
-          $ref: '#/definitions/auth_controller.SignInRequestDto'
+          $ref: '#/definitions/auth_handler.SignInRequestDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth_controller.SignInResponseDto'
+            $ref: '#/definitions/auth_handler.SignInResponseDto'
         "401":
           description: Unauthorized
           schema:
@@ -2715,14 +2715,14 @@ paths:
         name: Creditcard
         required: true
         schema:
-          $ref: '#/definitions/creditcard_controller.CreateRequestDto'
+          $ref: '#/definitions/creditcard_handler.CreateRequestDto'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/creditcard_controller.CreateResponseDto'
+            $ref: '#/definitions/creditcard_handler.CreateResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2790,7 +2790,7 @@ paths:
         name: Creditcard
         required: true
         schema:
-          $ref: '#/definitions/creditcard_controller.UpdateRequestDto'
+          $ref: '#/definitions/creditcard_handler.UpdateRequestDto'
       produces:
       - application/json
       responses:
@@ -2831,7 +2831,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/creditcard_controller.GetAllUserCreditcardsResponseDto'
+              $ref: '#/definitions/creditcard_handler.GetAllUserCreditcardsResponseDto'
             type: array
         "400":
           description: Bad Request
@@ -2864,7 +2864,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/user_controller.GetAllResponseDto'
+              $ref: '#/definitions/user_handler.GetAllResponseDto'
             type: array
         "500":
           description: Internal Server Error
@@ -2883,14 +2883,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/user_controller.CreateRequestDto'
+          $ref: '#/definitions/user_handler.CreateRequestDto'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/user_controller.CreateResponseDto'
+            $ref: '#/definitions/user_handler.CreateResponseDto'
         "400":
           description: Bad Request
           schema:
@@ -2917,7 +2917,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/user_controller.GetOneByIdResponseDto'
+            $ref: '#/definitions/user_handler.GetOneByIdResponseDto'
         "401":
           description: Unauthorized
           schema:
@@ -2952,7 +2952,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/user_controller.UpdateRequestDto'
+          $ref: '#/definitions/user_handler.UpdateRequestDto'
       produces:
       - application/json
       responses:

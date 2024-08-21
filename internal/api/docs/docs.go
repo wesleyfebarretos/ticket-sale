@@ -44,7 +44,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_auth_controller.SignInRequestDto"
+                            "$ref": "#/definitions/admin_auth_handler.SignInRequestDto"
                         }
                     }
                 ],
@@ -52,7 +52,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_auth_controller.SignInResponseDto"
+                            "$ref": "#/definitions/admin_auth_handler.SignInResponseDto"
                         }
                     },
                     "401": {
@@ -80,7 +80,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/admin_event_controller.GetAllResponseDto"
+                                "$ref": "#/definitions/admin_event_handler.GetAllResponseDto"
                             }
                         }
                     },
@@ -126,7 +126,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_event_controller.CreateRequestDto"
+                            "$ref": "#/definitions/admin_event_handler.CreateRequestDto"
                         }
                     }
                 ],
@@ -134,7 +134,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/admin_event_controller.CreateResponseDto"
+                            "$ref": "#/definitions/admin_event_handler.CreateResponseDto"
                         }
                     },
                     "400": {
@@ -187,7 +187,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_event_controller.GetOneByIdResponseDto"
+                            "$ref": "#/definitions/admin_event_handler.GetOneByIdResponseDto"
                         }
                     },
                     "400": {
@@ -245,7 +245,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_event_controller.UpdateRequestDto"
+                            "$ref": "#/definitions/admin_event_handler.UpdateRequestDto"
                         }
                     }
                 ],
@@ -356,7 +356,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/admin_gateway_controller.GetAllResDTO"
+                                "$ref": "#/definitions/admin_gateway_handler.GetAllResDTO"
                             }
                         }
                     },
@@ -402,7 +402,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_gateway_controller.CreateReqDTO"
+                            "$ref": "#/definitions/admin_gateway_handler.CreateReqDTO"
                         }
                     }
                 ],
@@ -410,7 +410,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/admin_gateway_controller.CreateResDTO"
+                            "$ref": "#/definitions/admin_gateway_handler.CreateResDTO"
                         }
                     },
                     "400": {
@@ -463,7 +463,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_gateway_controller.GetOneByIdResDTO"
+                            "$ref": "#/definitions/admin_gateway_handler.GetOneByIdResDTO"
                         }
                     },
                     "400": {
@@ -521,7 +521,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_gateway_controller.UpdateReqDTO"
+                            "$ref": "#/definitions/admin_gateway_handler.UpdateReqDTO"
                         }
                     }
                 ],
@@ -632,7 +632,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/admin_product_controller.GetAllResponseDto"
+                                "$ref": "#/definitions/admin_product_handler.GetAllResponseDto"
                             }
                         }
                     },
@@ -678,7 +678,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_product_controller.CreateRequestDto"
+                            "$ref": "#/definitions/admin_product_handler.CreateRequestDto"
                         }
                     }
                 ],
@@ -686,7 +686,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/admin_product_controller.CreateResponseDto"
+                            "$ref": "#/definitions/admin_product_handler.CreateResponseDto"
                         }
                     },
                     "400": {
@@ -732,7 +732,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/admin_product_controller.GetAllWithRelationsResponseDto"
+                                "$ref": "#/definitions/admin_product_handler.GetAllWithRelationsResponseDto"
                             }
                         }
                     },
@@ -786,7 +786,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_product_controller.GetOneByUuidResponseDto"
+                            "$ref": "#/definitions/admin_product_handler.GetOneByUuidResponseDto"
                         }
                     },
                     "400": {
@@ -845,7 +845,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_product_controller.GetOneByIdResponseDto"
+                            "$ref": "#/definitions/admin_product_handler.GetOneByIdResponseDto"
                         }
                     },
                     "400": {
@@ -903,7 +903,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_product_controller.UpdateRequestDto"
+                            "$ref": "#/definitions/admin_product_handler.UpdateRequestDto"
                         }
                     }
                 ],
@@ -1014,7 +1014,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/admin_user_controller.GetAllResponseDto"
+                                "$ref": "#/definitions/admin_user_handler.GetAllResponseDto"
                             }
                         }
                     },
@@ -1054,7 +1054,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.CreateRequestDto"
+                            "$ref": "#/definitions/admin_user_handler.CreateRequestDto"
                         }
                     }
                 ],
@@ -1062,7 +1062,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.CreateResponseDto"
+                            "$ref": "#/definitions/admin_user_handler.CreateResponseDto"
                         }
                     },
                     "400": {
@@ -1109,7 +1109,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.GetOneByEmailRequestDto"
+                            "$ref": "#/definitions/admin_user_handler.GetOneByEmailRequestDto"
                         }
                     }
                 ],
@@ -1117,7 +1117,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.GetOneByEmailResponseDto"
+                            "$ref": "#/definitions/admin_user_handler.GetOneByEmailResponseDto"
                         }
                     },
                     "401": {
@@ -1170,7 +1170,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.GetOneByIdResponseDto"
+                            "$ref": "#/definitions/admin_user_handler.GetOneByIdResponseDto"
                         }
                     },
                     "401": {
@@ -1215,7 +1215,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin_user_controller.UpdateRequestDto"
+                            "$ref": "#/definitions/admin_user_handler.UpdateRequestDto"
                         }
                     },
                     {
@@ -1337,7 +1337,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth_controller.SignInRequestDto"
+                            "$ref": "#/definitions/auth_handler.SignInRequestDto"
                         }
                     }
                 ],
@@ -1345,7 +1345,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth_controller.SignInResponseDto"
+                            "$ref": "#/definitions/auth_handler.SignInResponseDto"
                         }
                     },
                     "401": {
@@ -1374,7 +1374,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/creditcard_controller.CreateRequestDto"
+                            "$ref": "#/definitions/creditcard_handler.CreateRequestDto"
                         }
                     }
                 ],
@@ -1382,7 +1382,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/creditcard_controller.CreateResponseDto"
+                            "$ref": "#/definitions/creditcard_handler.CreateResponseDto"
                         }
                     },
                     "400": {
@@ -1428,7 +1428,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/creditcard_controller.GetAllUserCreditcardsResponseDto"
+                                "$ref": "#/definitions/creditcard_handler.GetAllUserCreditcardsResponseDto"
                             }
                         }
                     },
@@ -1483,7 +1483,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/creditcard_controller.UpdateRequestDto"
+                            "$ref": "#/definitions/creditcard_handler.UpdateRequestDto"
                         }
                     }
                 ],
@@ -1597,7 +1597,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/user_controller.GetAllResponseDto"
+                                "$ref": "#/definitions/user_handler.GetAllResponseDto"
                             }
                         }
                     },
@@ -1628,7 +1628,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user_controller.CreateRequestDto"
+                            "$ref": "#/definitions/user_handler.CreateRequestDto"
                         }
                     }
                 ],
@@ -1636,7 +1636,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/user_controller.CreateResponseDto"
+                            "$ref": "#/definitions/user_handler.CreateResponseDto"
                         }
                     },
                     "400": {
@@ -1677,7 +1677,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/user_controller.GetOneByIdResponseDto"
+                            "$ref": "#/definitions/user_handler.GetOneByIdResponseDto"
                         }
                     },
                     "401": {
@@ -1732,7 +1732,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user_controller.UpdateRequestDto"
+                            "$ref": "#/definitions/user_handler.UpdateRequestDto"
                         }
                     }
                 ],
@@ -1772,7 +1772,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "admin_auth_controller.SignInRequestDto": {
+        "admin_auth_handler.SignInRequestDto": {
             "type": "object",
             "required": [
                 "email",
@@ -1789,7 +1789,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_auth_controller.SignInResponseDto": {
+        "admin_auth_handler.SignInResponseDto": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1806,7 +1806,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.CategoryDto": {
+        "admin_event_handler.CategoryDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1823,7 +1823,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.CreateRequestDto": {
+        "admin_event_handler.CreateRequestDto": {
             "type": "object",
             "properties": {
                 "city": {
@@ -1839,7 +1839,7 @@ const docTemplate = `{
                     "example": "Disney"
                 },
                 "product": {
-                    "$ref": "#/definitions/admin_product_controller.CreateRequestDto"
+                    "$ref": "#/definitions/admin_product_handler.CreateRequestDto"
                 },
                 "startAt": {
                     "type": "string",
@@ -1851,7 +1851,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.CreateResponseDto": {
+        "admin_event_handler.CreateResponseDto": {
             "type": "object",
             "properties": {
                 "city": {
@@ -1871,7 +1871,7 @@ const docTemplate = `{
                     "example": "Disney"
                 },
                 "product": {
-                    "$ref": "#/definitions/admin_product_controller.CreateResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.CreateResponseDto"
                 },
                 "productId": {
                     "type": "integer",
@@ -1887,7 +1887,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.GetAllProductDto": {
+        "admin_event_handler.GetAllProductDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -1895,7 +1895,7 @@ const docTemplate = `{
                     "example": true
                 },
                 "category": {
-                    "$ref": "#/definitions/admin_event_controller.CategoryDto"
+                    "$ref": "#/definitions/admin_event_handler.CategoryDto"
                 },
                 "categoryId": {
                     "type": "integer",
@@ -1943,7 +1943,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.GetAllResponseDto": {
+        "admin_event_handler.GetAllResponseDto": {
             "type": "object",
             "properties": {
                 "city": {
@@ -1963,7 +1963,7 @@ const docTemplate = `{
                     "example": "Disney"
                 },
                 "product": {
-                    "$ref": "#/definitions/admin_event_controller.GetAllProductDto"
+                    "$ref": "#/definitions/admin_event_handler.GetAllProductDto"
                 },
                 "productId": {
                     "type": "integer",
@@ -1979,7 +1979,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.GetOneByIdProductDto": {
+        "admin_event_handler.GetOneByIdProductDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -1987,7 +1987,7 @@ const docTemplate = `{
                     "example": true
                 },
                 "category": {
-                    "$ref": "#/definitions/admin_event_controller.CategoryDto"
+                    "$ref": "#/definitions/admin_event_handler.CategoryDto"
                 },
                 "categoryId": {
                     "type": "integer",
@@ -2018,7 +2018,7 @@ const docTemplate = `{
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
                 },
                 "installments": {
-                    "$ref": "#/definitions/admin_product_controller.InstallmentsResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.InstallmentsResponseDto"
                 },
                 "isDeleted": {
                     "type": "boolean",
@@ -2033,7 +2033,7 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_event_controller.StockDto"
+                    "$ref": "#/definitions/admin_event_handler.StockDto"
                 },
                 "uuid": {
                     "type": "string",
@@ -2041,7 +2041,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.GetOneByIdResponseDto": {
+        "admin_event_handler.GetOneByIdResponseDto": {
             "type": "object",
             "properties": {
                 "city": {
@@ -2061,7 +2061,7 @@ const docTemplate = `{
                     "example": "Disney"
                 },
                 "product": {
-                    "$ref": "#/definitions/admin_event_controller.GetOneByIdProductDto"
+                    "$ref": "#/definitions/admin_event_handler.GetOneByIdProductDto"
                 },
                 "productId": {
                     "type": "integer",
@@ -2077,7 +2077,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.StockDto": {
+        "admin_event_handler.StockDto": {
             "type": "object",
             "required": [
                 "qty"
@@ -2102,7 +2102,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_event_controller.UpdateRequestDto": {
+        "admin_event_handler.UpdateRequestDto": {
             "type": "object",
             "properties": {
                 "city": {
@@ -2118,7 +2118,7 @@ const docTemplate = `{
                     "example": "Disney"
                 },
                 "product": {
-                    "$ref": "#/definitions/admin_product_controller.UpdateRequestDto"
+                    "$ref": "#/definitions/admin_product_handler.UpdateRequestDto"
                 },
                 "startAt": {
                     "type": "string",
@@ -2130,7 +2130,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.CreatePaymentTypeResDTO": {
+        "admin_gateway_handler.CreatePaymentTypeResDTO": {
             "type": "object",
             "properties": {
                 "gatewayId": {
@@ -2147,7 +2147,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.CreateReqDTO": {
+        "admin_gateway_handler.CreateReqDTO": {
             "type": "object",
             "required": [
                 "authType",
@@ -2255,7 +2255,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.CreateResDTO": {
+        "admin_gateway_handler.CreateResDTO": {
             "type": "object",
             "properties": {
                 "active": {
@@ -2325,7 +2325,7 @@ const docTemplate = `{
                 "paymentTypes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_gateway_controller.CreatePaymentTypeResDTO"
+                        "$ref": "#/definitions/admin_gateway_handler.CreatePaymentTypeResDTO"
                     }
                 },
                 "softDescriptor": {
@@ -2362,7 +2362,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.GatewayPaymentTypesDTO": {
+        "admin_gateway_handler.GatewayPaymentTypesDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -2375,7 +2375,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.GatewayProcessDTO": {
+        "admin_gateway_handler.GatewayProcessDTO": {
             "type": "object",
             "properties": {
                 "id": {
@@ -2388,7 +2388,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.GetAllResDTO": {
+        "admin_gateway_handler.GetAllResDTO": {
             "type": "object",
             "properties": {
                 "active": {
@@ -2430,11 +2430,11 @@ const docTemplate = `{
                 "gatewayPaymentTypes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO"
+                        "$ref": "#/definitions/admin_gateway_handler.GatewayPaymentTypesDTO"
                     }
                 },
                 "gatewayProcess": {
-                    "$ref": "#/definitions/admin_gateway_controller.GatewayProcessDTO"
+                    "$ref": "#/definitions/admin_gateway_handler.GatewayProcessDTO"
                 },
                 "gatewayProcessId": {
                     "type": "integer",
@@ -2498,7 +2498,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.GetOneByIdResDTO": {
+        "admin_gateway_handler.GetOneByIdResDTO": {
             "type": "object",
             "properties": {
                 "active": {
@@ -2540,11 +2540,11 @@ const docTemplate = `{
                 "gatewayPaymentTypes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_gateway_controller.GatewayPaymentTypesDTO"
+                        "$ref": "#/definitions/admin_gateway_handler.GatewayPaymentTypesDTO"
                     }
                 },
                 "gatewayProcess": {
-                    "$ref": "#/definitions/admin_gateway_controller.GatewayProcessDTO"
+                    "$ref": "#/definitions/admin_gateway_handler.GatewayProcessDTO"
                 },
                 "gatewayProcessId": {
                     "type": "integer",
@@ -2608,7 +2608,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_gateway_controller.UpdateReqDTO": {
+        "admin_gateway_handler.UpdateReqDTO": {
             "type": "object",
             "required": [
                 "authType",
@@ -2704,7 +2704,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CategoryResponseDto": {
+        "admin_product_handler.CategoryResponseDto": {
             "type": "object",
             "properties": {
                 "description": {
@@ -2721,7 +2721,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CreateInstallmentsRequestDto": {
+        "admin_product_handler.CreateInstallmentsRequestDto": {
             "type": "object",
             "required": [
                 "id",
@@ -2744,7 +2744,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CreateInstallmentsResponseDto": {
+        "admin_product_handler.CreateInstallmentsResponseDto": {
             "type": "object",
             "properties": {
                 "fee": {
@@ -2769,7 +2769,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CreateRequestDto": {
+        "admin_product_handler.CreateRequestDto": {
             "type": "object",
             "required": [
                 "categoryId",
@@ -2818,7 +2818,7 @@ const docTemplate = `{
                     "type": "array",
                     "minItems": 1,
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.CreateInstallmentsRequestDto"
+                        "$ref": "#/definitions/admin_product_handler.CreateInstallmentsRequestDto"
                     }
                 },
                 "name": {
@@ -2831,11 +2831,11 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_product_controller.CreateStockRequestDto"
+                    "$ref": "#/definitions/admin_product_handler.CreateStockRequestDto"
                 }
             }
         },
-        "admin_product_controller.CreateResponseDto": {
+        "admin_product_handler.CreateResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -2881,7 +2881,7 @@ const docTemplate = `{
                 "installments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.CreateInstallmentsResponseDto"
+                        "$ref": "#/definitions/admin_product_handler.CreateInstallmentsResponseDto"
                     }
                 },
                 "isDeleted": {
@@ -2897,7 +2897,7 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_product_controller.CreateStockResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.CreateStockResponseDto"
                 },
                 "updatedAt": {
                     "type": "string",
@@ -2913,7 +2913,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CreateStockRequestDto": {
+        "admin_product_handler.CreateStockRequestDto": {
             "type": "object",
             "required": [
                 "qty"
@@ -2930,7 +2930,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.CreateStockResponseDto": {
+        "admin_product_handler.CreateStockResponseDto": {
             "type": "object",
             "required": [
                 "qty"
@@ -2955,7 +2955,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.GetAllResponseDto": {
+        "admin_product_handler.GetAllResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -3024,7 +3024,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.GetAllWithRelationsResponseDto": {
+        "admin_product_handler.GetAllWithRelationsResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -3032,7 +3032,7 @@ const docTemplate = `{
                     "example": true
                 },
                 "category": {
-                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.CategoryResponseDto"
                 },
                 "categoryId": {
                     "type": "integer",
@@ -3071,7 +3071,7 @@ const docTemplate = `{
                     "example": "https://example.com/images/red-hot-chilly-peppers-thumbnail.jpg"
                 },
                 "installments": {
-                    "$ref": "#/definitions/admin_product_controller.InstallmentsResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.InstallmentsResponseDto"
                 },
                 "isDeleted": {
                     "type": "boolean",
@@ -3086,7 +3086,7 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.StockResponseDto"
                 },
                 "updatedAt": {
                     "type": "string",
@@ -3102,7 +3102,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.GetOneByIdResponseDto": {
+        "admin_product_handler.GetOneByIdResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -3110,7 +3110,7 @@ const docTemplate = `{
                     "example": true
                 },
                 "category": {
-                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.CategoryResponseDto"
                 },
                 "categoryId": {
                     "type": "integer",
@@ -3161,7 +3161,7 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.StockResponseDto"
                 },
                 "updatedAt": {
                     "type": "string",
@@ -3177,7 +3177,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.GetOneByUuidResponseDto": {
+        "admin_product_handler.GetOneByUuidResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
@@ -3185,7 +3185,7 @@ const docTemplate = `{
                     "example": true
                 },
                 "category": {
-                    "$ref": "#/definitions/admin_product_controller.CategoryResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.CategoryResponseDto"
                 },
                 "categoryId": {
                     "type": "integer",
@@ -3236,7 +3236,7 @@ const docTemplate = `{
                     "example": 5.99
                 },
                 "stock": {
-                    "$ref": "#/definitions/admin_product_controller.StockResponseDto"
+                    "$ref": "#/definitions/admin_product_handler.StockResponseDto"
                 },
                 "updatedAt": {
                     "type": "string",
@@ -3252,30 +3252,30 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.InstallmentsResponseDto": {
+        "admin_product_handler.InstallmentsResponseDto": {
             "type": "object",
             "properties": {
                 "creditcard": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                        "$ref": "#/definitions/admin_product_handler.PaymentTypeInstallment"
                     }
                 },
                 "paymentSlip": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                        "$ref": "#/definitions/admin_product_handler.PaymentTypeInstallment"
                     }
                 },
                 "pix": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.PaymentTypeInstallment"
+                        "$ref": "#/definitions/admin_product_handler.PaymentTypeInstallment"
                     }
                 }
             }
         },
-        "admin_product_controller.PaymentTypeInstallment": {
+        "admin_product_handler.PaymentTypeInstallment": {
             "type": "object",
             "properties": {
                 "fee": {
@@ -3296,7 +3296,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.StockResponseDto": {
+        "admin_product_handler.StockResponseDto": {
             "type": "object",
             "required": [
                 "qty"
@@ -3321,7 +3321,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.UpdateInstallmentsRequestDto": {
+        "admin_product_handler.UpdateInstallmentsRequestDto": {
             "type": "object",
             "required": [
                 "id",
@@ -3344,7 +3344,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_product_controller.UpdateRequestDto": {
+        "admin_product_handler.UpdateRequestDto": {
             "type": "object",
             "required": [
                 "categoryId",
@@ -3393,7 +3393,7 @@ const docTemplate = `{
                     "type": "array",
                     "minItems": 1,
                     "items": {
-                        "$ref": "#/definitions/admin_product_controller.UpdateInstallmentsRequestDto"
+                        "$ref": "#/definitions/admin_product_handler.UpdateInstallmentsRequestDto"
                     }
                 },
                 "name": {
@@ -3407,7 +3407,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.CreateRequestDto": {
+        "admin_user_handler.CreateRequestDto": {
             "type": "object",
             "required": [
                 "email",
@@ -3440,7 +3440,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.CreateResponseDto": {
+        "admin_user_handler.CreateResponseDto": {
             "type": "object",
             "required": [
                 "email",
@@ -3482,7 +3482,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.GetAllResponseDto": {
+        "admin_user_handler.GetAllResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3515,7 +3515,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.GetOneByEmailRequestDto": {
+        "admin_user_handler.GetOneByEmailRequestDto": {
             "type": "object",
             "required": [
                 "email"
@@ -3527,7 +3527,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.GetOneByEmailResponseDto": {
+        "admin_user_handler.GetOneByEmailResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3560,7 +3560,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.GetOneByIdResponseDto": {
+        "admin_user_handler.GetOneByIdResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3593,7 +3593,7 @@ const docTemplate = `{
                 }
             }
         },
-        "admin_user_controller.UpdateRequestDto": {
+        "admin_user_handler.UpdateRequestDto": {
             "type": "object",
             "required": [
                 "email",
@@ -3628,7 +3628,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth_controller.SignInRequestDto": {
+        "auth_handler.SignInRequestDto": {
             "type": "object",
             "required": [
                 "email",
@@ -3645,7 +3645,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth_controller.SignInResponseDto": {
+        "auth_handler.SignInResponseDto": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3662,7 +3662,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.CreateRequestDto": {
+        "creditcard_handler.CreateRequestDto": {
             "type": "object",
             "required": [
                 "creditcardFlagId",
@@ -3685,7 +3685,7 @@ const docTemplate = `{
                 },
                 "expiration": {
                     "type": "string",
-                    "example": "2025-01-01T00:00:00Z"
+                    "example": "2025-01-01"
                 },
                 "name": {
                     "type": "string",
@@ -3698,7 +3698,7 @@ const docTemplate = `{
                 "number": {
                     "type": "string",
                     "minLength": 8,
-                    "example": "5574723384289379"
+                    "example": "4242424242424242"
                 },
                 "priority": {
                     "type": "integer",
@@ -3710,7 +3710,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.CreateResponseDto": {
+        "creditcard_handler.CreateResponseDto": {
             "type": "object",
             "required": [
                 "creditcardFlagId",
@@ -3736,7 +3736,7 @@ const docTemplate = `{
                 },
                 "expiration": {
                     "type": "string",
-                    "example": "2025-01-01T00:00:00Z"
+                    "example": "2025-01-01"
                 },
                 "id": {
                     "type": "integer",
@@ -3757,7 +3757,7 @@ const docTemplate = `{
                 "number": {
                     "type": "string",
                     "minLength": 8,
-                    "example": "5574********9379"
+                    "example": "4242********4242"
                 },
                 "priority": {
                     "type": "integer",
@@ -3777,7 +3777,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.CreditcardFlag": {
+        "creditcard_handler.CreditcardFlag": {
             "type": "object",
             "properties": {
                 "description": {
@@ -3798,7 +3798,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.CreditcardType": {
+        "creditcard_handler.CreditcardType": {
             "type": "object",
             "properties": {
                 "id": {
@@ -3811,7 +3811,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.GetAllUserCreditcardsResponseDto": {
+        "creditcard_handler.GetAllUserCreditcardsResponseDto": {
             "type": "object",
             "required": [
                 "expiration",
@@ -3824,10 +3824,10 @@ const docTemplate = `{
                     "example": "2024-01-01T00:00:00Z"
                 },
                 "creditcardFlag": {
-                    "$ref": "#/definitions/creditcard_controller.CreditcardFlag"
+                    "$ref": "#/definitions/creditcard_handler.CreditcardFlag"
                 },
                 "creditcardType": {
-                    "$ref": "#/definitions/creditcard_controller.CreditcardType"
+                    "$ref": "#/definitions/creditcard_handler.CreditcardType"
                 },
                 "expiration": {
                     "type": "string",
@@ -3840,7 +3840,7 @@ const docTemplate = `{
                 "number": {
                     "type": "string",
                     "minLength": 8,
-                    "example": "5574********9379"
+                    "example": "4242********4242"
                 },
                 "userId": {
                     "type": "integer",
@@ -3852,7 +3852,7 @@ const docTemplate = `{
                 }
             }
         },
-        "creditcard_controller.UpdateRequestDto": {
+        "creditcard_handler.UpdateRequestDto": {
             "type": "object",
             "required": [
                 "creditcardFlagId",
@@ -3874,7 +3874,7 @@ const docTemplate = `{
                 },
                 "expiration": {
                     "type": "string",
-                    "example": "2025-01-01T00:00:00Z"
+                    "example": "2025-01-01"
                 },
                 "name": {
                     "type": "string",
@@ -3934,7 +3934,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.AddressRequestDto": {
+        "user_handler.AddressRequestDto": {
             "type": "object",
             "properties": {
                 "addressType": {
@@ -3979,7 +3979,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.AddressResponseDto": {
+        "user_handler.AddressResponseDto": {
             "type": "object",
             "properties": {
                 "addressType": {
@@ -4032,7 +4032,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.CreateRequestDto": {
+        "user_handler.CreateRequestDto": {
             "type": "object",
             "required": [
                 "email",
@@ -4042,7 +4042,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/user_controller.AddressRequestDto"
+                    "$ref": "#/definitions/user_handler.AddressRequestDto"
                 },
                 "email": {
                     "type": "string",
@@ -4061,15 +4061,15 @@ const docTemplate = `{
                     "example": "123456"
                 },
                 "phone": {
-                    "$ref": "#/definitions/user_controller.PhoneRequestDto"
+                    "$ref": "#/definitions/user_handler.PhoneRequestDto"
                 }
             }
         },
-        "user_controller.CreateResponseDto": {
+        "user_handler.CreateResponseDto": {
             "type": "object",
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/user_controller.AddressResponseDto"
+                    "$ref": "#/definitions/user_handler.AddressResponseDto"
                 },
                 "email": {
                     "type": "string",
@@ -4088,7 +4088,7 @@ const docTemplate = `{
                     "example": "Doe"
                 },
                 "phone": {
-                    "$ref": "#/definitions/user_controller.PhoneResponseDto"
+                    "$ref": "#/definitions/user_handler.PhoneResponseDto"
                 },
                 "role": {
                     "type": "string",
@@ -4096,7 +4096,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.GetAllResponseDto": {
+        "user_handler.GetAllResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -4129,7 +4129,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.GetOneByIdResponseDto": {
+        "user_handler.GetOneByIdResponseDto": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -4162,7 +4162,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.PhoneRequestDto": {
+        "user_handler.PhoneRequestDto": {
             "type": "object",
             "required": [
                 "ddd",
@@ -4181,7 +4181,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.PhoneResponseDto": {
+        "user_handler.PhoneResponseDto": {
             "type": "object",
             "properties": {
                 "ddd": {
@@ -4202,7 +4202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user_controller.UpdateRequestDto": {
+        "user_handler.UpdateRequestDto": {
             "type": "object",
             "required": [
                 "email",

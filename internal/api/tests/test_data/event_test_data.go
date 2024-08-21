@@ -8,11 +8,11 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/product_categories_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_event_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_event_controller"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/controller/admin_product_controller"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/handler/admin_event_handler"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/handler/admin_product_handler"
 )
 
-func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseDto {
+func NewEvent(t *testing.T, userID int32) admin_event_handler.CreateResponseDto {
 	ctx := context.Background()
 
 	description := "Fresh and fiery red hot chilly peppers, perfect for adding a spicy kick to your dishes."
@@ -60,7 +60,7 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 		CreatedBy: userID,
 	})
 
-	return admin_event_controller.CreateResponseDto{
+	return admin_event_handler.CreateResponseDto{
 		ID:        newEvent.ID,
 		ProductID: newEvent.ProductID,
 		City:      newEvent.City,
@@ -68,7 +68,7 @@ func NewEvent(t *testing.T, userID int32) admin_event_controller.CreateResponseD
 		Location:  newEvent.Location,
 		EndAt:     newEvent.EndAt,
 		StartAt:   newEvent.StartAt,
-		Product: admin_product_controller.CreateResponseDto{
+		Product: admin_product_handler.CreateResponseDto{
 			ID:             newProduct.ID,
 			Name:           newProduct.Name,
 			Description:    newProduct.Description,
