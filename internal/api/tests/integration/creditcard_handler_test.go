@@ -24,7 +24,7 @@ func TestCreditcardHandler(t *testing.T) {
 
 		TSetCookieWithUser(t, user)
 
-		expiration := time.Now().UTC().AddDate(3, 0, 0)
+		expiration := time.Now().UTC().AddDate(3, 0, 0).Format(time.DateOnly)
 
 		newCreditcard := creditcard_handler.CreateRequestDto{
 			Name:             "Testing",
@@ -34,6 +34,7 @@ func TestCreditcardHandler(t *testing.T) {
 			NotifyExpiration: true,
 			CreditcardTypeID: 1,
 			CreditcardFlagID: 1,
+			CVC:              "434",
 		}
 
 		req := TMakeRequest(t, http.MethodPost, "creditcard", newCreditcard)
@@ -42,11 +43,10 @@ func TestCreditcardHandler(t *testing.T) {
 
 		test_utils.Decode(t, req.Body, &newCreditcardResponse)
 
-		expectedDate := expiration.Format(time.DateOnly)
 		currentDate := newCreditcardResponse.Expiration.Format(time.DateOnly)
 
 		assert.Equal(t, http.StatusCreated, req.StatusCode)
-		assert.Equal(t, expectedDate, currentDate)
+		assert.Equal(t, expiration, currentDate)
 		assert.Equal(t, newCreditcard.Name, newCreditcardResponse.Name)
 		assert.Equal(t, utils.MaskCreditcardNumber(newCreditcard.Number), newCreditcardResponse.Number)
 		assert.Equal(t, newCreditcard.Priority, newCreditcardResponse.Priority)
