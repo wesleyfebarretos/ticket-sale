@@ -162,3 +162,11 @@ sql:
         <<: *default_configs
         package: "admin_gateway_provider_connection"
         out: "internal/api/domain/repository/sqlc/admin_gateway_provider_connection"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/gateway_customer_card_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "gateway_customer_card_connection"
+        out: "internal/api/domain/repository/sqlc/gateway_customer_card_connection"
