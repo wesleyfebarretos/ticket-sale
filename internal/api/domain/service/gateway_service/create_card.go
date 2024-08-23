@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx/v4"
 	stripe_provider "github.com/wesleyfebarretos/ticket-sale/external/providers/gateways/stripe"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/gateway_provider_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
@@ -20,10 +21,10 @@ type CreateCardDTO struct {
 	CVC      string
 	ExpYear  string
 	CardID   int32
-	userID   int32
+	UserID   int32
 }
 
-func CreateCard(ctx context.Context, dto CreateCardDTO) (*gateway_customer_card_repository.GetByUserAndGatewayIdResponse, error) {
+func CreateCard(ctx context.Context, dto CreateCardDTO, tx *pgx.Tx) (*gateway_customer_card_repository.GetByUserAndGatewayIdResponse, error) {
 	gateway, err := GetActive(ctx)
 	if err != nil {
 		return nil, err
@@ -32,7 +33,7 @@ func CreateCard(ctx context.Context, dto CreateCardDTO) (*gateway_customer_card_
 	gatewayCustomerRepository := gateway_customer_repository.New()
 
 	customer := gatewayCustomerRepository.FindOneByGatewayAndUserId(ctx, gateway_customer_repository.FindOneByGatewayAndUserIdParams{
-		UserID:    dto.userID,
+		UserID:    dto.UserID,
 		GatewayID: gateway.ID,
 	})
 
@@ -41,7 +42,7 @@ func CreateCard(ctx context.Context, dto CreateCardDTO) (*gateway_customer_card_
 	}
 
 	user := user_repository.New().GetOneById(ctx, user_repository.GetOneByIdParams{
-		ID:   dto.userID,
+		ID:   dto.UserID,
 		Role: roles_enum.USER,
 	})
 
@@ -66,9 +67,15 @@ func CreateCard(ctx context.Context, dto CreateCardDTO) (*gateway_customer_card_
 		return nil, errors.New("Integration not available with the provider")
 	}
 
-	newCard := gateway_customer_card_repository.New().Create(ctx, gateway_customer_card_repository.CreateParams{
+	gatewayCustomerCardRepository := gateway_customer_card_repository.New()
+
+	if tx != nil {
+		gatewayCustomerCardRepository = gatewayCustomerCardRepository.WithTx(*tx)
+	}
+
+	newCard := gatewayCustomerCardRepository.Create(ctx, gateway_customer_card_repository.CreateParams{
 		GatewayID:     gateway.ID,
-		UserID:        dto.userID,
+		UserID:        dto.UserID,
 		CardID:        dto.CardID,
 		GatewayCardID: utils.Encrypt(gatewayCardID),
 	})

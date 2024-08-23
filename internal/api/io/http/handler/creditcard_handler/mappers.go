@@ -3,10 +3,11 @@ package creditcard_handler
 import (
 	"github.com/google/uuid"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/creditcard_service"
 )
 
-func (s *CreateRequestDto) ToDomain(userID int32) creditcard_repository.CreateParams {
-	return creditcard_repository.CreateParams{
+func (s *CreateRequestDto) ToDomain(userID int32) creditcard_service.CreateParamsDTO {
+	return creditcard_service.CreateParamsDTO{
 		Name:             s.Name,
 		Number:           s.Number,
 		Expiration:       s.Expiration,
@@ -15,6 +16,7 @@ func (s *CreateRequestDto) ToDomain(userID int32) creditcard_repository.CreatePa
 		UserID:           userID,
 		CreditcardTypeID: s.CreditcardTypeID,
 		CreditcardFlagID: s.CreditcardFlagID,
+		CVC:              s.CVC,
 	}
 }
 
