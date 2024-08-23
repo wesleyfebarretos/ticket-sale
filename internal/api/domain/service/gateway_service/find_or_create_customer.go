@@ -67,7 +67,7 @@ func FindOrCreateCustomer(ctx context.Context, userID int32) (*gateway_customer_
 	customer = &gateway_customer_repository.FindOneByGatewayAndUserIdResponse{
 		UserID:            newCustomer.UserID,
 		GatewayID:         newCustomer.GatewayID,
-		GatewayCustomerID: newCustomer.GatewayCustomerID,
+		GatewayCustomerID: utils.Decrypt(newCustomer.GatewayCustomerID),
 		CreatedAt:         newCustomer.CreatedAt,
 		UpdatedAt:         newCustomer.UpdatedAt,
 	}
