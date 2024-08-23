@@ -3667,10 +3667,10 @@ const docTemplate = `{
             "required": [
                 "creditcardFlagId",
                 "creditcardTypeId",
+                "cvc",
                 "expiration",
                 "name",
-                "number",
-                "tokenize"
+                "number"
             ],
             "properties": {
                 "creditcardFlagId": {
@@ -3682,6 +3682,11 @@ const docTemplate = `{
                     "type": "integer",
                     "minimum": 1,
                     "example": 1
+                },
+                "cvc": {
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "343"
                 },
                 "expiration": {
                     "type": "string",
@@ -3703,10 +3708,6 @@ const docTemplate = `{
                 "priority": {
                     "type": "integer",
                     "example": 1
-                },
-                "tokenize": {
-                    "type": "boolean",
-                    "example": true
                 }
             }
         },
@@ -3831,7 +3832,7 @@ const docTemplate = `{
                 },
                 "expiration": {
                     "type": "string",
-                    "example": "2025-01-01T00:00:00Z"
+                    "example": "2025-01-01"
                 },
                 "name": {
                     "type": "string",

@@ -1,16 +1,24 @@
 package creditcard_handler
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/creditcard_service"
 )
 
 func (s *CreateRequestDto) ToDomain(userID int32) creditcard_service.CreateParamsDTO {
+	date, err := time.Parse(time.DateOnly, s.Expiration)
+	if err != nil {
+		panic(exception.BadRequestException(fmt.Sprintf("Wrong expiration date format it need to be like %s", time.DateOnly)))
+	}
 	return creditcard_service.CreateParamsDTO{
 		Name:             s.Name,
 		Number:           s.Number,
-		Expiration:       s.Expiration,
+		Expiration:       date,
 		Priority:         s.Priority,
 		NotifyExpiration: s.NotifyExpiration,
 		UserID:           userID,
