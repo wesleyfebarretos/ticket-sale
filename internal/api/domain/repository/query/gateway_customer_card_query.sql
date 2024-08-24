@@ -19,3 +19,17 @@ WHERE
 AND
     gateway_id = $2;
 
+-- name: GetByCardAndGatewayId :one
+SELECT
+    id,
+    gateway_id,
+    user_id,
+    card_id,
+    gateway_card_id
+FROM 
+    fin.gateway_customer_card
+WHERE 
+    card_id = $1
+AND
+    gateway_id = $2;
+

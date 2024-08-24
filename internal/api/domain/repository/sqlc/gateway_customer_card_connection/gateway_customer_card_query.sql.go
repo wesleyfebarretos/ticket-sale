@@ -44,6 +44,47 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (FinGatewayCusto
 	return i, err
 }
 
+const getByCardAndGatewayId = `-- name: GetByCardAndGatewayId :one
+SELECT
+    id,
+    gateway_id,
+    user_id,
+    card_id,
+    gateway_card_id
+FROM 
+    fin.gateway_customer_card
+WHERE 
+    card_id = $1
+AND
+    gateway_id = $2
+`
+
+type GetByCardAndGatewayIdParams struct {
+	CardID    int32 `json:"cardId"`
+	GatewayID int32 `json:"gatewayId"`
+}
+
+type GetByCardAndGatewayIdRow struct {
+	ID            int32  `json:"id"`
+	GatewayID     int32  `json:"gatewayId"`
+	UserID        int32  `json:"userId"`
+	CardID        int32  `json:"cardId"`
+	GatewayCardID string `json:"gatewayCardId"`
+}
+
+func (q *Queries) GetByCardAndGatewayId(ctx context.Context, arg GetByCardAndGatewayIdParams) (GetByCardAndGatewayIdRow, error) {
+	row := q.db.QueryRow(ctx, getByCardAndGatewayId, arg.CardID, arg.GatewayID)
+	var i GetByCardAndGatewayIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.GatewayID,
+		&i.UserID,
+		&i.CardID,
+		&i.GatewayCardID,
+	)
+	return i, err
+}
+
 const getByUserAndGatewayId = `-- name: GetByUserAndGatewayId :many
 SELECT
     id,

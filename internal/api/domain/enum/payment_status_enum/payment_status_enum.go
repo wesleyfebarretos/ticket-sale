@@ -1,0 +1,10 @@
+package payment_status_enum
+
+const (
+	AWAITING_PAYMENT = iota + 1
+	PAYMENT_ATTEMPT
+	PAID
+	PENDING_CANCELLATION
+	CANCELLED
+	EXPIRED_PAYMENT_SLIP
+)
