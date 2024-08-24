@@ -21,8 +21,7 @@ func (this *CreateCustomerDTO) validate() error {
 }
 
 func CreateCustomer(c *CreateCustomerDTO) (*stripe.Customer, error) {
-	err := c.validate()
-	if err != nil {
+	if err := c.validate(); err != nil {
 		return nil, err
 	}
 

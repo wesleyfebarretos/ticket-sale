@@ -46,8 +46,7 @@ func (this *CreateCardDTO) validate() error {
 }
 
 func CreateCard(c *CreateCardDTO) (*stripe.PaymentSource, error) {
-	err := c.validate()
-	if err != nil {
+	if err := c.validate(); err != nil {
 		return nil, err
 	}
 
