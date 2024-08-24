@@ -44,7 +44,6 @@ const create = `-- name: Create :one
 INSERT INTO fin.payment_order (
     creditcard_uuid,
     user_id,
-    total_price,
     payment_type_id,
     installment_time_id,
     gateway_id,
@@ -56,19 +55,18 @@ INSERT INTO fin.payment_order (
     updated_by
 )
 VALUES
-($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 RETURNING id, uuid, creditcard_uuid, user_id, total_price, payment_type_id, installment_time_id, gateway_id, payment_status_id, payment_cancel_reason_id, extra_info, payment_at, cancel_at, due_at, expiration_at, base_value, reversed_value, canceled_value, added_value, total_value, created_by, updated_by, created_at, updated_at
 `
 
 type CreateParams struct {
 	CreditcardUuid    *uuid.UUID `json:"creditcardUuid"`
 	UserID            int32      `json:"userId"`
-	TotalPrice        float64    `json:"totalPrice"`
 	PaymentTypeID     int32      `json:"paymentTypeId"`
 	InstallmentTimeID int32      `json:"installmentTimeId"`
 	GatewayID         int32      `json:"gatewayId"`
 	PaymentStatusID   int32      `json:"paymentStatusId"`
-	TotalPrice_2      float64    `json:"totalPrice2"`
+	TotalPrice        float64    `json:"totalPrice"`
 	AddedValue        float64    `json:"addedValue"`
 	BaseValue         float64    `json:"baseValue"`
 	CreatedBy         int32      `json:"createdBy"`
@@ -79,12 +77,11 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (FinPaymentOrder
 	row := q.db.QueryRow(ctx, create,
 		arg.CreditcardUuid,
 		arg.UserID,
-		arg.TotalPrice,
 		arg.PaymentTypeID,
 		arg.InstallmentTimeID,
 		arg.GatewayID,
 		arg.PaymentStatusID,
-		arg.TotalPrice_2,
+		arg.TotalPrice,
 		arg.AddedValue,
 		arg.BaseValue,
 		arg.CreatedBy,

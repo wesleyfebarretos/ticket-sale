@@ -13,7 +13,6 @@ type CreateParams struct {
 	CreditcardUuid    *uuid.UUID `json:"creditcardUuid"`
 	UpdatedBy         *int32     `json:"updatedBy"`
 	TotalPrice        float64    `json:"totalPrice"`
-	TotalPrice_2      float64    `json:"totalPrice2"`
 	AddedValue        float64    `json:"addedValue"`
 	BaseValue         float64    `json:"baseValue"`
 	UserID            int32      `json:"userId"`
@@ -60,7 +59,6 @@ func (this *CreateParams) ToEntity() payment_order_connection.CreateParams {
 		InstallmentTimeID: this.InstallmentTimeID,
 		GatewayID:         this.GatewayID,
 		PaymentStatusID:   this.PaymentStatusID,
-		TotalPrice_2:      this.TotalPrice_2,
 		AddedValue:        this.AddedValue,
 		BaseValue:         this.BaseValue,
 		CreatedBy:         this.CreatedBy,

@@ -28,6 +28,10 @@ sql:
               import: "github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/override"
               type: UserProfileAddress
               slice: true
+          - db_type: "uuid"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
 
   - <<: *schema
     queries: "internal/api/domain/repository/query/users_addresses_query.sql"

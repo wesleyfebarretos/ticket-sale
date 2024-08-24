@@ -61,8 +61,6 @@ func CreatePaymentIntent(ctx context.Context, dto *CreatePaymentIntentDTO) (bool
 		return false, fmt.Errorf("no customer found to user %d", dto.UserID)
 	}
 
-	//  TODO: keep development after create order repository methods
-
 	switch dto.Gateway.ProviderID {
 	case gateway_provider_enum.STRIPE:
 		_, err := stripe_provider.CreatePaymentIntent(&stripe_provider.CreatePaymentIntentDTO{

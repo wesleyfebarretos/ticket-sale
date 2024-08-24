@@ -2,7 +2,6 @@
 INSERT INTO fin.payment_order (
     creditcard_uuid,
     user_id,
-    total_price,
     payment_type_id,
     installment_time_id,
     gateway_id,
@@ -14,7 +13,7 @@ INSERT INTO fin.payment_order (
     updated_by
 )
 VALUES
-($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 RETURNING *;
 
 -- name: Cancel :exec
