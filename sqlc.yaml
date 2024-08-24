@@ -170,3 +170,11 @@ sql:
         <<: *default_configs
         package: "gateway_customer_card_connection"
         out: "internal/api/domain/repository/sqlc/gateway_customer_card_connection"
+
+  - <<: *schema
+    queries: "internal/api/domain/repository/query/payment_order_query.sql"
+    gen:
+      go: 
+        <<: *default_configs
+        package: "payment_order_connection"
+        out: "internal/api/domain/repository/sqlc/payment_order_connection"
