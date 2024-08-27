@@ -13,7 +13,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/gateway_service"
 )
 
-type CheckoutQueueProducerDTO struct {
+type PaymentQueueProducerDTO struct {
 	ProductUUID       *uuid.UUID
 	CardUUID          *uuid.UUID
 	CardID            *int32
@@ -23,7 +23,7 @@ type CheckoutQueueProducerDTO struct {
 	UserID            int32
 }
 
-func CheckoutQueueProducer(ctx context.Context, dto CheckoutQueueProducerDTO) {
+func PaymentQueueProducer(ctx context.Context, dto PaymentQueueProducerDTO) {
 	gateway, err := gateway_service.GetActive(ctx)
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
