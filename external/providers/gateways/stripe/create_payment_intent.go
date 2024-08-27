@@ -44,9 +44,6 @@ func CreatePaymentIntent(dto *CreatePaymentIntentDTO) (*stripe.PaymentIntent, er
 		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
 			Enabled: stripe.Bool(true),
 		},
-		PaymentMethodTypes: []*string{
-			stripe.String("card"),
-		},
 		Currency: stripe.String(string(stripe.CurrencyUSD)),
 	}
 

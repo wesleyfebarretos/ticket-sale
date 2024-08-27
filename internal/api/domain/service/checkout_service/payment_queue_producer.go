@@ -12,6 +12,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/payment_order_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/gateway_service"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/utils"
 )
 
 type PaymentQueueProducerDTO struct {
@@ -33,6 +34,8 @@ func PaymentQueueProducer(ctx context.Context, dto PaymentQueueProducerDTO) {
 	if err != nil {
 		panic(exception.InternalServerException(err.Error()))
 	}
+
+	customer.GatewayCustomerID = utils.Decrypt(customer.GatewayCustomerID)
 
 	paymentMethod := ""
 
