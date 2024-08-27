@@ -36,12 +36,14 @@ func PaymentQueueProducer(ctx context.Context, dto PaymentQueueProducerDTO) {
 
 	paymentMethod := ""
 
-	card := creditcard_repository.New().WithTx
+	card := creditcard_repository.New().GetByUuid(ctx, *dto.CardUUID)
 
-	if dto.CardID != nil && dto.CardUUID != nil {
-		card := gateway_service.GetCustomerCardID(ctx, *dto.CardID, gateway.ID)
-		paymentMethod = card.GatewayCardID
+	if card == nil {
+		panic(exception.NotFoundException("card not found"))
 	}
+
+	customerCard := gateway_service.GetCustomerCardID(ctx, card.ID, gateway.ID)
+	paymentMethod = customerCard.GatewayCardID
 
 	product := admin_product_repository.New().GetOneByUuid(ctx, *dto.ProductUUID)
 
