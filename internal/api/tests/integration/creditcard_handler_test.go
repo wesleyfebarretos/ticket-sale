@@ -11,7 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/roles_enum"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/gateway_customer_card_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/gateway_customer_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/gateway_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/io/http/handler/creditcard_handler"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_data"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/tests/test_utils"
@@ -55,9 +57,22 @@ func TestCreditcardHandler(t *testing.T) {
 		assert.Equal(t, newCreditcard.CreditcardFlagID, newCreditcardResponse.CreditcardFlagID)
 		assert.NotEqual(t, uuid.Nil, newCreditcardResponse.Uuid)
 
-		customer := gateway_customer_repository.New().FindOneByUserId(context.Background(), user.ID)
+		ctx := context.Background()
+
+		gateway := gateway_repository.New().GetActive(ctx)
+
+		assert.NotNil(t, gateway)
+
+		customer := gateway_customer_repository.New().FindOneByGatewayAndUserId(ctx, gateway_customer_repository.FindOneByGatewayAndUserIdParams{
+			UserID:    user.ID,
+			GatewayID: gateway.ID,
+		})
 
 		assert.NotNil(t, customer)
+
+		customerCard := gateway_customer_card_repository.New().GetByCardAndGatewayId(ctx, gateway.ID, newCreditcardResponse.ID)
+
+		assert.NotNil(t, customerCard)
 	}))
 
 	t.Run("it should update a creditcard", TRun(func(t *testing.T) {
