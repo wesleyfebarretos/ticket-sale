@@ -74,3 +74,21 @@ func (this *GetAllUserCreditcardsResponse) FromEntity(p []creditcard_connection.
 
 	return res
 }
+
+func (this *GetByUuidResponse) FromEntity(p creditcard_connection.FinCreditcard) *GetByUuidResponse {
+	return &GetByUuidResponse{
+		ID:               p.ID,
+		Uuid:             p.Uuid,
+		Name:             p.Name,
+		Number:           p.Number,
+		Expiration:       p.Expiration,
+		Priority:         p.Priority,
+		NotifyExpiration: p.NotifyExpiration,
+		UserID:           p.UserID,
+		CreditcardTypeID: p.CreditcardTypeID,
+		CreditcardFlagID: p.CreditcardFlagID,
+		IsDeleted:        p.IsDeleted,
+		CreatedAt:        p.CreatedAt,
+		UpdatedAt:        p.UpdatedAt,
+	}
+}

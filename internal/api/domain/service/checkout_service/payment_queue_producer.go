@@ -9,6 +9,7 @@ import (
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/payment_status_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/admin_product_repository"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/creditcard_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/repository/implementation/payment_order_repository"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/gateway_service"
 )
@@ -16,7 +17,6 @@ import (
 type PaymentQueueProducerDTO struct {
 	ProductUUID       *uuid.UUID
 	CardUUID          *uuid.UUID
-	CardID            *int32
 	InstallmentTimeID int32
 	PaymentTypeID     int32
 	Qty               int32
@@ -35,6 +35,8 @@ func PaymentQueueProducer(ctx context.Context, dto PaymentQueueProducerDTO) {
 	}
 
 	paymentMethod := ""
+
+	card := creditcard_repository.New().WithTx
 
 	if dto.CardID != nil && dto.CardUUID != nil {
 		card := gateway_service.GetCustomerCardID(ctx, *dto.CardID, gateway.ID)

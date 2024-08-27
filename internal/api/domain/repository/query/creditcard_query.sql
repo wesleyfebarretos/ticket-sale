@@ -38,3 +38,6 @@ FROM
     user_creditcards
 WHERE 
     user_id = $1;
+
+-- name: GetByUuid :one
+SELECT * FROM fin.creditcard WHERE uuid = $1;

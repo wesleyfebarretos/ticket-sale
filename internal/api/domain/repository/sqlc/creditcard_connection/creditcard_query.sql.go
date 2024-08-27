@@ -100,6 +100,31 @@ func (q *Queries) GetAllUserCreditcards(ctx context.Context, userID int32) ([]Us
 	return items, nil
 }
 
+const getByUuid = `-- name: GetByUuid :one
+SELECT id, uuid, name, number, expiration, priority, notify_expiration, user_id, creditcard_type_id, creditcard_flag_id, is_deleted, created_at, updated_at FROM fin.creditcard WHERE uuid = $1
+`
+
+func (q *Queries) GetByUuid(ctx context.Context, argUuid uuid.UUID) (FinCreditcard, error) {
+	row := q.db.QueryRow(ctx, getByUuid, argUuid)
+	var i FinCreditcard
+	err := row.Scan(
+		&i.ID,
+		&i.Uuid,
+		&i.Name,
+		&i.Number,
+		&i.Expiration,
+		&i.Priority,
+		&i.NotifyExpiration,
+		&i.UserID,
+		&i.CreditcardTypeID,
+		&i.CreditcardFlagID,
+		&i.IsDeleted,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const softDelete = `-- name: SoftDelete :exec
 UPDATE 
     fin.creditcard

@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
@@ -72,4 +73,19 @@ func (this *CreditcardRepository) Update(ctx context.Context, params UpdateParam
 	if err != nil && err != pgx.ErrNoRows {
 		panic(exception.InternalServerException(err.Error()))
 	}
+}
+
+func (this *CreditcardRepository) GetByUuid(ctx context.Context, uuid uuid.UUID) *GetByUuidResponse {
+	card, err := this.queries.GetByUuid(ctx, uuid)
+	if err == pgx.ErrNoRows {
+		return nil
+	}
+
+	if err != nil {
+		panic(exception.InternalServerException(err.Error()))
+	}
+
+	res := GetByUuidResponse{}
+
+	return res.FromEntity(card)
 }
