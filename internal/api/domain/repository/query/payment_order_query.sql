@@ -28,3 +28,6 @@ WHERE
 
 -- name: GetOneByUuid :one
 SELECT * FROM fin.payment_order WHERE uuid = $1;
+
+-- name: GetAll :many
+SELECT * FROM fin.payment_order;

@@ -117,6 +117,55 @@ func (q *Queries) Create(ctx context.Context, arg CreateParams) (FinPaymentOrder
 	return i, err
 }
 
+const getAll = `-- name: GetAll :many
+SELECT id, uuid, creditcard_uuid, user_id, total_price, payment_type_id, installment_time_id, gateway_id, payment_status_id, payment_cancel_reason_id, extra_info, payment_at, cancel_at, due_at, expiration_at, base_value, reversed_value, canceled_value, added_value, total_value, created_by, updated_by, created_at, updated_at FROM fin.payment_order
+`
+
+func (q *Queries) GetAll(ctx context.Context) ([]FinPaymentOrder, error) {
+	rows, err := q.db.Query(ctx, getAll)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []FinPaymentOrder{}
+	for rows.Next() {
+		var i FinPaymentOrder
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uuid,
+			&i.CreditcardUuid,
+			&i.UserID,
+			&i.TotalPrice,
+			&i.PaymentTypeID,
+			&i.InstallmentTimeID,
+			&i.GatewayID,
+			&i.PaymentStatusID,
+			&i.PaymentCancelReasonID,
+			&i.ExtraInfo,
+			&i.PaymentAt,
+			&i.CancelAt,
+			&i.DueAt,
+			&i.ExpirationAt,
+			&i.BaseValue,
+			&i.ReversedValue,
+			&i.CanceledValue,
+			&i.AddedValue,
+			&i.TotalValue,
+			&i.CreatedBy,
+			&i.UpdatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getOneByUuid = `-- name: GetOneByUuid :one
 SELECT id, uuid, creditcard_uuid, user_id, total_price, payment_type_id, installment_time_id, gateway_id, payment_status_id, payment_cancel_reason_id, extra_info, payment_at, cancel_at, due_at, expiration_at, base_value, reversed_value, canceled_value, added_value, total_value, created_by, updated_by, created_at, updated_at FROM fin.payment_order WHERE uuid = $1
 `

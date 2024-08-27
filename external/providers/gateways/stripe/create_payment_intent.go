@@ -37,6 +37,12 @@ func CreatePaymentIntent(dto *CreatePaymentIntentDTO) (*stripe.PaymentIntent, er
 		return nil, err
 	}
 
+	if config.Envs.AppEnv == "testing" {
+		return &stripe.PaymentIntent{
+			ID: "pi_3MtwBwLkdIwHu7ix28a3tqPa",
+		}, nil
+	}
+
 	params := &stripe.PaymentIntentParams{
 		Amount:        stripe.Int64(dto.Amount),
 		Customer:      &dto.CustomerID,
