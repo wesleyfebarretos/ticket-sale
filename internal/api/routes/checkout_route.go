@@ -13,5 +13,5 @@ func HandleCheckout(router *gin.RouterGroup) {
 	checkoutRoute.Use(middleware.JWT.MiddlewareFunc())
 	checkoutRoute.Use(middleware.Authorization(roles_enum.USER))
 
-	checkoutRoute.POST("payment", checkout_handler.PaymentQueueProducer)
+	checkoutRoute.POST("payment", checkout_handler.OrderQueueProducer)
 }
