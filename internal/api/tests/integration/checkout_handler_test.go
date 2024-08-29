@@ -26,7 +26,7 @@ func TestCheckoutHandler(t *testing.T) {
 		test_data.NewGatewayCustomer(t, 1, user.ID)
 		test_data.NewGatewayCustomerCard(t, 1, user.ID, card.ID)
 
-		request := checkout_handler.PaymentQueueProducerRequest{
+		request := checkout_handler.OrderQueueProducerRequest{
 			ProductUUID:       &product.Uuid,
 			CardUUID:          &card.Uuid,
 			InstallmentTimeID: 1,

@@ -6,6 +6,7 @@ require (
 	github.com/appleboy/gin-jwt/v2 v2.9.2
 	github.com/docker/go-connections v0.5.0
 	github.com/gin-gonic/gin v1.10.0
+	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v4 v4.18.3
@@ -22,10 +23,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
-require (
-	github.com/gofrs/uuid v4.2.0+incompatible // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-)
+require github.com/mattn/go-colorable v0.1.13 // indirect
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
@@ -113,7 +111,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/net v0.25.0
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
