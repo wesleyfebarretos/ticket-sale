@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
+	"github.com/wesleyfebarretos/ticket-sale/internal/akafka"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	_ "github.com/wesleyfebarretos/ticket-sale/internal/api/docs"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/routes"
@@ -39,7 +40,10 @@ func main() {
 
 	router := routes.Bind()
 
+	go akafka.OrderConsumer()
+
 	if err := router.Run(fmt.Sprintf(":%s", config.Envs.Port)); err != nil {
 		log.Fatalf("Error on starting API: %v", err)
 	}
+
 }

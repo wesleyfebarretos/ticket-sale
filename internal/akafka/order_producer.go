@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/google/uuid"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/kafka_topic_enum"
@@ -26,7 +26,7 @@ func OrderProducer(order OrderProducerDTO) {
 		"bootstrap.servers": config.Envs.Kafka.Host,
 	})
 	if err != nil {
-		log.Fatal("error on start kafka order producer")
+		log.Fatalf("error on start kafka order producer %v", err)
 	}
 
 	defer p.Close()
