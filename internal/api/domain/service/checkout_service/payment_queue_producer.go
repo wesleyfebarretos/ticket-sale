@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/wesleyfebarretos/ticket-sale/internal/akafka"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/gateway_provider_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/payment_status_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
@@ -72,10 +73,12 @@ func OrderQueueProducer(ctx context.Context, dto OrderQueueProducerDTO) {
 		CreatedBy:         dto.UserID,
 	})
 
+	gatewayPaymentID := ""
+
 	//  TODO: send data of created payment intent to kafka queue to proceed checkout
 	switch gateway.GatewayProviderID {
 	case gateway_provider_enum.STRIPE:
-		_, err := StripeCreatePaymentIntent(ctx, &StripeCreatePaymentIntentDTO{
+		result, err := StripeCreatePaymentIntent(ctx, &StripeCreatePaymentIntentDTO{
 			PaymentMethod: paymentMethod,
 			CustomerID:    customer.GatewayCustomerID,
 			Amount:        int64(amount),
@@ -90,7 +93,22 @@ func OrderQueueProducer(ctx context.Context, dto OrderQueueProducerDTO) {
 			})
 			panic(exception.InternalServerException(err.Error()))
 		}
+
+		gatewayPaymentID = result.ID
+
 	default:
 		panic(exception.InternalServerException("no active gateway"))
 	}
+
+	orderToQueue := akafka.OrderProducerDTO{
+		ProductUUID:       dto.ProductUUID,
+		CardUUID:          dto.CardUUID,
+		GatewayPaymentID:  gatewayPaymentID,
+		InstallmentTimeID: dto.InstallmentTimeID,
+		PaymentTypeID:     dto.PaymentTypeID,
+		Qty:               dto.Qty,
+		UserID:            dto.UserID,
+	}
+
+	akafka.OrderProducer(orderToQueue)
 }

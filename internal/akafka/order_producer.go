@@ -5,13 +5,23 @@ import (
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/google/uuid"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/kafka_topic_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
-	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/checkout_service"
 )
 
-func OrderProducer(order checkout_service.OrderQueueProducerDTO) {
+type OrderProducerDTO struct {
+	ProductUUID       *uuid.UUID
+	CardUUID          *uuid.UUID
+	GatewayPaymentID  string
+	InstallmentTimeID int32
+	PaymentTypeID     int32
+	Qty               int32
+	UserID            int32
+}
+
+func OrderProducer(order OrderProducerDTO) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": config.Envs.Kafka.Host,
 	})
