@@ -23,7 +23,10 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
-require github.com/mattn/go-colorable v0.1.13 // indirect
+require (
+	github.com/confluentinc/confluent-kafka-go v1.9.2 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+)
 
 require (
 	dario.cat/mergo v1.0.0 // indirect

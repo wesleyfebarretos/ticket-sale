@@ -16,6 +16,13 @@ restart-db:
 	@docker compose down postgres --volumes
 	@docker compose up postgres -d
 
+start-kafka:
+	@docker compose up zookeeper kafka kafka-ui -d 
+
+restart-kafka:
+	@docker compose down zookeeper kafka kafka-ui --volumes
+	@docker compose up zookeeper kafka kafka-ui -d 
+
 # Migrations
 create-table:
 	@migrate create -ext=sql -dir=./internal/api/migrations/tables -seq $(shell echo $(filter-out $@,$(MAKECMDGOALS))_table)
