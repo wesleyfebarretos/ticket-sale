@@ -47,6 +47,12 @@ type ProvidersConfig struct {
 	Gateways GatewaysConfig
 }
 
+type KafkaConfig struct {
+	Host      string
+	Port      int
+	Host_Port string
+}
+
 type Config struct {
 	ApiToken   string
 	AppEnv     string
@@ -57,6 +63,7 @@ type Config struct {
 	JWT        JWTConfig
 	Logger     LoggerConfig
 	Providers  ProvidersConfig
+	Kafka      KafkaConfig
 }
 
 var (
@@ -100,6 +107,11 @@ func Init() {
 						ProviderID: gateway_provider_enum.STRIPE,
 					},
 				},
+			},
+			Kafka: KafkaConfig{
+				Host:      getEnv("KAFKA_HOST", "localhost"),
+				Port:      getEnvAsInt("KAFKA_PORT", 9092),
+				Host_Port: fmt.Sprintf("%s:%d", getEnv("KAFKA_HOST", "localhost"), getEnvAsInt("KAFKA_PORT", 9092)),
 			},
 		}
 	})

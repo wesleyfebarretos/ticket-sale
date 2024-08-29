@@ -5,18 +5,15 @@ import (
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/wesleyfebarretos/ticket-sale/internal/api/config"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/enum/kafka_topic_enum"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/exception"
 	"github.com/wesleyfebarretos/ticket-sale/internal/api/domain/service/checkout_service"
 )
 
-const (
-	kafkaServer string = "localhost:9092"
-)
-
 func OrderProducer(order checkout_service.OrderQueueProducerDTO) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": kafkaServer,
+		"bootstrap.servers": config.Envs.Kafka.Host,
 	})
 	if err != nil {
 		log.Fatal("error on start kafka order producer")
@@ -39,4 +36,6 @@ func OrderProducer(order checkout_service.OrderQueueProducerDTO) {
 	if err != nil {
 		panic(err)
 	}
+
+	p.Flush(1000)
 }
