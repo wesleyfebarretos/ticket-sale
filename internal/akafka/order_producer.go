@@ -12,13 +12,13 @@ import (
 )
 
 type OrderProducerDTO struct {
-	ProductUUID       *uuid.UUID
-	CardUUID          *uuid.UUID
-	GatewayPaymentID  string
-	InstallmentTimeID int32
-	PaymentTypeID     int32
-	Qty               int32
-	UserID            int32
+	ProductUUID       *uuid.UUID `json:"productUuid"`
+	CardUUID          *uuid.UUID `json:"cardUuid"`
+	GatewayPaymentID  string     `json:"gatewayPaymentId"`
+	InstallmentTimeID int32      `json:"installmentTimeId"`
+	PaymentTypeID     int32      `json:"paymentTypeId"`
+	Qty               int32      `json:"qty"`
+	UserID            int32      `json:"userId"`
 }
 
 func OrderProducer(order OrderProducerDTO) {
